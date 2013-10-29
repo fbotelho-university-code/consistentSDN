@@ -1,9 +1,9 @@
 %
-% Modelo para relatório da disciplina de Projecto de Engenharia Informatica
+% Modelo para relatï¿³rio da disciplina de Projecto de Engenharia Informatica
 % do MEI.
 %
 % Incorpora elementos impostos pelo Regulamento de Estudos Pos-Graduados da
-% Universidade de Lisboa (Deliberacao 1506/2006 - Diario da República, 2.a série 
+% Universidade de Lisboa (Deliberacao 1506/2006 - Diario da Repï¿ºblica, 2.a sï¿©rie 
 % - n.o 209 - 30 de Outubro de 2006)
 %
 \documentclass[12pt,openright,twoside]{report}
@@ -13,12 +13,20 @@
 
 \usepackage[portuguese,english]{babel}
 \usepackage{times}
-
+\usepackage{url}
 \usepackage{graphicx}
-
+\usepackage{mdwlist}
+\usepackage[nottoc]{tocbibind}
+\usepackage{csquotes}
 % Indice remissivo
 \usepackage{makeidx}
 \makeindex
+
+\usepackage{titlesec}
+
+%\titlespacing{\subsubsection}{0pt}{0pt}{0pt}
+\titleformat{\subsubsection}[runin]{\normalfont\bfseries}{\thesubsection.}{3pt}{}
+
 
 % Glossario
 \usepackage{glossaries}
@@ -31,6 +39,12 @@
 \usepackage{fancyhdr}
 \usepackage{lastpage}
 
+\usepackage[font={scriptsize}]{caption}
+\usepackage{subcaption}
+\usepackage[sortcites=true, firstinits=true, isbn=false,
+url=false, doi=false, eprint=false]{biblatex}
+
+\bibliography{bibliografia,web}
 \fancyhf{} %
 \lhead{\nouppercase {\leftmark}} %
 \rhead{\nouppercase {\bf \thepage}}
@@ -52,16 +66,24 @@
 \thispagestyle{plain}
 }
 
+
+%%%%%%% PERSONAL COMMANDS %%%%%%%%%%%
+\newcommand{\distcontrollers}{\cite{:vn, Tootoonchian:2010vy,Koponen:2010th,Yeganeh:2012jm}}
+\newcommand{\distcontrollerspaper}{\cite{Tootoonchian:2010vy, Koponen:2010th,Yeganeh:2012jm}}
+%END 
+
+
 %
 % ALTERAR AQUI AS INFORMACOES RELATIVAS AO PROJECTO
 %
-\newcommand{\PEITITULO}{T\'{I}TULO DO TRABALHO EM MAI\'{U}SCULAS}
-\newcommand{\PEIAutor}{Nome Completo do Aluno}
-\newcommand{\PEIAutorNumAluno}{3XXXX}
+\newcommand{\PEITITULO}{A Consistent and Fault-Tolerant Network
+  Information Base for Scalable Software Defined Networks}
+\newcommand{\PEIAutor}{FÃ¡bio Andrade Botelho}
+\newcommand{\PEIAutorNumAluno}{41625}
 
 %Orientador e CoOrientador *sem* titulos (e.g. Prof. Doutor)
-\newcommand{\PEIOrientador}{Nome Completo do Orientador}
-\newcommand{\PEICoOrientador}{Nome Completo do Co-Orientador} %se nao se aplicar, nao importa o que aqui esteja
+\newcommand{\PEIOrientador}{Alysson Neves Bessani}
+\newcommand{\PEICoOrientador}{Fernando Manuel Valente Ramos} %se nao se aplicar, nao importa o que aqui esteja
 
 %Se aplicavel, o supervisor pode ter um titulo (Dr., Eng.) colocado aqui
 \newcommand{\PEISupervisorInstituicao}{Nome Completo do Supervisor}  %se nao se aplicar, nao importa o que aqui esteja
@@ -78,19 +100,19 @@
 %\newcommand{\PEIIdiomaTese}{\selectlanguage{english}}
 
 % Comentar/descomentar conforme conveniente
-\newcommand{\MEIEspecializacao}{Arquitectura, Sistemas e Redes de Computadores}
-%\newcommand{\MEIEspecializacao}{Sistemas de Informação}
-%\newcommand{\MEIEspecializacao}{Interacção e Conhecimento}
+%\newcommand{\MEIEspecializacao}{SeguranÃ§a InformÃ¡tica}
+%\newcommand{\MEIEspecializacao}{Arquitectura, Sistemas e Redes de Computadores}
+%\newcommand{\MEIEspecializacao}{Interacï¿½ï¿½o e Conhecimento}
 %\newcommand{\MEIEspecializacao}{Engenharia de Software }
 
 \usepackage{ifpdf}
 \ifpdf
 \pdfinfo {
 	/Author (\PEIAutor)
-	/Title (Projecto em Engenharia Informatica)
-	/Subject (Engenharia Informatica, especializacao em \MEIEspecializacao)
-	/Keywords ()
-	/CreationDate (D:20081112151803)
+	/Title (Projecto em SeguranÃ§a Informatica)
+	/Subject (SeguranÃ§a Informatica)
+	/Keywords (state machine replication, software defined networks)
+	/CreationDate (D:20100510104905)
 }
 \fi
 
@@ -180,11 +202,9 @@
 
 % Bibliografia
 
-\LIMPA
-\nocite{*}
-\bibliographystyle{plain}
-\bibliography{bibliografia}
-\addcontentsline {toc} {chapter} {Bibliografia}
+% \LIMPA
+
+ \printbibliography[title=References,heading=bibintoc]
 
 % Indice remissivo
 \LIMPA

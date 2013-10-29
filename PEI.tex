@@ -28,9 +28,9 @@
 \titleformat{\subsubsection}[runin]{\normalfont\bfseries}{\thesubsection.}{3pt}{}
 
 
-% Glossario
-\usepackage{glossaries}
-\makeglossary
+\usepackage[nomain,acronym,xindy,nonumberlist]{glossaries}
+\include{./tex/acronimos}
+\makeglossary  
 
 % Links
 \usepackage{hyperref}
@@ -96,8 +96,8 @@ url=false, doi=false, eprint=false]{biblatex}
 %\newcommand{\PEITIPO}{PROJECTO }
 
 % Comentar/descomentar conforme conveniente
-\newcommand{\PEIIdiomaTese}{\selectlanguage{portuguese}}
-%\newcommand{\PEIIdiomaTese}{\selectlanguage{english}}
+%\newcommand{\PEIIdiomaTese}{\selectlanguage{portuguese}}
+\newcommand{\PEIIdiomaTese}{\selectlanguage{english}}
 
 % Comentar/descomentar conforme conveniente
 %\newcommand{\MEIEspecializacao}{Segurança Informática}
@@ -149,7 +149,7 @@ url=false, doi=false, eprint=false]{biblatex}
 %Lista de figuras
 \listoffigures
 
-\addcontentsline {toc} {chapter} {Lista de Figuras}
+%\addcontentsline {toc} {chapter} {Lista de Figuras}
 \newpage
 \thispagestyle{empty}
 \mbox{}
@@ -158,7 +158,7 @@ url=false, doi=false, eprint=false]{biblatex}
 %Lista de tabelas
 \listoftables
 
-\addcontentsline {toc} {chapter} {Lista de Tabelas}
+%\addcontentsline {toc} {chapter} {Lista de Tabelas}
 \newpage
 \thispagestyle{empty} \mbox{}
 \newpage
@@ -171,16 +171,57 @@ url=false, doi=false, eprint=false]{biblatex}
 \setcounter{page}{1}
 \pagenumbering{arabic}
 
-% Conteudo (incl. Introducao)
-\include{./tex/conteudo}
+\chapter{Introduction}
+\glsresetall
+% contexto do trabalho
+% se resume o trabalho desenvolvido
+% se identificam  contribuicoes 
+% estrutura do relatorio 
+% sucintamente o enquadramento instituicional 
 
-% Conclusao
-\include{./tex/conclusao}
+%Outro capitulo? 
+% pormenor os objectivos do trabalho
+% contexto subjacente 
+% metodologia  utilizado no desenvolvimento como o planeamento efectuado para o concretizar 
+% Apresentar uma confrontacao com o plano de trabalho inicial  analisando as razoes de eventuais desvios occorridos
+
+
+\include{./tex/intro}
+\LIMPA
+\chapter{Background}
+\glsresetall
+\include{./tex/background}
+\LIMPA
+\chapter{Related Work}
+\glsresetall
+\include{./tex/relatedwork}
+
+\LIMPA
+\chapter{Distributed Controller}
+\glsresetall
+\include{./tex/heimdall}
+\LIMPA
+\chapter{Feasibility Study}
+\glsresetall
+\include{./tex/feasibility} 
+\LIMPA
+
+\chapter{Conclusions}
+\glsresetall
+% sumario de trabalho realizado
+% comentario critico
+% possibility of future work 
+
+\include{./tex/conclusion}
+\LIMPA
 
 % Inicio apendices
 \appendix
 
 \include{./tex/apendices}
+
+
+
 
 % Fim do conteudo
 % ----------------------------------------------------------------------
@@ -193,22 +234,22 @@ url=false, doi=false, eprint=false]{biblatex}
 % Para actualizar o glossario, e' preciso correr o script ./fazindice
 % e voltar a gerar o PDF
 %
-\include{./tex/acronimos}
-\renewcommand{\glossaryname}{Abreviaturas}
+%\include{./tex/acronimos}
+%\renewcommand{\glossaryname}{Glossary}
 %\setglossary{glodelim={\noexpand}}
 %\setglossary{glsnumformat=ignore}
 \printglossary
-\addcontentsline {toc} {chapter} {Abreviaturas}
+\addcontentsline {toc} {chapter} {Glossary}
 
 % Bibliografia
 
 % \LIMPA
 
- \printbibliography[title=References,heading=bibintoc]
+\printbibliography[title=References,heading=bibintoc]
 
 % Indice remissivo
 \LIMPA
-\printindex
-\addcontentsline {toc} {chapter} {\'{I}ndice}
+%\printindex
+%\addcontentsline {toc} {chapter} {Table Of Contents}
 
 \end{document}

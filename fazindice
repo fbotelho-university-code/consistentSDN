@@ -1,0 +1,1 @@
+makeindex PEI.glo -s PEI.ist -t PEI.glg -o PEI.gls

@@ -1,3 +1,7 @@
+*.graffle
+*.png 
+*.jpg
+*.pdf
 *.aux
 *.glo
 *.idx

@@ -26,3 +26,8 @@
 *.out
 *.synctex.gz
 .#*
+data
+PEI.fdb_latexmk
+tese.sublime-project
+tese.sublime-workspace
+feasibility.fdb_latexmk

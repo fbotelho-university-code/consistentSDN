@@ -7,7 +7,7 @@
 % - n.o 209 - 30 de Outubro de 2006)
 %
 \documentclass[12pt,openright,twoside]{report}
-
+\usepackage[show]{chato-notes}
 \usepackage[utf8]{inputenc}
 % Quem tiver problemas com os acentos, trocar utf8 por latin1
 
@@ -18,6 +18,14 @@
 \usepackage{mdwlist}
 \usepackage[nottoc]{tocbibind}
 \usepackage{csquotes}
+\usepackage[table,hyperref,x11names]{xcolor}
+\usepackage{array,booktabs}
+\usepackage{multirow}
+
+
+
+
+
 % Indice remissivo
 \usepackage{makeidx}
 \makeindex
@@ -39,7 +47,7 @@
 \usepackage{fancyhdr}
 \usepackage{lastpage}
 
-\usepackage[font={scriptsize}]{caption}
+\usepackage[font={small}]{caption}
 \usepackage{subcaption}
 \usepackage[sortcites=true, firstinits=true, isbn=false,
 url=false, doi=false, eprint=false]{biblatex}
@@ -72,6 +80,8 @@ url=false, doi=false, eprint=false]{biblatex}
 \newcommand{\distcontrollerspaper}{\cite{Tootoonchian:2010vy, Koponen:2010th,Yeganeh:2012jm}}
 %END 
 
+\newcommand{\tbl}[2]{\begin{tabular}{#1}#2\end{tabular}}
+\newcommand{\ml}[2]{#1 $\pm$ #2} 
 
 %
 % ALTERAR AQUI AS INFORMACOES RELATIVAS AO PROJECTO
@@ -199,7 +209,7 @@ url=false, doi=false, eprint=false]{biblatex}
 \LIMPA
 \chapter{Distributed Controller}
 \glsresetall
-\include{./tex/heimdall}
+\include{./tex/heimdall}fe
 \LIMPA
 \chapter{Feasibility Study}
 \glsresetall

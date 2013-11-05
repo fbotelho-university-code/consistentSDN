@@ -2,11 +2,52 @@
 \section{Shared Data Store Controller Architecture}
 \glsresetall
 \label{sec:heimdall:architecture}
-%Paper  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Heimdall} 
+The proposed distributed control architecture is based on a set of controllers acting as clients of the fault-tolerant replicated key-value data store, reading and updating the required state as the control application demands, maintaining thus only soft state locally.
+There are two main concerns around this design: (i) how to avoid the storage being a single point of failure and (ii) how to avoid making the storage a bottleneck for the system.
+In the previous section we showed that state-of-the-art state machine replication can be used to build a data store that solves both these concerns.
+
+Fig. \ref{fig:architecture} shows the architecture of our shared data store distributed controller.
+The architecture comprises a set of SDN controllers connected to the switches in the network.
+All decisions of the control plane applications running on the distributed controller are based on OpenFlow events triggered by the switches and the consistent network state the controllers share on the data store.
+The fact that we have a consistent data store makes the interaction between controllers as simple as reading and writing on the shared data store: there is no need for code that deals with conflict resolution or the complexities due to possible corner cases arising from weak consistency.
+
+By design, the SMR-based data store is replicated and fault-tolerant (as in all designs discussed in the previous section), being up and running as long as a majority of replicas is alive~\cite{Lam98}.
+In other words, $2f+1$ replicas are needed to tolerate $f$ simultaneous crashes.
+Thus, besides offering strong consistency, this architecture leads to a completely fault-tolerant control plane.
+Furthermore, in this design the controllers keep only soft state locally, which can be easily reconstructed after a crash.
+The switches tolerate controller crashes using the master-slave configuration introduced in OpenFlow 1.2\,\cite{ONF2011}, which allows each switch to report events to up to $f+1$ controllers (being $f$ an upper bound on the number of faults tolerated), with a single one being master for each particular switch.
+The master is constantly being monitored by the remaining $f$ controllers, which can takeover its role in case of a crash.
+
+Interestingly, our architecture could also be used in SDN deployments were a distributed controller is not necessary, to implement fault tolerance for centralized controllers.
+In this case the fault-tolerant data store can be used to store the pertinent controller state, making it extremely simple to recover from its crash.
+In this case, the applications deployed on the primary controller manage the network while a set of $f$ backup controllers keep monitoring this primary, just as in the distributed controller design.
+If the primary fails, one of the backups -- say, the one with the highest IP address -- takes the role of primary and uses the data store to continue controlling the network.
+
+Our distributed controller architecture covers the two most complex fault domains in an SDN, as introduced in~\cite{kim2012}.
+It has the potential to tolerate faults in the controller (if the controller itself or associated machinery fails) by having the state stored in the fault-tolerant data store.
+It can also deal with faults in the control plane (the connection controller-switch) by having each switch connected to several controllers (which is ongoing work).
+The third SDN fault domain --- the data plane --- is orthogonal to this work since it depends on the topology of the network and how control applications react to faults.
+This problem is being addressed in other recent efforts~\cite{kim2012,Reitblatt2013}.
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.6]{./pic/heimdall/multicontroller.pdf}
+%add desired spacing between images, e. g. ~, \quad, \qquad etc.
+%(or a blank line to force the subfigure onto a new line) 
+\caption[Heimdall Architecture]{The shared data store controller
+  architecture with each switch sending OpenFlow messages to two
+  controllers. The controllers coordinate their actions using a
+  logically centralized data store, implemented as a set of
+  synchronized replicas. }
+\label{fig:architecture} 
+\end{figure}
+
+\section{Floodlight} 
 \glsresetall
 \label{sec:heimdall:floodlight}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 \section{Data Store}
@@ -14,3 +55,152 @@
 \label{sec:heimdall:dataStore}
 %Features  design, etc., 
 
+FIXME : Alysson - será que posso justificar que a data store
+performance nao é importante quando comparada com o middleware? 
+
+\subsection{Smart}
+we had to change the library used of netty from netty-3.1.1.GA.jar to
+netty-3.2.6.Final.jar because it conflicted with floodlight. We are in
+the dark here. Do not known if this will cause problems... 
+
+\subsection{Design}
+
+\subsubsection{Map interface} 
+Actually motivated by the LearningSwitch application. The rest interface exposed the learning switch database (hash table ) directly. We implemented a class to Delegate the map interface methods to our KeyValueTable. We don't actually use it inside the applications we modified because we have some preference for static typing (which for arguably legitimate reasons does not appear in the Map interface). Nevertheless we could use it. putAll and containsValue are not implemented. No special reason just lazinesss.  
+
+LinkedHashMap should be used for maintaining consistent ordering
+across replicas. 
+
+\subsection{Cross References tables}
+\label{sec.datastore.cross.references}
+\subsection{Versions}
+It can be really painfull to use replace if equal based on byte
+representation. The serialization process may inocently output two
+different outputs for values that are equal (as specified by their
+equals method contract).  This can happen for something as simple as
+using differen List implementations or some more obscure reason (e.g.,
+when creating a deep copy object the method used to copy a list may
+cause some state such as the total size of an arraylist different from
+the original, if that value ends up affecting the output of the
+serialization process we end up with different values). 
+Example: Lists.newArrayList(existentList) from guava turned out to
+have a different byte representation from  simply creating a new array
+list and iterating over the existentList and insert one by one. We
+kind of lost 
+
+So all in all
+the usage of replace based on byte comparison is not
+advocated. Instead timestamps end up benefiting the user by being more
+space efficient in the message exchanged (with a possibly
+insignificant cost for carrying the timestamp value); and by being
+easier to work with. 
+
+
+TODO measure the cost of a timestamp? 
+\subsection{Cache}
+\subsubsection{Cache? What about Consistentcy}
+Fine grained control. 
+Monotolically increase. problems caused with clocks. Use aphry blog
+post to talk about this kind of problems. 
+
+\subsubsection{Implementation}
+So for the cache implementation we actually favored composition over
+composition over inheritance \ref{joshua98}  . The
+\texttt{CachedKeyValueTable} can be composed of any kind of
+\texttt{IKeyValueTable} and we use forwarding (i.e., the delegation
+pattern) to implement all methods. However, the cache layer implement
+on top of the key value table performs all the cache logic when
+retrieving and updating values. So we actually update the cache values
+when updating the data store. Given that we are building on top of the
+version interface this complicates things, since we would actually
+like need to know which is logical version the value will be
+associated in the data store. In some cases we can exploit the
+method sematics to achieve this. For example with \texttt{put} we get,
+as a return value, the previously present value. So, we can actually
+keep the newly inserted value in the cache together with its accurate
+version (previous version plus one)\footnote{This actually requires
+  the data store to expose and compromise its version update
+  algorithm. Changing it afterwards will off course, break the client
+  implementation. } As for other methods as \texttt{insert} where the
+return value only indicates the success of the operation, we can not
+actually know which version the newly inserted value will have in the
+data store. We are faced with two choices: to leave it out of the
+cache or keep it with no version associated to it.  
+
+We choose to keep it out of the cache. Otherwise we add more
+complexity to the client code which now must deal with one more outcome
+when retrieving data from a cached data store. In general we do not
+explicit compromise to anything in the current implemented
+interface. The client can not be sure of what will get inserted in the
+cache or not. This leave space open for future optimizations, or
+changes  without impacting the client code correctness. But overall
+the implementation on which this document is based actually updates
+the datastore value on the following methods. Every retrieval method
+such as get , getByReference, 
+updates or writes such as : put,  replace(key, knownVersion,newValue),
+putIfAbsent,    
+but those don't : replace (key, existentValue, newValue), remove,
+insert. 
+
+So although it may be argued that the Cache is a implementation detail
+that should not be explicit (visible ) at the interface level we
+actually disagree in our case. Since the cache provides functional
+behaviour: fine-graine control, explicit control over consistency
+level of the data obtained from the data store. So the client, for
+correctness or optimizations reasons should be able to control whether
+the values obtained from the data store must be obtained with strong
+consistency semantics or not. Furthermore this should it should be
+able to make this choice dynamically in each call.  So our API must be
+designed with all this considerations in mind. 
+
+Cache are a common source  source of memory leaks \cite{joshua98}  in java
+applications since it is easy to forget values kept in the cache long
+after they are not need anymore.  
+
+It is also relevant that cross referenced values (section
+\ref{sec.datastore.cross.references} ) can be obtained in cache. So we
+also a method \texttt{getValueByReference(key, ts)} to this end. 
+
+\texttt{getCached(key)}  returns a cached value or nothing. Definitely
+does not goes to the data store. 
+
+\texttt{get(key, delta} on the other hand obtaines the value from cache
+if the value is present and if the  difference between the current time and the time the value was
+added  is less or equal than the specified \texttt{delta}. Otherwise
+the data store is used. 
+
+What about null values? The cache does not allows null values to be
+set as well as all other data store utilities.  FIXME actually null
+would be cool to known that the values are not present in the data
+store. 
+
+It works on cross references as well (getValueByReference(K key , long
+ts) ). 
+
+
+With cache and cross references values you don't get read your writes
+consistency. That is because values are written through other tables
+interface. So we have no way of updating the cache . 
+
+\subsection{Columns}
+The basic idea is to minimize the size of messages by being able to
+selectiveley access the sub-parts of data store values. These
+sub-parts, the attributes of an object are usually a much smaller part
+than the whole, and in our experience with floodlight applications,
+there are a few required components  FIXME : lower, higher  (specify
+how much of the object space is used at maximum and minimum in the
+flow treatment)
+
+So, in such case it is obvious that we benefit from acessing only
+those componenents. We compose a prototype to analze the benefits
+that smaller messages will bring to the applications. 
+
+
+It becomes complicate when we deal with cross references
+tables. Because the key value store and colum based store are actually
+two separated entities. 
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "../PEI"
+%%% End: 

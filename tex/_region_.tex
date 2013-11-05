@@ -1,0 +1,812 @@
+\message{ !name(feasibility.tex)}
+\message{ !name(feasibility.tex) !offset(-2) }
+%!TEX root = ../PEI.tex
+\label{sec:feasibility:apps}
+\glsresetall
+
+We are considering applications in isolation. DeviceManager could have
+applications registered on device events (updates, deletion etc.,)
+that would cause more traffic to the data store. 
+ 
+
+
+Mininet  Hi-Fi \cite{Handigol:2012tg}\footnote{Version 2.0 (mininet-2.0.0-113012-amd64-ovf) available at \url{http://mininet.org}}. Unfortunely we had to hack the box configuration to avoid that hosts  triggered gratioutious data packets that would  trigger traffic to the controller when initializing the switch-controller connection. We changed the \texttt{net\.ipv6\.conf\.all\.disable\_ipv6,net\.ipv6\.conf\.default\.disable\_ipv6} fields in the file \texttt{/etc/sysctl\.conf} to true\footnote{This is a known problem https://mailman.stanford.edu/pipermail/mininet-discuss/2010-November/000167.html (contains solution)}. 
+
+We do not log creation, and deletion of tables. Those will not appear in the workloads. This is nor relevant since it usually happens upon a first switch connection or first host packet processed by an application  for that switch
+
+
+\section{Learning Switch}
+\label{sec:feasibility:ls}
+\glsresetall
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\todo{IT IS NOT IP. IT IS A MAC.}
+\todo{Learning switch is what Kandoo calls a local app}
+\begin{figure}[ht]
+
+  \begin{subfigure}[b]{0.5\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{pic/feasibility/ls-events-broadcast}
+                \caption{Broadcast packet.}
+                \label{fig:ls:interaction:broadcast}
+        \end{subfigure}%
+        ~
+        \begin{subfigure}[b]{0.5\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{pic/feasibility/ls-events-unicast}
+                \caption{Unicast packet.}
+                \label{fig:ls:interaction:unicast}
+        \end{subfigure}
+        \caption[Learning Switch workloads]{Broadcast packets trigger a write for the source address of the respective packet. Unicast packets have to additionally read the source address port location.}
+        \label{fig:ls:interaction}
+\end{figure}
+
+The Learning Switch application emulates the hardware layer 2 switch
+forwarding process. For each switch a different \emph{\texttt{MAC}-to-switch-port}
+table is maintained in the data store. Each table is populated using
+the source address information (i.e., \texttt{MAC} and port)  present in every OpenFlow
+\texttt{packet-in} request for the purpose of maintaining the location
+of devices. After learning this location, the controller can install
+rules in the switches to forward packets from a source to a
+destination. Until then, the controller must instruct the switch to
+\emph{flood} the packet to every port, with the exception of
+  the ingress port. Despite being distributed, each switch-table is
+  only accessed by the controller managing the switch in
+  question. Even so, we justify the study  of this application for two
+  reasons: (i) it benefits from the fault-tolerance property of
+  our distribution and (ii) it is commonly used as the
+  single-controller benchmark application in the literature \cite{Tootoonchian:2012uia}. 
+
+\todo{to be common you need more than 1 example}
+
+Figure \ref{fig:ls:interaction}  shows the detailed interaction between the
+switch, controller (Learning Switch) and data store for two possible
+cases. First (figure \ref{fig:ls:interaction:broadcast}), the case for broadcast packets that require
+one write operation to store the switch-port  of the
+source address. Second (figure \ref{fig:ls:interaction:unicast}),   the case for unicast
+packets, that not only stores source information, but also read the
+switch egress port for the destination address.  
+
+
+\note{Nao esta  claro que a tabela nesta app e single
+  reader, single writer. NInguem entendeu...}
+
+Original:  Map<IOFSwitch, Map<MacVlanPair,Short>> . Modified : Map<IOFSwitch, Map<MacVlanPair,Short> . Originally instanced with concurrent hashmaps for the main map and each table map. 
+CHANGE: We still maintain a concurrentMap for the main switch-to-KeyValueTable map. This is required since the manipulation of the map is done concurrenty by: each switch thread and  by the REST API.
+There isn't any problem since KeyValueTable is  thread safe \ref{section.datastore.thread.safety}
+
+Original: It is critical that the size of each switch table is limited 
+due to resource usage.  Mac addresses have to be recycled as devices enter and leave the network. Or simple as traffic dynamics change. Either way in some networks we can't possibly support all the hosts \ref{sec.learning.switch.study.size} for table. Remember each table can contain all hosts in the network! Traditionally the LearningSwitch uses a LRULinkedHashMap (Least Recently Used Linked Hash Map). This imposes a limit on the number of entries present in the table. The behaviour of this LRULInkedHashMap is to remove the oldest entry in the table whenever the threshold is reached.  The default threshold (used in all our experiences unless we state otherwise) is of 1000 hosts per table. (Remember that each table can potentially keep an entry for each host in the all network! ). 
+Change:  We replicate this kind of table in the data store. Which was fairly simple. Off course the behaviour changes in the case we use a cache. As discussed in section \ref{sec.learning.switch.lru.cache}
+
+The controller only replies to one switch.  This causes the problem set by \cite{of.cpp} of mac broadcasting REVISE EXAMPLE.  The path is set switch by switch. 
+
+The application is configured with a idle timeout of 5 and a hard timeout of 0 seconds. As such the switch deletes the entry after 5 seconds of inactivity. This will result in a delete from the switch table that will trigger an OpenFlow \texttt{FLOW\_REMOVED } message from the switch to the controller. The Learning switch applications will process this OF message and delete the corresponding entry in the data store. Then, (immediately after) it will instruct the switch the remove the reverse entry from its table. The switch upon processing this message will trigger another \texttt{FLOW\_REMOVED} message to the controller.  This recursive process is not infinitive. The switch will only trigger \texttt{FLOW\_REMOVED} messages when it deletes an entry from the table. If the controller instructs it to remove something that isn't there, we will not trigger any message (sec. 6.4 of \cite{openflow-spec}). 
+
+
+\subsection{Broadcast Packet}
+This workload corresponds to the operations performed in the data
+store when processing broadcast packets in a OpenFlow
+\texttt{packet-in} request.  Table \ref{table:lsw0:broadcast} shows that for the
+purpose of associating the source address of the packet to the ingress
+switch-port where it was received, the Learning Switch application performs one
+write operation with a request size of 113 bytes and reply size of 1
+byte. 
+
+\begin{table}[ht]
+\centering 
+\begin{tabular}{l c c c c}
+ Operation & Type & Request & Reply \\ \toprule 
+ Associate source address to ingress port & W & 113 & 1 \\ \bottomrule
+\end{tabular}
+\caption[Workload lsw-0-broadcast( Broadcast Packet) operations]{Workload lsw-0-broadcast( Broadcast Packet) operations and sizes (in bytes).}
+\label{table:lsw0:broadcast}
+\end{table}
+
+\subsection{Unicast Packet}
+Workload \textbf{lsw1-1} is the result of processing an OpenFlow request
+triggered by an unicast packet. Thus,  when compared to the previous
+workload (\textbf{lsw1-0} covering broadcast packets), an additional
+operation is required to query the switch-port location of the
+destination address. Table \ref{table:lsw0:unicast} provides a summary all the data
+store operations in this workload. 
+
+\begin{table}[ht]
+\centering 
+\begin{tabular}{l c c c c}
+ Operation & Type & Request & Reply  \\ \toprule 
+ Associate source address to ingress port & W & 113 & 1\\\midrule
+Read egress port for destination address & R & 36 & 77 \\\bottomrule
+\end{tabular}
+\caption[Workload lsw-0-unicast( Unicast Packet) operations]{Workload lsw-0-unicast( Unicast Packet) operations and sizes (in bytes).}
+\label{table:lsw0:unicast}
+\end{table}
+
+\subsection{Optimizations}
+Our serialization process between ewsdn and now has changed. In ewsdn we used longer tablenames and java serialization. Aftewards we changed our codes so that each tablename is the concatenation of ``LS''  and the switch identifier (which can be as long as FIXME characters.  Also we have manually convert the information stored in the data store. Notice for example that between the examples the read egress port operation, the return value (a switch port idenfifiers) varies is 12 times greater in the java serialization process. 
+
+
+\begin{table}[ht]
+\centering 
+\begin{tabular}{l c c c c}
+ Operation & Type & Request & Reply \\ \toprule 
+Associate source address to ingress port & W & 29 & 1\\\midrule
+Read egress port for destination address & R & 27 & 6 \\\bottomrule
+\end{tabular}
+\caption[Workload lsw-1-unicast( Unicast Packet) operations]{Workload lsw-1-unicast( Unicast Packet) operations and sizes (in bytes).}
+\label{table:lsw1:unicast}
+\end{table}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=0.5]{../data/reportGenerator/lsw-0-broadcastlsw-0-unicastlsw-1-broadcastlsw-1-unicasttxLatCmp.pdf}
+\caption[Learning Switch workloads performance comparison]{Learning Switch workloads performance comparison (90th percentile). }
+\end{figure}
+\subsection{Cache}
+
+\label{sec.learning.switch.lru.cache} Discuss cache implications of
+least recently used. 
+
+We only get values from cache if they exist despite the time they are
+present there. This happens since Learning Switch installs rules with
+a idle timeout. So when rules expire, the switch warns the Learning
+Switch application which in turn deletes the entries in the data
+store. So we don't actually require to be worried about stale values
+in the cache being invalid (e.g., a host moved from one port to
+another). If they are, the idle mechanism associated with rules
+installed in the data plane will, eventually, correct the situation.
+Off course we are not strongly consistent anymore. 
+
+We don't actually improve on the micro-benchmarks tested measures
+shown throughout this chapters. We do not improve simply because with
+cache we do not avoid or improve any of the data store interactions
+present in table \ref{table:work:lsw1-1} (that shows the latest
+learning switch workload).  With cache we will only improve on the
+long run, since we can now avoid the two type of requests present in
+that table. First we can avoid re-writing the source address to source
+port association when we already now it. In the original learning
+switch association this is re-write is not costly ($\Omega(1)$ ) and also
+has the functional impact of refreshing the entry timestamp such that
+the least recently used table can keep up consistently with the last
+active hosts and delete the not active ones. In the cache
+implementation this is not true anymore. Now, the active hosts
+actually get forgotten somewhere in time as newly (unknown) entries
+are added to the data store. This is not problematic since the host,
+being active, will benefit from latency a lot before actually being
+erased from the  the data store due to the newly added hosts. This off
+course is explicitly dependant of the maximum number of entries per
+table. 
+\footnote{\url{http://docs.oracle.com/javase/6/docs/api/java/util/LinkedHashMap.html}}
+
+(Note that insertion order is not affected if a key is re-inserted
+into the map. (A key k is reinserted into a map m if m.put(k, v) is
+invoked when m.containsKey(k) would return true immediately prior to
+the invocation.)).  So NOTHING I SAID WAS TRUE! :) BUT IT APPLIES TO
+GETS : In access-ordered linked hash maps, merely querying the map
+with get is a structural modification.)
+FIXME : YOU MUST ACTUALLY CONFIRM ALL THIS. AND ADD SUPPORT IN THE
+IMPLEMENTATION OF THE LEARNING SWITCH. 
+
+When avoiding this write
+in the cache implementation we must actually be sure that we only
+avoid to write to the data store when the association is known in
+cache and it is actually correct (the ingress port is the same from
+the packet being processed). 
+
+The second avoidance is the read operation that queries for the egress
+port of the current processed packet. We do not actually need to read
+from the data store it the entry is present in the cache. First the
+data is not been modified by any other controller since we are the only
+ones which manipulate our switch tables. 
+
+
+With cache we no longer read from the database. We do not need since
+put updates the cache. So if it isn't on the cache it is not in the
+data store.
+
+
+
+% \begin{figure}
+% \centering
+% \includegraphics[width=\textwidth]{pic/feasibility/ls-events-unicast}
+% \caption[]{\textbf{}}
+% \end{figure}
+
+\label{cenas}
+
+% \begin{figure}
+% \centering
+% \includegraphics[width=\textwidth]{pic/feasibility/ls-events-broadcast}
+% \caption[]{\textbf{}}
+% \end{figure}
+
+\section{Load Balancer}
+\label{sec:feasibility:lb}
+\glsresetall
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The Load Balancer application employs a round-robin algorithm to distribute the
+requests addressed to a \gls{vip} . In order to
+understand its behaviour we begin by the data model currently used. Figure
+\ref{fig:lb-model} shows the three different entities used in the Load
+Balancer. The  VIP entity .
+representss   a virtual endpoint with a specified \gls{ip}, port and
+protocol address. Each VIP can be associated with one or more pools
+of 
+servers. Given that the distribution algorithm is round-robin, each pool
+has a current assigned server (\texttt{current-member} attribute in the figure). Finally, the third entity --- Member
+--- represents a real server. Each of those entities, corresponds
+to a different tablee  in the data store, indexed by the entity
+key attributes represented in the figure (in bold). Moreover, a fourth table is
+required to associate \gls{i} addresses to VIP resources. In light of
+this data model, the load balancer logic requires the following
+operations from the data store: (i) check if the source address is
+associated with a VIP resource; (ii) if so, read the VIP, Pool and
+Member information required to install flows in the switch and (iii)
+update the pool \texttt{current-member} attribute. This description corresponds to the case where OpenFlow
+\texttt{packet-in} requests are indeed addressed at a VIP
+resource. The respective workload which, \textbf{markedly - replace,
+  aly says is wrong TODO} is the heavier in
+the Load Balancer application, is described in detail in the workload
+\textbf{lbw1-0} section ahead. Alternatively, workload
+\textbf{lbw1-1} captures the workload created by every
+packet unrelated to a VIP. Finally, workload \textbf{lbw1-2}
+considers the special case of ARP requests questioning the hardware
+address of a VIP \texttt{IP}.
+
+\begin{figure}[H]
+\centering 
+\includegraphics[scale=0.6]{./pic/feasibility/lb-model.pdf}
+\caption{\small Simplified Load Balancer entities data model. The data
+store contains a table for each entity, indexed by their keys (represent as bold attributes). }
+\label{fig:lb-model}
+\end{figure}
+
+We can see the model. FIXME (take from final.tex) 
+Initially we also found different index tables:  (FIXME How should i
+present this kind of stuff? show the model, and then show a table in
+the same figure if possible. The table should show the indexes listed
+with names, types and simple explanation.) 
+\texttt{vipIpToId} to map Ip (integer) into VIPID (string) 
+\texttt{vipIpToMac} to map Mac (MacAddress) into VIPID (string) 
+\texttt{memberIpToId} to map Ip (integer) into Member ID. 
+\texttt{clientToMember} to map IPClient into Member  Remember
+connected clients. 
+
+
+
+
+\begin{figure}
+  \centering
+  \begin{subfigure}[b]{0.5\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{pic/feasibility/lb-events-broadcast}
+                \caption{ARP packet address at a VIP.}
+                \label{fig:lb:interaction:arp2Vip}
+        \end{subfigure}%
+        ~
+        \begin{subfigure}[b]{0.5\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{pic/feasibility/lb-events-unicast}
+                \caption{}
+                \label{fig:lb:interaction:ip2Vip}
+        \end{subfigure}
+        \caption[Load Balancer workload events]{A \texttt{\gls{arp}} request message addressed at a VIP \gls{ip} that results in a direct \gls{arp} reply. On the left a normal \gls{ip} packet addressed at VIP should be resolved (who is responsible) and replied by installing the appropriate rules}  
+        \label{fig:lb:interaction}
+\end{figure}
+
+\subsection{Packets to a VIP}
+When the Load Balancer  receives a data packet addressed
+at a VIP, it triggers the operations seen in table
+\ref{table:workload:lbw1-0}. 
+The first operation fetches a VIP resource associated with the
+destination \texttt{IP} address of the packet.
+If it succeeds (reply different from 0), then it proceeds to read 
+the chosen pool for the returned  VIP\footnote{The current implementation of this
+application always chooses the first existent pool.}.
+Afterwards it updates (third operation) the fetched  pool, along with the newly modified
+\texttt{current-member}.
+The forth and final operation retrieves
+the address information for the selected  Member. 
+
+\note{ discutir a questão de update concorrente (segunda e  terceira operacao )}
+
+
+\begin{table}[H]
+\centering 
+\begin{tabular}{l c c c c}
+ Operation & Type & Request & Reply \\ \toprule 
+ 
+Get VIP id for the destination IP & R & 104 & 8\\\midrule
+Get VIP Info (pool information) & R & 29 & 509\\\midrule
+Get the choosen pool & R & 30 & 369\\\midrule
+Conditional replace pool after round-robin & W & 772 & 1\\\midrule
+Read the chosen Member & R & 32 & 221 \\\bottomrule
+\end{tabular}\caption[Workload lbw-0-ip-to-vip( IP packet to a VIP)
+operations]{Workload lbw-0-ip-to-vip( IP packet to a VIP) operations
+  and sizes (in bytes).}\end{table}
+
+\subsection{Normal Packets}
+Even when processing a normal packet, not related to a VIP address at
+all, the Load Balancer still has to find out if this is the case. This workload, which only requires one operation (see
+table \ref{table:workload:lbw1-1}) sets the minimum amount of work imposed by
+the Load Balancer to the controller pipeline. 
+
+\subsection{ARP Request}
+This workload  results  from processing an ARP Request addressed at a
+VIP address. The data store operations, summarized in Table
+\ref{table:workload:lbw1-2}, shows that two reads are
+required. First, as previously seen,  it queries the data
+store to check if the packet destination address is a VIP (1 read
+needed). As it is, the controller then retrieves the \texttt{MAC} address for that
+VIP server (so, another read is needed).
+
+\begin{table}[ht]
+\small
+\centering 
+\begin{tabular}{l c c c c}
+Operation & Type & Request & Reply \\ \toprule 
+Get VIP id for the destination IP  & R & 104 & 8\\\midrule
+Get VIP info (proxy MAC address) & R & 29 & 509 \\\bottomrule
+\end{tabular}\caption[Workload lbw-0-arp-request( Arp Request to a
+VIP) operations]{Workload lbw-0-arp-request( Arp Request to a VIP)
+ operations and sizes (in bytes).}
+\end{table}
+
+
+
+\subsection{Optimizations}
+
+\begin{table}[H]
+\small
+\begin{tabular}{llccccc}
+ Operation & Type &  \multicolumn{5}{c}{ (Request, Reply) } \\  \midrule
+&  & lbw-0 & lbw-1  & lbw-2 & lbw-3 & lbw-4 \\ \toprule 
+%& &   \multicolumn{5}{c}{(Request, Reply)} \\midrule 
+Get VIP id of destination IP  & R & (104,8) &\multirow{2}{*}{(104,509)} &  \multirow{2}{*}{(104,513)} &\multirow{2}{*}{\textbf{(62,324)}} & \multirow{2}{*}{-}    \\\cmidrule{1-2} 
+Get VIP info (pool)   & R &  (29,509) & & & &   \\ \midrule 
+Get the choosen pool  & R & (30,369)  &  - & (30,373) & -   & \multirow{3}{*}[-2mm]{\textbf{(11,4)}}  \\  \cmidrule{1-2} 
+Replace pool after round-robin  & W & (772,1) & -
+&\textbf{(403, 1)} &  - \\ \cmidrule{1-2}  
+  Read the chosen Member &  R & (32,221) & - & (32,225) & \textbf{(44,4)} & \\\bottomrule  
+\end{tabular}\caption[Load Balancer IP to VIP workload operations across
+diferent implementations.]{Load Balancer  lbw-\textit{X}-ip-to-vip workload
+  operations and respective sizes (in bytes) across diferent
+  implementations. Bolded sizes represent significant differences
+  across implementations. Sizes marked with \texttt{-} are equal to
+  the previous. } 
+\end{table}
+
+
+\begin{figure}[ht]
+
+
+\begin{floatrow}
+\ffigbox{%
+  \includegraphics[scale=0.4]{../data/reportGenerator/lbw-0-ip-to-viplbw-1-ip-to-viplbw-2-ip-to-viplbw-3-ip-to-viplbw-4-ip-to-viptxLatCmp.pdf}
+}{\caption{Cenas}%
+}
+
+
+\capbtabbox{%
+\small
+  \begin{tabular}{lll} 
+    Prefix &  Data store & Section\\\toprule
+    lbw-0 & Simple Key-Value  & \ref{sec:}  \\
+    lbw-1 & Cross References  & \ref{sec:} \\
+    lbw-2 & Versioned Values & \ref{sec:} \\
+    lbw-3 & Column Store & \ref{sec:} \\
+    lbw-4 & Micro Components & \ref{sec:} \\ \bottomrule
+    & &  \\ 
+    & &  \\ 
+    & &  \\ 
+    & &  \\ 
+    & &  \\ 
+  \end{tabular}
+}{%
+  \caption[Name guide to Load Balancer workloads]{Name guide to Load
+    Balancer workloads.}\
+}
+\end{floatrow}
+\end{figure}
+
+
+
+In the ARP request case  we improve by using cross references tables
+to join the two requests into one (lbw-1-arp-request). With the column
+based implementation we improve slighty by reducing the size of the
+requests as see 
+
+\textbf{Cross References Tables}, So both arp request and the packet address at a VIp workloads show
+requests that first obtain the VIP id and only aftewards read the VIP
+from the VIP table using the obtained id. So we can improve our
+workload footprint by directly obtaining the VIP with only the first
+request. 
+
+We can use our cross reference tables mechanism to do that. sec
+\ref{sec.datastore.cross.references}. 
+
+\textbf{Versioned Values} With versioned values we can easily  cut the operation which updates
+the pool after round robin size in half.  Off course every other get
+operation will have an additional 4 bytes on reads. This is negligible  specially in the case of the Load Balancer
+since 
+
+
+\textbf{Columns} 
+So with columns lots of changes had to be made.
+All value classes (Member, VIP , Pool ) were accessed directly by
+their fields.  We \emph{choose} to change that such that are fields
+are private and manipulated by getters and setters. 
+
+So we choose to have the Members and VIPS accessed by columns. 
+For VIPS we don't actually gain much from this transformation (513 /
+324 size reduction)   compared with Members (225 / 4 reduction in
+size) . The reason for this is that we actually have to retrieve a lot
+of information from the VIP. Since we are caching VIPS and we must
+access it in two different types of flow processing (broadcast packet
+address to a VIP and packet address to a  VIP) we should on each VIP
+request  pull the union of the information required for the two
+operations. The reason being is simple. The flow are not
+independent. When processing the first we can be sure that unless some
+anomaly happens the hosts performing the arp request will consequently
+trigger the second flow processing. So we benefit from having the
+information in cache to avoid having to perform another request just
+because a field is missing. 
+
+Also Members we only require a 4 byte request. 
+
+
+\textbf{Micro Components} When analyzing the last workload available. We notice two things: we
+can't avoid going to the data store for pull and update the round
+roubin algorithm. The reason being is twofold: first we should be
+sure that the round-robin algorithm is consistent, second even if we
+cache the thing then we are in trouble since the update will fail with
+the timestamps in order. Off course we use some kind of CRDT value in
+the data store which in this case would be pretty simple but then we
+would be advocating the extra complexity of the eventual consistency
+plane.  So we want to make sure that we got our round robin accurate
+but we want to improve on the performance of this workload in
+general.  Well, the ideal solution for this would be to use cache for
+the VIP as we already have. This a lot of the data store interaction
+can be alliviated: we do not have to always consult the data store on
+each request since we can cache which address are VIP's and which are
+not.  But when an address is a VIP we must consult the data store in
+order to round-robin. Ideally we would like to perform all operations
+at once in the data store : retrieve the choosen member and update the
+pool.  For this we make use of micro-componenets by installing a
+prototype method in the data store that does all this for us. 
+
+
+
+\subsubsection{Cache}
+So we can actually improve on reading the members and vips.  We do not
+improve on reading the pools because given the replace operation this
+could potentially cause even more operations due to lack of the
+consistent pool information. So we transform the application to use
+cache on the VIPS and Members  table. On the theoretical best case scenario this
+can lower the workload by completely avoiding the first and last
+operation. Ideally we should also avoid the normal case of IP packets
+not addressed at a VIP. For this our cache  must understand what a
+empty value means FIXME. (use containsInCache . update to insert empty
+in cache. Then see if containsInCache AND get == null you can be
+certain the value is not a VIP), completely avoiding the going to the
+data store. 
+
+FIXME: how to measure, justify the time used in the cache parameter? 
+
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=0.5]{./../data/reportGenerator//lbw-3-ip-to-notviptxLat.pdf}
+\caption[Minimum impact of Load Balancer in the pipeline.]{Workload
+  lbw-3-ip-to-notvip shows the minimal impact the Load Balancer
+  applications has on the pipeline in our best implementation.}
+\end{figure}
+
+
+\section{Device Manager}
+\label{sec:feasibility:dm}
+\glsresetall
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The Device Manager application tracks  and stores host device
+information such as the switch-ports to where devices are
+attached to\footnote{The original application is able to track devices as
+  they move around a network, however our current implementation does
+  not take this feature into consideration.}. This information ---
+that is retrieved from the OpenFlow packets that the controller receives --- is crucial to
+Floodlight’s Forwarding application. That is to say, that for  each new flow, the Device
+Manager has the job of finding a switch-port for both the destination
+and source address. Given this information, it is able to pass it to
+the Forwarding application, that can later decide on the actions to
+take (e.g., best route). Notice that this arrangement, excludes the
+Learning Switch as the  forwarding application in action. 
+
+Regarding the data store usage, Device Manager requires three
+tables. The first table, keeps track 
+of known devices created by the
+application. A second table indexes those same devices by their
+\texttt{(MAC,VLAN)} pair.  Finally, a third table maintains an index
+from an \texttt{IP} address to one or more devices. Notice
+that devices are uniquely identified by their \texttt{id} or \texttt{(MAC,VLAN)} pair, but not their \texttt{IP}\footnote{\textbf{This is true in the context of
+  the application. But it does not makes any sense. The only plausible
+explanation i see, is that this related with the mobility
+tracking capabilities of the original device manager. When considering
+mobile hosts, different devices will surely appear with the same
+IP.} }.  
+
+We consider two distinct workloads for this application differing in
+wether the application already knows the source device information (workload \textbf{dmw1-0})
+or not (workload \textbf{dmw1-1}). In the former case, the
+application mainly reads information from the data store in order to
+obtain location information. As for the latter case, the
+application must create the device information and updates all the
+existent tables. Therefore, this workload generates more traffic between
+the controller and data store. 
+
+
+
+
+A lot of changes had to be made. First to the Device class which is
+more than a simple value class and hardly Serializable due to its
+static references... 
+We lost the Device new DeviceDebugEventLogger() which logged events in
+the control plane. 
+Avoiding broadcast address querys in the data store. Before they were
+free (nearly) not now. 
+
+\begin{figure}
+  \centering
+  \begin{subfigure}[b]{0.5\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{pic/feasibility/dm-unknown}
+                \caption{Packet from an unknown device.}
+                \label{fig:dm:interaction:unknown}
+        \end{subfigure}%
+        ~
+        \begin{subfigure}[b]{0.5\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{pic/feasibility/ls-events-unicast}
+                \caption{Packet from a known device.}
+                \label{fig:dm:interaction:known}
+        \end{subfigure}
+        \caption[Device Manager workload events]{Workloads for this application heavily depend on the state of the data store. Unknown devices trigger several operations to the creation of these, while known devices only require an update of their "last seen" timestamp. No matter the case, the source and destination devices are retrieved if they exist.}
+        \label{fig:dm:interaction}
+\end{figure}
+
+
+\subsection{Known Devices}
+\begin{table}[H]
+\centering 
+\begin{tabular}{l c c c c}
+Operation & Type & Request & Reply \\ \toprule 
+
+Read the source device key & R & 408 & 8\\\midrule
+Read the source device & R & 26 & 1444\\\midrule
+Update "last seen" timestamp & W & 2942 & 0\\\midrule
+Read the destination device key & R & 408 & 8\\\midrule
+Read the destination device & R & 26 & 1369 \\\bottomrule
+\end{tabular}
+\caption[Workload dm-0-known( Known Devices) operations]{Workload dm-0-known( Known Devices) operations and sizes (in bytes).}
+\end{table}
+When devices are known to the application, a \texttt{packet-in} request
+triggers the operations seen in table \ref{table:workload:dmw1-1}. The
+first and final operation  read source and destination device
+information in order to make their switch-ports available to the
+Forwarding process. Additionally, the second operation
+(a write), updates the ``last seen'' timestamp of the source
+device.  The thorough reader will notice that the request size of this
+operation significantly exceeds the size of  a timestamp. This is
+taken in consideration when we optimize this application (see
+section TODO). Right now it suffices to say that the lack of a more
+sophisticated data model  and appropriate concurrency control in the
+data store interface leads to excessive information exchange. 
+
+\subsection{Unknown Source}
+\begin{table}[H]
+\centering 
+\begin{tabular}{l c c c c}
+
+ Operation & Type & Request & Reply \\ \toprule 
+
+ Read the source device key & R & 408 & 0\\\midrule
+Get and increment the device id counter & W & 21 & 4\\\midrule
+Put new device in device table & W & 1395 & 1\\\midrule
+Put new device in \texttt{(MAC,VLAN)} table & W & 416 & 0\\\midrule
+Get devices with source IP & R & 386 & 0\\\midrule
+Update devices with source IP & W & 517 & 0\\\midrule
+Read the destination device key & R & 408 & 8\\\midrule
+Read the destination device & R & 26 & 1378 \\\bottomrule
+\end{tabular}
+\caption[Workload dm-0-unknown( ARP from Unknown Source)
+operations]{Workload dm-0-unknown( ARP from Unknown Source) operations
+  and sizes (in bytes).}
+\end{table}
+
+
+This workload is triggered in the specific case in which  the source device
+is unknown and the OpenFlow message carries an ARP request
+packet. Seing that both these  conditions are true, the application
+proceeds  with 7 data store operations, described in table
+\ref{table:workloads:dmw1-1}. Their intention is to  create device
+information and update the three tables described  in the beginning
+of this section.  The first operation reads the  source device. Being
+that it  is not known, this operation fails (notice in the table, that
+the reply has a size  of zero bytes). As a result the application
+proceeds with the creation of a device. For this, the
+following write (second operation) atomically retrieves
+ and increments a device
+unique \texttt{id} counter. Afterwards, the third and fourth  operation
+update, with the newly created device, the device and MAC/VLAN
+tables respectively. Likewise, the fifth and sixth operations update
+the \texttt{IP} index table. Given that this index links an \texttt{IP} to
+several devices we are forced to first collect the set of devices in
+order to update it\footnote{Again, this can be alleviated with a more
+  expressive data model.}. This \emph{read-modify} operation can
+fail in case of concurrent updates. Under that case, both operations
+would be repeated until they succeed. At this point, the Device Manager
+is done with the creation of the device and can, finally, move to the
+last operation which reads the destination device information. 
+
+\subsection{Optimizations}
+\begin{figure}
+  \centering
+  \begin{subfigure}[b]{0.5\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{../data/reportGenerator/dm-0-unknowndm-1-unknowndm-2-unknowndm-3-unknowndm-4-unknowntxLatCmp.pdf}
+                \caption{}
+                \label{}
+        \end{subfigure}%
+        ~
+        \begin{subfigure}[b]{0.5\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{../data/reportGenerator/dm-0-knowndm-1-knowndm-2-knowndm-3-knowndm-4-knowntxLatCmp.pdf}
+                \caption{}
+                \label{}
+        \end{subfigure}
+        \caption[Device Manager performance analysis]{}
+        \label{fig:dm:performance}
+\end{figure}
+
+
+\begin{table}
+\small
+\begin{tabular}{lll} 
+    Prefix &  Data store & Section\\\toprule
+    dm-0 & Simple Key-Value  & \ref{sec:}  \\
+    dm-1 & Cross References  & \ref{sec:} \\
+    dm-2 & Versioned Values & \ref{sec:} \\
+    dm-3 & Column Store & \ref{sec:} \\
+    dm-4 & Micro Components & \ref{sec:} \\ \bottomrule
+  \end{tabular}
+  \caption[Name guide to Device Manager workloads]{Name guide to
+    Device Manager workloads.}
+  \label{table:names:dm}
+\end{table}
+
+
+
+\begin{table}[H]
+\small
+\centering
+\begin{threeparttable}
+\begin{tabular}{ll ccccc}
+ Operation & Type &  \multicolumn{5}{c}{ (Request, Reply) } \\  \midrule
+&  & lbw-0 & lbw-1  & lbw-2 & lbw-3 & lbw-4 \\ \toprule 
+Get source key & R &(408, 8) & \multirow{2}{*}{(408,1274)} &
+\multirow{2}{*}{(408,1278)} & \multirow{2}{*}{(486,1261)} &
+\multirow{2}{*}{(28,1414)} \tnote{a} \\ \cmidrule{1-2}
+Get source device & R & (26,1444) & & & & \\ \midrule
+Update timestamp & W & (2942,0) & (2602,0) & (1316,1) & (667,1) & 
+(36,0) \\ \cmidrule{1-2}
+Get destination key & R & (408,8) & \multirow{2}{*}[-1mm]{(408,1199)} &
+\multirow{2}{*}[-1mm]{(408,1203)} & \multirow{2}{*}[-1mm]{(416,474)} &
+\multirow{2}{*}[-1mm]{N/A} \\ \cmidrule{1-2}
+Get destination device & R & (26,1369) &  &
+ & & \\\bottomrule
+\end{tabular}
+\caption[Workload dm-0-known( Known Devices) operations]{Workload
+  dm-0-known( Known Devices) operations and sizes (in bytes).}
+\begin{tablenotes}
+\item [a)] This operation also fetches the destination device.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+%TODO - do not use put new device in MAC,VLAN table. This is
+%confusing. 
+
+\begin{table}[ht]
+\small
+\centering 
+\begin{threeparttable}
+\begin{tabular}{ll ccccc}
+ Operation & Type &  \multicolumn{5}{c}{ (Request, Reply) } \\  \midrule
+&  & lbw-0 & lbw-1  & lbw-2 & lbw-3 & lbw-4 \\ \toprule 
+Read source key & R & (408,0) & - & - & (486,0) & (28,201)\tnote{a}\\
+Increment counter & W & (21,4) & -  & - & - & \multirow{5}{*}{(476,8)} \\
+Update device table & W & (1395,1) & (1225,1)\tnote{b}  & - &
+(1183,1) & \\
+Update MAC  table & W & (416,0) & - & - & -
+& \\
+Get from IP index & R & (386,0) & - & - & - & \\
+Update IP index  & W & (517,0) & - & - & - & \\
+Get destination key & R & (408,8) &
+\multirow{2}{*}{(408,1208)}\tnote{b} & \multirow{2}{*}{(408,1212)} &
+\multirow{2}{*}{(416,474)} & \multirow{2}{*}{N/A}  \\ 
+Get destination device & R & (26,1378)  &  & & \\\bottomrule
+\end{tabular}
+\caption[Workload dm-0-unknown( ARP from Unknown Source)
+operations]{Workload dm-0-unknown( ARP from Unknown Source) operations
+  and sizes (in bytes).}
+\begin{tablenotes}
+\item [a)] This operation also fetches the destination device.
+\item [b)] Differences in sizes caused by a SERIALIZATION improvement 
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+%the question that may arise: why not simply put everything inside the
+%data store then? Well, in the case of the device manager, there are
+%actually a few subitilidades hidden in our explanation. First there
+%is a dependency of others services. topology manager. 
+
+
+
+\subsubsection{Cross References tables}
+So in practice we have to get the device key from the mac/vlan table and only then we can actually get the device information we want. This is redudant, and we can actually perform the all operation instantenously  by using cross references tables.   This reduces the
+number of messages. In this workload we also tuned the device n
+serialization process to lower the devices message size.  We simple
+remove the reference to the entityClassifier since classifiers are
+known to the local controller and we actually only need the
+entityClassifier name. Its instance/class can then be obtained. 
+
+
+
+
+\subsubsection{Timestamps}
+\subsubsection{Cache}
+With cache we fetch known devices in an optimistic concurrency
+manner.  If there is no such device in cache, we then try to obtain it
+from the data store, as it might be created from other
+controller. (Really? - yes same device with different routes that go
+through different openflow controllers)
+
+What we try to do is to fetch device from the cache. At some point in
+time in a  normal network, we hope that all device information is
+known. After that point devices in cache should pass the timestamp
+update at first (if they are not updated by concurrent
+controllers). If the devices are connected to different openflow
+island simultaneously than this is a bad idea since we will actually
+have to perform one more request that the normal workload
+pattern. (try to updated - fails, retrieve new , update) . Off course
+this could be mitigated by having the update attempt to return the
+currently present value timestamp.. 
+
+
+\subsubsection{Columns}
+Biggests changes. Joshua Blosch advice. To be fair, we have also
+broken this rule every now and then. 
+
+Other applications can add and manipulate what kind of columns they
+want for the devices. For example in our scenario only the attachment
+points of the destination device are needed. But other applications
+could require the complete list of MAc addresses known for that
+device...  They could easily do that by manipulate the DeviceManager
+interface to add this requirement to the list of fetched information
+from the Device. 
+
+\subsubsection{Micro Components}
+Just a proof of concept. Establish special methods in the data store. 
+Three : 
+createDevice <-
+updateDeviceTimestamp <- 
+getTwoDevices <- could be done with transactions.  Gets the source
+device entirely. Also gets the attachments points of the destination
+device since these are required to forwarding. 
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "../PEI"
+%%% End: 
+
+\message{ !name(feasibility.tex) !offset(-812) }

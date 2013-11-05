@@ -30,10 +30,11 @@ We plan to make heavy use of optimization techniques such as batching, caching a
 As the number of SDN production networks increase the need for dependability becomes essential. The key takeover of this work is that dependability mechanisms have their cost, and it is therefore an interesting challenge for the SDN community to integrate these mechanisms into scalable control platforms. But, as argued in this paper, this is a challenge we, as a community, can surely meet.\\
 
 
-
 \subsection{Limitations}
 \begin{itemize}
 \item Read entire tables, a common behaviour observed has not practical solution.  This will off course result in a giant overhead to the data store. Naturally this can be solved by introducing stale data with a cache, which may not be harmfull if the applications are not in a critical path to the network control goals (e.g., systems who display information). However we have seen this kind of code in Floodlight applications. In fact, there was one application that was left out of this work in a early stage, since after we adapt it to our data store and analyzed its behaviour we found that on each topological change to the network, it required reading all the data store state to behave 
+\item It is important to clarify from the outset that the feasibility study analysis is arguably simplistic since it is focused in on data plane plane events in isolation . Considered in isolation,
+other applications behaviour can impact on the workloads  by communicating with the application API.
 \end{itemize}
 
 \subsection{Future Work}

@@ -7,7 +7,102 @@
 \end{center}
 \vspace*{1cm} \setlength{\baselineskip}{0.6cm}
 
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Typi non habent claritatem insitam; est usus legentis in iis qui facit eorum claritatem. Investigationes demonstraverunt lectores legere me lius quod ii legunt saepius. Claritas est etiam processus dynamicus, qui sequitur mutationem consuetudium lectorum. Mirum est notare quam littera gothica, quam nunc putamus parum claram, anteposuerit litterarum formas humanitatis per seacula quarta decima et quinta decima. Eodem modo typi, qui nunc nobis videntur parum clari, fiant sollemnes in futurum. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Typi non habent claritatem insitam; est usus legentis in iis qui facit eorum claritatem. Investigationes demonstraverunt lectores legere me lius quod ii legunt saepius.
+This work is motivated by the 
+emergent network architecture of Software
+Defined Networks where the control of the network is extracted from the
+network devices and delegated to a
+server named controller that is responsible for dynamically
+configuring the network devices present in the infrastructure. The
+controller has the advantage of logically centralizing the network
+state in contrast to the previous model where state was distributed
+across the network devices. If spite of this logical centralization,
+the control plane (where the controller operates)  must be distributed
+in order to support the scale of modern datacenters and
+networks. However, this distribution introduces several challenges due
+to the heterogeneous, asynchronous and faulty environment where the
+controller operates. Current distributed controllers
+lack transparency due to the  eventual consistency
+properties employed in the distribution of the controller. This results in a
+complex programming model for the development of network control applications. This work will
+contribute with a fault-tolerant distributed controller with strong
+consistency properties that allows a more transparent distribution of
+the control plane. Also we believe that even if favoring 
+consistency, we will be able to provide superior performance results
+that those available in the literature. 
+
+
+% The success of the current Internet infrastructure and architecture is
+% indisputable. However, it  has long suffered from negative
+% criticism. The "classic'' Internet architecture suffers from serious
+% drawbacks in the management field as the inherent complexity
+% associated with the manual configuration of  distributed 
+% network equipment can be too much to bare with only rudimentary
+% mechanisms as command line interfaces and hand-made configuration
+% scripts. Human error is known to be the most probable cause of network
+% downtime. Additionally the lack of control abstractions  in
+% networking  prevents the deployment of both new and modified control functions.
+
+% These problems are cumulative as both network designers
+% and administrators struggle to satisfy modern network
+% requirements. Currently several control mechanisms are designed,
+% deployed and configured in isolation of each other. Known examples
+% are:intra domain routing; inter domain routing; access control; QoS services; packet inspection;load-balancing; and intrusion detection. These control mechanisms
+% are deployed in network devices such as routers and switches with no
+% support for their modification. 
+% Thus, devices that should  be optimized for data forwarding end up bundled with
+% heavyweight control features that must be configured independently. 
+
+% Software Defined Networking (SDN) radically changes the current IP
+% architecture by extracting the control function from the network
+% devices and shifting it to a centralized service known as the control
+% plane. This plane, with the help of a coherent view of the network state
+% can dynamically configure the network devices.
+% The network state
+% is centralized in a datastore known as Network Information Base (NIB)
+% or View. The NIB  can provide up
+% to date connectivity, namespace information, and other physical or
+% logical information capable of satisfying network control  objectives. 
+%  The result configuration is the output
+% of a function applied to the current network state. In SDNs networks devices are
+% only responsible  for packet forwarding  as opposed  to the classic
+% Internet architecture where devices also run distributed algorithms
+% in order to perform self-configuration. 
+
+% Centralized control planes have been reported to scale to tens of
+% thousands of hosts. However the current
+% state of the art implementations are still far from satisfying the
+% requirements of modern datacenters and Wide Area Networks as the high traffic present in these networks may lead a
+% centralized service to exhaustion. In addition latency issues presented
+% in  WAN's covered by a centralized control planes may not
+% be acceptable under the quality of service desired. Finally a single
+% point of failure is not an usual option  as the failure of the control plane
+% may compromise network availability. All this  strongly
+% suggests the distribution of the control plane. However, the
+% distribution processes must not affect the benefits of the
+% SDN architecture even if operating in a heterogeneous, asynchronous and faulty
+% environment.
+
+% Although SDN has been considered a hot
+% research topic the existing work does not covers distribution of the
+% control plane extensively. Two designs are often-cited: HyperFlow \cite{Tootoonchian:2010vy} and
+% Onix \cite{Koponen:2010th}. The latter replicates network events that cause changes to the NIB
+% while the former replicates and distributes the NIB state. We consider both those works to have serious
+% drawbacks as lack of distribution transparency and weak consistency
+% properties leading  to a complex programming model for
+% the development of network control applications. 
+
+% In our work we plan  to contribute to the Software
+% Defined Network field by introducing a strong consistent Network
+% Information Base integrated in an open source SDN controller. Our NIB
+% is replicated across controllers instances in a distributed state machine
+% fashion that we implement with  well-known protocols to the  Distributed
+% Systems field. We believe that the Network community has overlooked
+% both the correctness and simplicity advantages of strong consistent datastores as
+% well as their performance. We
+% also belief that correctness problems can arise from the use of 
+% weak consistency datastores if the application is not fully aware of
+% the distribution guarantees given by the NIB. 
+
 
 %Resumo até \textbf{300} palavras. 
 
@@ -15,7 +110,8 @@ Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh 
 
 \begin{flushleft}
 \textbf{Keywords:}
-about 5 keywords (in English)
+Replication, Strong Consistency, Distributed State Machine,
+Distributed Control Plane, Software Defined Networking. 
 \end{flushleft}
 
 \LIMPA

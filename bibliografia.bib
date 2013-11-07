@@ -616,12 +616,6 @@ title = {{Maestro: A System for Scalable OpenFlow Control}},
 year = {2012},
 pages = {1--10},
 month = jul,
-annote = {The authors defend that the vast majority of processing time of NOX is spend of sending messages individually (80%). 
-
-They improve a Controller by making it multi threaded, focusing on a n-core architecture. It resembles SEDA architecture. Done in Java with workers threads polls which pull from application queues that encapsulate the application logic and data (packets necessary). 
-
-The papers evaluates and compares Maestro with NOX. NOX looses big time, while in the end they advance that distributing Maestro can improve it. 
- },
 keywords = {Controller, Multi-Threaded, Multi-Threaders},
 read = {Yes},
 rating = {0},
@@ -678,19 +672,6 @@ booktitle = {OSDI'10: Proceedings of the 9th USENIX conference on Operating syst
 year = {2010},
 publisher = { USENIX Association},
 month = oct,
-annote = {Distributed Controller. 
-Two different consistent mechanisms { transactional + one hop dht eventual consistent}. 
-
-The paper advocates that the "essence of the SDN philosophy is that basic primitives for state distribution should be implemented once in the control platform rather than separately for individual control task, and should use well-known and general-purpose techniques from the distributed systems literature rather than the more specialized algorithmms found in routing protocols and other network control mechanism". 
-
-It also describes the general control platform : generality, scalability, reliability, simplicity, control plane performance. 
-
-Key,value based, allows watch list set on entities stored in database, synchronization api call allows some degree of consistency ( Review This). 
- 
-Ainda n{\~a}o percebi bem o paper. Guarda cenas em sitios diferentes, de formas diferentes. Ler de novo
-
-Others  [logically centralized, hot topics] said : Onix is a control platform designed to enable scalable control applications. Its main contribution is to abstract away the task of network state distribution from applications and provide them with a logical view of the network state.. while allowing them to make their own trade-offs among consistency, durability and scalability. 
- },
 keywords = {Distributed, To Review, Controller},
 read = {Yes},
 rating = {0},
@@ -710,7 +691,6 @@ booktitle = {INM/WREN'10: Proceedings of the 2010 internet network management co
 year = {2010},
 publisher = { USENIX Association},
 month = apr,
-annote = {Others [ logically centralized - hot topics] :  distributed event based control plane for OpenFlow that allows control applications to make decisions locally by passively synchronizing network-wide views of the individual controller instances.. the paper evaluates the limit of how fast the individual controllers can synchronize and the resultant inconsistency. },
 read = {Yes},
 rating = {0},
 date-added = {2012-09-06T18:26:15GMT+00:00},
@@ -744,31 +724,6 @@ booktitle = {USENIX ATC'12: Proceedings of the 2012 USENIX conference on Annual 
 year = {2012},
 publisher = { USENIX Association},
 month = jun,
-annote = {A efficient block store api which can be use as disk ; 
-
-Introduction : depiction of several replication models. 
-
-Main idea: partial replication while not hurting durability/availability
-		-{\&}gt; 1st : separate data from metadata. metadata on all replicas, data in some; 
-		-{\&}gt; 2nd: every replica buffers writes to unavailable replicas; Backup replicas are used according to the map between blocks and replicas and this allows the write to be written to f+1 replicas. 
-
-Gnothi allows a tradeoff between space cost and availability. Data is written as long as there is space in the buffers. Authors advance that a 10% buffer reserve is enough to guarantee write availability in many workloads. 
-
-Also partial writes. Gnothi writes full blocks in f+1 replicas (preferred quorum for the replica), the authors advance: a recovering node only needs to fetch (f+1) / (2f+1) (e.g., 2/3, para f=1). 
-Model : 
-	2f +1 
-	Asynchronous model. 
-		
-Guarantees :
-	When an update completes, data is stored on f+1 disks; al reads and writes are linearizable (citation needed!); 
-	Reads always return the most current data even though some replicas may have stale versions of some blocks; 
-	System available until : 
-		reads -{\&}gt; f failures;
-		writes -{\&}gt; f failures and failed replicas recover or are replaced 					before the reserve buffer is fully consumed by new 					updates. 
-	Can respect client order. 
-	
-Algorithm:  
-},
 rating = {0},
 date-added = {2012-09-10T16:08:40GMT+00:00},
 date-modified = {2012-12-10T00:51:43GMT+00:00},
@@ -786,7 +741,6 @@ booktitle = {Proceedings of the VLDB Endowment},
 year = {2011},
 publisher = { VLDB Endowment},
 month = jan,
-annote = {We have 3 replica based paxos machines. Like Cassandra/Dynamo the neighbors share the same key-based-range. (Scalable). Paxos is used to maintain consistency. Lot of technical details like Memtables, SSTables and stuff like that .},
 rating = {0},
 date-added = {2012-09-10T16:08:40GMT+00:00},
 date-modified = {2012-12-17T22:11:36GMT+00:00},
@@ -839,13 +793,7 @@ booktitle = {ASPLOS-VII: Proceedings of the seventh international conference on 
 year = {1996},
 publisher = { ACM  Request Permissions},
 month = dec,
-annote = {The papers offers a system with a disk like interface with allows reading/writing blocks of data. Quite low-level interface.  
 
-Petal. Composed of several servers/disks that are seen as one. Internal replicated, and load balanced through non-state machine methods, but meta-data is shared globally and updated through paxos (Tables with maps client identifiers to individual disks in the system). The method used by the servers for replication is primary based replication (the primaries locks the data, writes to itself and the secondary, waits for return of both and only then replies to client). 
-
-OThers : 
-Copy-on write based snapshots {\&}lt;- See this better 
-},
 doi = {10.1145/237090.237157},
 rating = {0},
 date-added = {2012-09-10T16:08:40GMT+00:00},
@@ -908,12 +856,6 @@ uri = {\url{papers2://publication/uuid/5835F15B-4A86-4209-85A3-B22B4D33FD2B}}
 @article{Keller:ug,
 author = {Keller, E and Arora, D and Botero, D P and Rexford, J},
 title = {{Live Migration of an Entire Network (and its Hosts)}},
-annote = {A built on top of Nox proxy (i think it is kind of built as an application) responsible for migrating the entire network. This include network equipment state and buffers states and finally controller view state. They do a good analysis of state implications in SDN. 
-
-POints : 
-
-connections between controllers and switches is done with OF which runs in top of TCP which guarantees order. Off course order with several controllers/switches can not be guaranteed; 
-},
 rating = {0},
 date-added = {2012-10-02T15:10:24GMT+00:00},
 date-modified = {2012-10-30T11:10:28GMT+00:00},
@@ -1099,26 +1041,6 @@ booktitle = {HotSDN '12: Proceedings of the first workshop on Hot topics in soft
 year = {2012},
 publisher = { ACM  Request Permissions},
 month = aug,
-annote = {Problem: limiting the overhead o frequent events on the control plane is essential for scalability in SDN. 
-
-IDEIA: Hierarchical controllers (2 layers now, more in the future?) Top layer logically centralized (may be fully distributed, they do not focus on that) with network wide state. The bottom layer, possibly on switch, close to switch, or several switches for local controlled applications. 
-
-Evaluation: s{\~a}o espectaculares demais para o meu gosto. 
-
-
-General:
-
-. They pose the question and motivation as "how can we mode control functionalities toward data paths, without introducing new data path mechanisms in switches?" 
- Next they focus on processing power close to switches with applications that are local in scope (i.e., no need for wide network state). 
-. "the main advantage of Kandoo is that it gives network operators the freedom to configure the deployment model of control plane functionalitites based on the characteristics of control applications. 
-ALL communications between Kandoo controllers are event-
-
-Criticism: I do lack more explanation into why so much ("a large class of applications are local (e.., local policy enforcer and LLDC or can be decomposed to modules that are local (e.g., elephant flow detection modules in an elephant flow rerouting application).   
-
-They shield the root controller from these frequent events that are supossedely capable of being processed locally. However we are not clearly informed on what  does this mean. Network wide state does not miss LLDC? They do warn us that applications that require network wide state Kandoo is not help, although it can not hurt either (quote them) 
-
-Finally food for thought : 
-they say the following : "Altough Kandoo provides a scalable method for event handling we strongly recommend pushing network state proactively. We envision Kandoo to be used as a scalable, adaptive control plane, where the default configuration is pushed proactively and is adaptively refined afterwards. In our toy example, defaults paths can be pushed proactively, while elephant flows will be rerouted adaptively." },
 doi = {10.1145/2342441.2342446},
 rating = {0},
 date-added = {2012-09-11T19:48:31GMT+00:00},
@@ -1155,12 +1077,6 @@ booktitle = {HotSDN '12: Proceedings of the first workshop on Hot topics in soft
 year = {2012},
 publisher = { ACM  Request Permissions},
 month = aug,
-annote = {
-Question proposed : " How does distributed SDN state impact the performance of a logically centralized control application" 
-
-What they did : They have characterized the state exchange points in a distributed SDN control plane and identify two key state distribution trade-offs. We simulate these exchange points in the context of an existing SDN load balancer application and have evaluated the impact of inconsistent global network view in the load balancer application"
-
-Result :  They suggest that inconsistency info SIGNIFICANTLY degrades performance of logically centralized control applications AGNOSTIC to the underlying state distribution},
 doi = {10.1145/2342441.2342443},
 rating = {0},
 date-added = {2012-09-11T19:48:31GMT+00:00},
@@ -1214,8 +1130,7 @@ title = {{From viewstamped replication to byzantine fault tolerance}},
 journal = {Replication},
 year = {2010},
 pages = {121--149},
-annote = {Fail-recovery protocol with the same structure of Paxos. Works on asynchronous model, with static membership, and based on a primary role. Allows for state machine replication semantics, with total order guarantees. The papers describes The full protocol (normal behaviour, view-change behaviour and recovery process) with a lot of optimizations made possible. Has great performance given that it is based on volatile memory for most of the messages exchanged and state changes. Also it has a description of pbft as an extraction of the Viewstamped protocol. 
-},
+
 keywords = {byzantine, pbft, fail-recover, state machine, replication, total order},
 read = {Yes},
 rating = {4},
@@ -1252,11 +1167,7 @@ booktitle = {SIGCOMM '07: Proceedings of the 2007 conference on Applications, te
 year = {2007},
 publisher = { ACM  Request Permissions},
 month = aug,
-annote = {Distinct notes: Normal Enterprise Network Architecture redefined and the possibility that a single controller can take care of 10K hosts alone and their supposedly  average flow traffic. 
 
-On the architecture redefinement interesting things : 
--{\&}gt;More secure. Binding of machines, addresses and users which must authenticate at the controllers points to a more trackable, security oriented architecture. 
-},
 doi = {10.1145/1282380.1282382},
 rating = {0},
 date-added = {2012-09-10T18:41:40GMT+00:00},

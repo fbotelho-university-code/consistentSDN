@@ -33,6 +33,12 @@ As the number of SDN production networks increase the need for dependability bec
 \begin{itemize}
 \item they were not data store aware so we had to optimize them. This off course caused changes to the code.
 \end{itemize}
+
+% \begin{itemize}
+% \item So in the best case we have 200kFlows/s with a data store.  That 2 out 3 applications that are fundamental in the packet in pipeline require at least one write operation exchanged with the data store. So even with top-notch engineering techniques of caching, batching, non-blocking I/O , we are definitely  setting a hard limit on the controller scalability. In fact this drop the processing rate of state of the art centralized controllers by a factor of 5 (at  least!). 
+% \item We distribute a control plane for three reasons: fault tolerante (reliability!), scalability and performance (in the controller case, this concerns the latency between switches and the controller). 
+
+
 \subsection{Limitations}
 \begin{itemize}
 \item Read entire tables, a common behaviour observed has not practical solution.  This will off course result in a giant overhead to the data store. Naturally this can be solved by introducing stale data with a cache, which may not be harmfull if the applications are not in a critical path to the network control goals (e.g., systems who display information). However we have seen this kind of code in Floodlight applications. In fact, there was one application that was left out of this work in a early stage, since after we adapt it to our data store and analyzed its behaviour we found that on each topological change to the network, it required reading all the data store state to behave 
@@ -46,3 +52,8 @@ other applications behaviour can impact on the workloads  by communicating with 
 \item Study the differences between serializability and strong consistency, establishing when do the applications require one or another. State machine replication is not required in all aplications, use strong consistency in some cases (reads, writes). Bessani Protocol, cassandra with strong consistency scales better than SMR , etc., 
 \end{itemize}
 
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "../PEI"
+%%% End: 

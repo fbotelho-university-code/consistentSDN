@@ -11,11 +11,11 @@
 
 (is-multi t)
 
-(bibview-cache)
+(bibview-cache ("Koponen:2010th" . "Koponen etal. 2010, Onix: distributed control platform large, in: OSDI'10: Proceedings 9th USENIX"))
 
 (master-dir . "/Users/fabiim/Dropbox/TESE/final/")
 
-(label-numbers)
+(label-numbers ("sec:optimizations" . 1))
 
 (bof "/Users/fabiim/Dropbox/TESE/final/PEI.tex")
 
@@ -227,9 +227,9 @@
 
 (bof "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex")
 
-("sec:feasibility:apps" "s" "\\glsresetall To evaluate the feasibility of our distributed controller design we implemented a proto" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
+("sec:feasibility:apps" "s" "\\glsresetall \\todo{Online appendix} To evaluate the feasibility of our distributed controller design" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
 
-(toc "toc" "        4.0.0.1 Development Environment characteristics" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 4 "4.0.0.1" "\\subsubsection{Development Environment characteristics}" 6825)
+("fig:feasibility:workloads" "f" "General workload" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
 
 (toc "toc" "    4.1 Learning Switch" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 2 "4.1" "\\section{Learning Switch}" 7692)
 
@@ -241,57 +241,57 @@
 
 ("fig:ls:interaction" "f" "Learning Switch workloads" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
 
-(toc "toc" "      4.1.1 Broadcast Packet" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.1.1" "\\subsection{Broadcast Packet}" 12537)
+(toc "toc" "      4.1.1 Broadcast Packet" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.1.1" "\\subsection{Broadcast Packet}" 12609)
 
-("table:lsw0:broadcast" "t" "Workload lsw-0-broadcast( Broadcast Packet) operations" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
+("table:lsw0:broadcast" "t" "Workload lsw-0-broadcast operations" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
 
-(toc "toc" "      4.1.2 Unicast Packet" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.1.2" "\\subsection{Unicast Packet}" 13419)
+(toc "toc" "      4.1.2 Unicast Packet" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.1.2" "\\subsection{Unicast Packet}" 13467)
 
-("table:lsw0:unicast" "t" "Workload lsw-0-unicast( Unicast Packet) operations" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
+("table:lsw0:unicast" "t" "Workload lsw-0-unicast operations" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
 
-(toc "toc" "      4.1.3 Optimizations" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.1.3" "\\subsection{Optimizations}" 14278)
+(toc "toc" "      4.1.3 Optimizations" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.1.3" "\\subsection{Optimizations}" 14740)
 
-("table:lsw1:unicast" "t" "Workload lsw-1-unicast( Unicast Packet) operations" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
+("table:lsw1:unicast" "t" "Workload lsw-1-unicast operations" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
 
 ("fig:lsw:comparison" "f" "Learning Switch workloads performance comparison" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
 
-(toc "toc" "      4.1.4 Cache" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.1.4" "\\subsection{Cache}" 17702)
+(toc "toc" "      4.1.4 Cache" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.1.4" "\\subsection{Cache}" 18255)
 
-("sec.learning.switch.lru.cache" "s" "Given that Learning Switch is a single reader, single writer application, we can introduce caching m" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
+("sec:ls:cache" "s" "%Before we delve into caching the Learning Switch tables in the controller we must further understan" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
 
-("sec:feasibility:ls:cache" "s" "Given that Learning Switch is a single reader, single writer application, we can introduce caching m" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
-
-(toc "toc" "    4.2 Load Balancer" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 2 "4.2" "\\section{Load Balancer}" 21329)
+(toc "toc" "    4.2 Load Balancer" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 2 "4.2" "\\section{Load Balancer}" 21753)
 
 ("sec:feasibility:lb" "s" "\\glsresetall %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
 
-(toc "toc" "      4.2.1 Load Balancer main idea" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.2.1" "\\subsection{Load Balancer main idea}" 21486)
+("fig:lb-model" "f" "Load Balancer domain model" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
 
-("fig:lb-model" "f" "\\small Simplified Load Balancer entities data model. The data store contains a table for each entity" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
-
-("tablle:lb:indexes" "f" "Load Balancer key-value tables" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
+("table:lb:indexes" "f" "Load Balancer key-value tables" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
 
 ("fig:lb:interaction:arp2Vip" "f" "ARP packet address at a VIP." "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
 
 ("fig:lb:interaction:ip2Vip" "f" "IP packets addressed at a VIP. " "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
 
-("fig:lb:interaction" "f" "Load Balancer workload events" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
+("fig:lb:interaction" "f" "Load Balancer workloads" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
 
-(toc "toc" "      4.2.2 Packets to a VIP" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.2.2" "\\subsection{Packets to a VIP}" 24989)
-
-("table:lbw-0-ip-to-vip" "t" "Workload lbw-0-ip-to-vip( IP packet to a VIP) operations" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
-
-(toc "toc" "      4.2.3 ARP Request" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.2.3" "\\subsection{ARP Request}" 26716)
+(toc "toc" "      4.2.1 ARP Request" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.2.1" "\\subsection{ARP Request}" 25375)
 
 ("table:lbw-0-arp-request" "t" "Workload lbw-0-arp-request( Arp Request to a VIP) operations" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
 
-(toc "toc" "      4.2.4 Optimizations" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.2.4" "\\subsection{Optimizations}" 27664)
+(toc "toc" "      4.2.2 Packets to a VIP" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.2.2" "\\subsection{Packets to a VIP}" 26346)
+
+("table:lbw-0-ip-to-vip" "t" "Workload lbw-0-ip-to-vip( IP packet to a VIP) operations" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
+
+(toc "toc" "      4.2.3 Optimizations" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.2.3" "\\subsection{Optimizations}" 28311)
+
+("table:lbw:optimizations" "t" "Load Balancer IP to VIP workload operations across diferent implementations." "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
 
 ("table:lb-versions" "f" "Name guide to Load Balancer workloads" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
 
-(toc "toc" "      4.2.5 Cache" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.2.5" "\\subsection{Cache}" 34326)
+("sec:optimizations" "s" "" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" "LOST LABEL.  RESCAN TO FIX.")
 
-(toc "toc" "    4.3 Device Manager" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 2 "4.3" "\\section{Device Manager}" 37981)
+(toc "toc" "      4.2.4 Cache" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.2.4" "\\subsection{Cache}" 34519)
+
+(toc "toc" "    4.3 Device Manager" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 2 "4.3" "\\section{Device Manager}" 38172)
 
 ("sec:feasibility:dm" "s" "\\glsresetall %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% The Device Manager application tra" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
 
@@ -303,15 +303,15 @@
 
 ("fig:dm:interaction" "f" "Device Manager workload events" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
 
-(toc "toc" "      4.3.1 Known Devices" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.3.1" "\\subsection{Known Devices}" 41271)
+(toc "toc" "      4.3.1 Known Devices" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.3.1" "\\subsection{Known Devices}" 41462)
 
 ("table:ops:dm-0-known" "t" "Workload dm-0-known (Known Devices) operations" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
 
-(toc "toc" "      4.3.2 Unknown Source" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.3.2" "\\subsection{Unknown Source}" 42210)
+(toc "toc" "      4.3.2 Unknown Source" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.3.2" "\\subsection{Unknown Source}" 42401)
 
 ("table:ops:dm-0-unknown" "t" "Workload dm-0-unknown( ARP from Unknown Source) operations" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
 
-(toc "toc" "      4.3.3 Optimizations" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.3.3" "\\subsection{Optimizations}" 44413)
+(toc "toc" "      4.3.3 Optimizations" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.3.3" "\\subsection{Optimizations}" 44604)
 
 ("fig:" "f" " " "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
 
@@ -321,7 +321,11 @@
 
 ("table:names:dm" "t" "Name guide to Device Manager workloads" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
 
-(toc "toc" "      4.3.4 Cache" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.3.4" "\\subsection{Cache}" 49814)
+("table:dm-known-optimizations" "t" "Workload dm-0-known( Known Devices) operations" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil "")
+
+("table:dm-unknown-optimizations" "t" "Workload dm-0-unknown( ARP from Unknown Source) operations" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil "")
+
+(toc "toc" "      4.3.4 Cache" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.3.4" "\\subsection{Cache}" 50005)
 
 (eof "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex")
 
@@ -329,9 +333,9 @@
 
 (bof "/Users/fabiim/Dropbox/TESE/final/tex/conclusion.tex")
 
-(toc "toc" "      5.0.1 Limitations" "/Users/fabiim/Dropbox/TESE/final/tex/conclusion.tex" nil 3 "5.0.1" "\\subsection{Limitations}" 4499)
+(toc "toc" "      5.0.1 Limitations" "/Users/fabiim/Dropbox/TESE/final/tex/conclusion.tex" nil 3 "5.0.1" "\\subsection{Limitations}" 5208)
 
-(toc "toc" "      5.0.2 Future Work" "/Users/fabiim/Dropbox/TESE/final/tex/conclusion.tex" nil 3 "5.0.2" "\\subsection{Future Work}" 5549)
+(toc "toc" "      5.0.2 Future Work" "/Users/fabiim/Dropbox/TESE/final/tex/conclusion.tex" nil 3 "5.0.2" "\\subsection{Future Work}" 6258)
 
 (eof "/Users/fabiim/Dropbox/TESE/final/tex/conclusion.tex")
 

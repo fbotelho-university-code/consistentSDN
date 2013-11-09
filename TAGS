@@ -1,0 +1,325 @@
+
+/Users/fabiim/Dropbox/TESE/final/PEI.tex,1100
+\titleformat{\subsubsection}45,1189
+\renewcommand{\headrulewidth}\headrulewidth68,1779
+\newcommand{\LIMPA}\LIMPA73,1999
+\newcommand{\LIMPAC}\LIMPAC80,2141
+\newcommand{\distcontrollers}\distcontrollers88,2252
+\newcommand{\distcontrollerspaper}\distcontrollerspaper89,2346
+\newcommand{\tbl}\tbl92,2450
+\newcommand{\ml}\ml93,2508
+\newcommand{\PEITITULO}\PEITITULO98,2604
+\newcommand{\PEIAutor}\PEIAutor100,2729
+\newcommand{\PEIAutorNumAluno}\PEIAutorNumAluno101,2777
+\newcommand{\PEIOrientador}\PEIOrientador104,2880
+\newcommand{\PEICoOrientador}\PEICoOrientador105,2932
+\newcommand{\PEISupervisorInstituicao}\PEISupervisorInstituicao108,3120
+\newcommand{\PEIAnoLectivo}\PEIAnoLectivo110,3242
+\newcommand{\PEIAno}\PEIAno111,3282
+\newcommand{\PEITIPO}\PEITIPO114,3357
+\newcommand{\PEIIdiomaTese}\PEIIdiomaTese119,3543
+\chapter{Introduction}Introduction193,5129
+\chapter{Related Work}Related211,5668
+\chapter{Distributed Controller}Distributed216,5745
+\chapter{Feasibility Study}Feasibility221,5872
+\chapter{Conclusions}Conclusions230,5978
+\appendix241,6165
+
+/Users/fabiim/Dropbox/TESE/final/tex/acronimos.tex,0
+
+/Users/fabiim/Dropbox/TESE/final/tex/capa.tex,0
+
+/Users/fabiim/Dropbox/TESE/final/tex/agradecimentos.tex,0
+
+/Users/fabiim/Dropbox/TESE/final/tex/resumo_pt.tex,0
+
+/Users/fabiim/Dropbox/TESE/final/tex/resumo_ing.tex,0
+
+/Users/fabiim/Dropbox/TESE/final/tex/intro.tex,3967
+\section{Motivation}Motivation2,1
+Software Defined Networking (SDN) \cite{ONF:2012ui}ONF:2012ui6,455
+Distribution of the control plane is argued by many, to be essential for scalability and reliability reasons \cite{Tootoonchian:2010vy, Koponen:2010th,Yeganeh:2012jm,:zr}. However, state of the art  distributed control planes lack transparency and consistency proprieties that are desirable in the development of network control applications. Also we believe that, based on the state of the art replication results available \cite{Rao:2011vz,Lee:1996jm,Bolosky:2011ve,Wang:2012tj} we can contribute to SDN with an efficient distributed control plane. Finally, we also believe that Software Defined Networking will have significant deployment support from the network industry and may eventually take a primary role in the replacement of the current IP architecture. All these factors  encourage us to pursue the work described in this document.Tootoonchian:2010vy,8,1133
+Classic IP networks are complex to manage and control. This complexity is caused by several factors. First, network configuration is a human based process done mainly through direct command line interaction or ad-hoc scripts. Additionally, each network device requires a different configuration and current network infrastructures may contain thousands of devices. This process of translating high-level network objectives by humans to low level device-dependent configuration primitives is error prone. Furthermore, configuration errors (that should be insignificant events) can cascade into network errors of a global scale. As an example, in 2008 Pakistan Telecom took Youtube offline almost worldwide \cite{McCullagh:2008fk}McCullagh:2008fk12,1981
+\subsection{Software Defined Networks} Software28,4404
+ Software Defined Networking (SDN) is a novel architecture that emerged from the drawbacks set by closely-coupling the control and data planes. This architecture - presented in  Figure \ref{fig:sdn.2d}fig:sdn.2d29,4444
+\ref{fig:sdn.2d}fig:sdn.2d35,5445
+  \label{fig:sdn.2d}fig:sdn.2d48,6554
+In order to separate the control plane from the data plane it is necessary that the latter implements an interface that allows the configuration of the network devices from the control plane. OpenFlow \cite{openflow}openflow51,6589
+ \cite{Hoezle:2012uq}Hoezle:2012uq64,8475
+ \cite{onf}onf67,8683
+ hardware vendors currently support OpenFlow \cite{openflow}openflow69,8813
+\subsection{Distributed Control Plane}Distributed72,8917
+\textbf{Scalability} is a fundamental reason for distributing. Although centralized controllers have been reported  to handle  tens of thousands of hosts \cite{Casado:2007kb}Casado:2007kb82,10316
+The \textbf{performance} reason presented may not be the only one, but it is fundamental. At the time of writing only one SDN enabled WAN is known \cite{Hoezle:2012uq}Hoezle:2012uq83,11209
+Fundamental principles such as the  Brewer's CAP theorem \cite{Brewer:fk}Brewer:fk87,12301
+The tradeoffs associated with this choice have already been studied by Levin et al. \cite{Levin:2012bt}Levin:2012bt89,12957
+Currently, often-cited distributed control planes as Onix \cite{Koponen:2010th}Koponen:2010th93,14137
+In our work we favor consistency and consequently transparency in the distribution of the control plane. This is not to say that our system will not show high availability characteristics as much as system favoring availability have inconsistent results. However, there are networks that have control requirements that are best fit with consistency over availability (and vice versa) as discussed by Levin et al. \cite{Levin:2012bt}Levin:2012bt95,14972
+\section{Objectives}Objectives106,17789
+\section{Contributions}Contributions110,18054
+\section{Planning}Planning112,18121
+\section{Thesis Organization}Thesis113,18140
+\item Chapter \ref{chapter:1}chapter:1118,18231
+\item Chapter \ref{chapter:2}chapter:2119,18270
+
+/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex,9357
+Shenker, a networking researcher from Berkley\footnote{Scoot Shenker has played a fundamental role in SDN development, collaborating in many papers. He is also co-founder of both ONF \cite{onf}onf12,674
+protocols'' \cite{Shenker:2011ys}Shenker:2011ys13,990
+\section{Software Defined Networks}Software34,2099
+\label{sec:background:sdn}sec:background:sdn36,2148
+\subsection{Fundamentals}Fundamentals42,2378
+\subsubsection{4D.}4D.43,2405
+the reviewers''  \cite{Greenberg:2005boa}Greenberg:2005boa44,2571
+in Figure \ref{fig:4d}fig:4d61,3582
+  \label{fig:4d}fig:4d71,3890
+\subsubsection{Ethane.}Ethane.97,5114
+\subsubsection{OpenFlow.}OpenFlow.152,8208
+standard interface is available. OpenFlow \cite{openflow}openflow156,8622
+Ethane \cite{Casado:2007kb}Casado:2007kb161,8901
+Foundation (ONF). At the time of writing, the version 1.3 \cite{of13}of13175,9798
+several improvements over the original paper \cite{openflow}openflow176,9886
+\subsubsection{Network Operating System.} The Network Operating System (NOS) terminology  was initially used in theNetwork178,9950
+introduced by Gude et al. \cite{Gude:2008jd}Gude:2008jd181,10196
+Cai et al. \cite{Z.-Cai:2008fk}Z.-Cai:2008fk182,10245
+\subsection{General Architecture}General218,12151
+participation and support from several industry partners \cite{onf}onf220,12248
+advantages of it \cite{ONF:2012ui}ONF:2012ui225,12618
+\subsubsection{General architecture.} The architecture of Software Defined Network is presented in FigureGeneral240,13159
+\ref{fig:sdn-stack}fig:sdn-stack241,13265
+  \label{fig:sdn-stack}fig:sdn-stack257,14045
+\cite{Koponen:2010th}Koponen:2010th290,15942
+\subsubsection{Types of Controllers.} The controller is oftenTypes303,16536
+``logically centralized'' \cite{Gude:2008jd,Greenberg:2005boa}Gude:2008jd,Greenberg:2005boa305,16628
+co-founder \cite{:zr}:zr312,17058
+from Casado and Koponen \cite{Martin-Casado:2011ly}Martin-Casado:2011ly321,17504
+\section{Physically Centralized  Controllers}Physically337,18316
+\label{sec:background:centralized}sec:background:centralized339,18375
+\subsection{Existent Controllers}Existent346,18672
+\subsubsection{NOX}NOX351,18824
+\label{sec:nox}sec:nox352,18844
+NOX \cite{Gude:2008jd}Gude:2008jd353,18860
+  \label{fig:nox-pipeline}fig:nox-pipeline373,19961
+\ref{fig:nox-pipeline}fig:nox-pipeline381,20332
+\cite{Tootoonchian:2012uia,zen-doc-thesis}Tootoonchian:2012uia,zen-doc-thesis391,20967
+several environments \cite{nox}nox399,21421
+\subsubsection{Maestro}Maestro401,21455
+\cite{maestro}maestro404,21534
+be concurrently executed. As seen in Figure \ref{fig:maestro-pipeline}fig:maestro-pipeline412,22020
+mind. As an example based on Figure \ref{fig:maestro-pipeline}fig:maestro-pipeline425,22776
+  \label{fig:maestro-pipeline}fig:maestro-pipeline440,23535
+with usual switching  and routing capabilities \cite{maestro}maestro456,24200
+\subsubsection{Beacon}Beacon458,24264
+\label{sec:beacon}sec:beacon459,24287
+unit of abstraction in the OSGI \cite{osgi}osgi471,24986
+\subsubsection{Floodlight}Floodlight493,26097
+distributed controller named Big Controller \cite{:vn}:vn496,26363
+asynchronous event based multithreaded library named Netty \cite{netty}netty510,27209
+\subsection{Controller Choice}Controller517,27499
+\subsection{NOX}NOX527,27909
+\label{sec:nox}sec:nox528,27926
+NOX \cite{Gude:2008jd}Gude:2008jd529,27942
+  \label{fig:nox-pipeline}fig:nox-pipeline549,29043
+\ref{fig:nox-pipeline}fig:nox-pipeline557,29414
+\cite{Tootoonchian:2012uia,zen-doc-thesis}Tootoonchian:2012uia,zen-doc-thesis567,30049
+several environments \cite{nox}nox575,30503
+\subsection{Maestro}Maestro577,30537
+\cite{maestro}maestro580,30613
+be concurrently executed. As seen in Figure \ref{fig:maestro-pipeline}fig:maestro-pipeline588,31099
+mind. As an example based on Figure \ref{fig:maestro-pipeline}fig:maestro-pipeline601,31855
+  \label{fig:maestro-pipeline}fig:maestro-pipeline616,32614
+with usual switching  and routing capabilities \cite{maestro}maestro632,33279
+\subsection{Beacon}Beacon634,33343
+\label{sec:beacon}sec:beacon635,33363
+unit of abstraction in the OSGI \cite{osgi}osgi647,34062
+\subsection{Floodlight}Floodlight669,35173
+distributed controller named Big Controller \cite{:vn}:vn672,35436
+asynchronous event based multithreaded library named Netty \cite{netty}netty686,36282
+\section{Distributed Controllers}Distributed694,36573
+\label{sec:relatedWork:distributed}sec:relatedWork:distributed696,36620
+\subsection{HyperFlow}HyperFlow703,36900
+Motivated by the lack of scalability in centralized controllers, HyperFlow \cite{Tootoonchian:2010vy}Tootoonchian:2010vy704,36923
+controller \cite{Gude:2008jd}Gude:2008jd709,37262
+\subsubsection{Architecture.}Architecture.712,37378
+in figure \ref{fig:hyperflow-design}fig:hyperflow-design714,37551
+an application built on top of NOX \cite{Gude:2008jd}Gude:2008jd715,37617
+  \label{fig:hyperflow-design}fig:hyperflow-design750,39600
+\subsubsection{State Distribution.} State distribution in HyperFlow is accomplished through theState754,39646
+\subsubsection{Scalability.}Scalability.786,41584
+\subsubsection{Programming Model.} Applications running on HyperFlow act as they control the entireProgramming808,42860
+\subsection{Onix}Onix824,43754
+Onix \cite{Koponen:2010th}Koponen:2010th825,43772
+developed their controllers based on from Onix \cite{The-Valley-of-the-Nerd.:fk}The-Valley-of-the-Nerd.:fk839,44704
+\subsubsection{Architecture.}Architecture.842,44843
+\ref{fig:onix-process}fig:onix-process853,45586
+in figure \ref{fig:onix-design}fig:onix-design862,46081
+  \label{fig:onix-design}fig:onix-design872,46534
+  \label{fig:onix-process}fig:onix-process883,47014
+\subsubsection{State Distribution.} Onix defines a flexible distribution model for the NIB State886,47055
+\cite{DeCandia:2007cn}DeCandia:2007cn896,47637
+coordination framework (see  ZooKeeper \cite{Hunt:2010ux}Hunt:2010ux905,48090
+\subsubsection{Scalability.}Scalability.908,48180
+\subsubsection{Programming Model.} Applications are built against the NIB graph data structure that isProgramming930,49307
+\subsection{Kandoo}Kandoo952,50493
+Kandoo \cite{Yeganeh:2012jm}Yeganeh:2012jm953,50513
+\subsubsection{Architecture.}Architecture.960,50865
+  \label{fig:kandoo-design}fig:kandoo-design979,52060
+\subsubsection{Scalability.}Scalability.994,52741
+\subsubsection{Programming Model.} In Kandoo the NOS layer is responsible for the deployment of localProgramming1007,53491
+\section{Consistent Data Stores}Consistent1067,56796
+\label{sec:relatedWork:consistentDataStore}sec:relatedWork:consistentDataStore1069,56842
+One of the most popular techniques for implementing such replicated data store is state machine replication (SMR)~\cite{Sch90,Lam98}Sch90,Lam981073,57299
+Practical crash fault-tolerant replicated state machines are usually based on the Paxos agreement algorithm for ensuring that all updates to the data store are applied in the same order in all replicas (thus ensuring consistency)~\cite{Lam98}Lam981076,57646
+Since the original Paxos describes only an algorithmic framework for maintaining synchronized replicas with minimal assumptions, we instead describe the Viewstamped Replication (VR) protocol, a similar (but more concrete) state machine replication algorithm introduced at the same time~\cite{reitblatt2012abstractions}reitblatt2012abstractions1077,57890
+Fig. \ref{fig:paxos}fig:paxos1078,58210
+\label{fig:paxos}fig:paxos1088,59054
+The Paxos/VR algorithm has served as the foundation for many recent replicated (consistent and fault-tolerant) data stores, from main-memory databases with the purpose of implementing coordination and configuration management (e.g., Apache'  Zookeeper~\cite{Hun10}Hun101091,59087
+Although not as scalable as a weakly consistent data store, these systems grant the advantages of consistency for a large number of applications, namely those with moderate performance and scalability requirements. To give an idea of the performance of these systems, Table \ref{table:smr-results}table:smr-results1094,59667
+    Spanner \cite{Corbett:2012uz}Corbett:2012uz1101,60225
+    Spinnaker \cite{Rao11}Rao111102,60278
+    SCKV-Store \cite{Bes13}Bes131103,60326
+    Zookeeper \cite{Hun10}Hun101104,60376
+  \label{table:smr-results}table:smr-results1107,60682
+Interestingly, these values are of the same order of magnitude of the reported values for \emph{non-consistent} updates in Onix (33k small updates per second considering 3 nodes~\cite{koponen2010}koponen20101112,61111
+\section{Consistent Data Planes}Consistent1116,61630
+\label{sec:relatedWork:consistentPlane}sec:relatedWork:consistentPlane1118,61676
+levels. Programming languages such as Frenetic~\cite{Foster2011}Foster20111122,61789
+related line of work~\cite{reitblatt2012abstractions}reitblatt2012abstractions1125,61991
+made. Onix~\cite{Koponen:2010:ODC:1924943.1924968}Koponen:2010:ODC:1924943.19249681129,62232
+limitation''~\cite{Koponen:2010:ODC:1924943.1924968}Koponen:2010:ODC:1924943.19249681138,62834
+Other works on SDN consistency include the Frenetic programming language~\cite{Foster2011}Foster20111142,62935
+In~\cite{reitblatt2012abstractions}reitblatt2012abstractions1147,63755
+
+/Users/fabiim/Dropbox/TESE/final/tex/heimdall.tex,1733
+\section{Shared Data Store Controller Architecture}Shared2,1
+\label{sec:heimdall:architecture}sec:heimdall:architecture4,66
+Fig. \ref{fig:architecture}fig:architecture11,802
+By design, the SMR-based data store is replicated and fault-tolerant (as in all designs discussed in the previous section), being up and running as long as a majority of replicas is alive~\cite{Lam98}Lam9816,1501
+The switches tolerate controller crashes using the master-slave configuration introduced in OpenFlow 1.2\,\cite{ONF2011}ONF201120,2020
+Our distributed controller architecture covers the two most complex fault domains in an SDN, as introduced in~\cite{kim2012}kim201228,3157
+This problem is being addressed in other recent efforts~\cite{kim2012,Reitblatt2013}kim2012,Reitblatt201332,3795
+\label{fig:architecture}fig:architecture44,4377
+\section{Floodlight}Floodlight47,4417
+\label{sec:heimdall:floodlight}sec:heimdall:floodlight49,4452
+\section{Data Store}Data53,4570
+\label{sec:heimdall:dataStore}sec:heimdall:dataStore55,4604
+\subsection{Smart}Smart61,4791
+\subsection{Design}Design66,5012
+\subsubsection{Map interface} Map68,5033
+\subsection{Cross References tables}Cross74,5667
+\label{sec.datastore.cross.references}sec.datastore.cross.references75,5704
+\subsection{Versions}Versions76,5743
+\subsection{Cache}Cache100,6909
+\subsubsection{Cache? What about Consistentcy}Cache?101,6928
+\subsubsection{Implementation}Implementation106,7110
+composition over inheritance \ref{joshua98}joshua98108,7210
+Cache are a common source  source of memory leaks \cite{joshua98}joshua98156,10053
+\ref{sec.datastore.cross.references}sec.datastore.cross.references161,10292
+\subsection{Columns}Columns185,11289
+
+/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex,8848
+\label{sec:feasibility:apps}sec:feasibility:apps6,186
+To evaluate the feasibility of our distributed controller design we implemented a prototype of the previously described controller architecture by integrating applications from the Floodlight controller~\footnote{\url{http://www.projectfloodlight.org/floodlight/}} with a data store built using a state-of-the-art state machine replication library, BFT-SMaRt~\cite{smart-tr}smart-tr11,253
+Fig. \ref{fig:feasibility:workloads}fig:feasibility:workloads24,2054
+We will show different workloads for the three applications modified, that cover all the possible data plane events that cause an interaction with the data store. We also reveal the iterative process that defined our work by showing the incremental performance improvements done to applications with each of the data store functionalities described in section~\ref{sec:heimdall:datastore:functionalities}sec:heimdall:datastore:functionalities25,2325
+  \label{fig:feasibility:workloads}fig:feasibility:workloads31,3281
+First, we emulated a network environment in Mininet  --- a network emulation platform that enables a virtual network, running a real kernel, switch and application code on a single machine~\cite{Handigol:2012tg}Handigol:2012tg36,3432
+For this, we set up an environment in our cluster composed of four machines, three for the distributed data store\footnote{To tolerate the crash from a single controller ($f=1$) three replicas are needed, as explained in Section~\ref{sec:heimdall:datastore:bft-smart}sec:heimdall:datastore:bft-smart42,4428
+In the third phase, we analyze the results of the previous phases. Then we try to improve on them by using the data store functionalities referred in Section \ref{sec:heimdall:datastore:functionalities}sec:heimdall:datastore:functionalities45,5685
+Unless stated otherwise the values shown in this chapter are in the 90th percentile. Appendix A (available online \cite{support}support49,6155
+\section{Learning Switch} Learning59,7691
+\label{sec:feasibility:ls}sec:feasibility:ls60,7718
+                \label{fig:ls:interaction:broadcast}fig:ls:interaction:broadcast69,8028
+                \label{fig:ls:interaction:unicast}fig:ls:interaction:unicast76,8315
+        \label{fig:ls:interaction}fig:ls:interaction79,8594
+Despite being a single-reader and single writer application (each switch table is only accessed by the controller managing the switch in question), we include it here for two reasons: (i) it benefits from the fault-tolerant property of our distribution process and (ii) it is commonly used as the single-controller benchmark application in the literature~\cite{Tootoonchian:2012uia,Erickson:2013er}Tootoonchian:2012uia,Erickson:2013er87,9447
+Fig.~\ref{fig:ls:interaction}fig:ls:interaction89,9849
+First (Fig.~\ref{fig:ls:interaction:broadcast}fig:ls:interaction:broadcast90,10000
+Second (Fig.~\ref{fig:ls:interaction:unicast}fig:ls:interaction:unicast91,10163
+The \gls{lru} tables are not the only way to control the table entries. Learning Switch also applies timeouts (hard and soft --- see section~\ref{section:background:of}section:background:of110,12030
+\subsection{Broadcast Packet}Broadcast112,12608
+This workload is defined by  the operations performed in the data store when processing broadcast packets in a \acrfull{of} \texttt{packet-in} request (Fig.~\ref{fig:ls:interaction:broadcast}fig:ls:interaction:broadcast113,12638
+\label{table:lsw0:broadcast}table:lsw0:broadcast123,13424
+\subsection{Unicast Packet}Unicast126,13466
+This workload adds an operation to the previous one, since for every unicast address we must also fetch the known switch port location of the destination address.Table \ref{table:lsw0:unicast}table:lsw0:unicast127,13494
+this topic again in Section \ref{sec:ls:cache}sec:ls:cache129,14281
+\label{table:lsw0:unicast}table:lsw0:unicast140,14699
+\subsection{Optimizations}Optimizations143,14739
+If we do it manually instead we can improve  significantly on the size of the messages exchanged. Table  \ref{table:lsw1:unicast}table:lsw1:unicast147,15244
+Considering the total size of the messages request  we reduce the equivalent unicast workload (from Table \ref{table:lsw0:unicast}table:lsw0:unicast148,15399
+Fig. \ref{fig:lsw:comparison}fig:lsw:comparison150,15621
+The natural conclusion we can take, is to think that if we merge the two messages that compose the broadcast workload into one (by using Micro Components - see section \ref{sec:heimdall:datastore:mc}sec:heimdall:datastore:mc163,17015
+\label{table:lsw1:unicast}table:lsw1:unicast175,17878
+\label{fig:lsw:comparison}fig:lsw:comparison183,18201
+\subsection{Cache}Cache186,18242
+\ref{sec:ls:cache}sec:ls:cache187,18261
+\section{Load Balancer}Load218,21739
+\label{sec:feasibility:lb}sec:feasibility:lb219,21763
+\subsection{Load Balancer main idea}Load222,21895
+In order to understand its behaviour we will begin by the data model currently used. Fig. \ref{fig:lb-model}fig:lb-model224,22047
+\label{fig:lb-model}fig:lb-model240,23173
+\label{tablle:lb:indexes}tablle:lb:indexes253,23519
+the Load Balancer application, is represented in Fig. \ref{fig:lb:interaction:ip2Vip}fig:lb:interaction:ip2Vip264,24084
+\ref{fig:lb:interaction:arp2VIp}fig:lb:interaction:arp2VIp265,24192
+                \label{fig:lb:interaction:arp2Vip}fig:lb:interaction:arp2Vip276,24669
+                \label{fig:lb:interaction:ip2Vip}fig:lb:interaction:ip2Vip283,24970
+        \label{fig:lb:interaction}fig:lb:interaction286,25344
+\subsection{Packets to a VIP}Packets289,25393
+at a \gls{vip}, it triggers the operations seen in table \ref{table:lbw-0-ip-to-vip}table:lbw-0-ip-to-vip291,25479
+\label{table:lbw-0-ip-to-vip}table:lbw-0-ip-to-vip322,27075
+\subsection{ARP Request}ARP327,27120
+\ref{table:lbw-0-arp-request}table:lbw-0-arp-request330,27281
+\label{table:lbw-0-arp-request}table:lbw-0-arp-request346,28023
+\subsection{Optimizations}Optimizations349,28068
+    lbw-0 & Simple Key-Value  & \ref{sec:}sec:383,29614
+    lbw-1 & Cross References  & \ref{sec:}sec:384,29661
+    lbw-2 & Versioned Values & \ref{sec:}sec:385,29707
+    lbw-3 & Column Store & \ref{sec:}sec:386,29752
+    lbw-4 & Micro Components & \ref{sec:}sec:387,29793
+    Balancer workloads.}\label{table:lb-versions}table:lb-versions396,30004
+Table \ref{table}table401,30085
+\ref{tables}tables404,30280
+\ref{table:lb-versions}table:lb-versions410,30658
+table \ref{table:lbw-0-ip-to-vip}table:lbw-0-ip-to-vip412,30788
+simplifies client code (see section \ref{sec:heimdall:versions}sec:heimdall:versions435,32207
+In Fig. \ref{fig:lbw:comparision}fig:lbw:comparision466,33858
+section \ref{section}section469,34059
+\subsection{Cache}Cache481,34734
+\ref{table:lbw-0-ip-to-vip,table:lbw-0-arp-request}table:lbw-0-ip-to-vip,table:lbw-0-arp-request509,36353
+\gls{vip} as seen in Fig. \ref{fig:}fig:515,36732
+\section{Device Manager}Device552,38391
+\label{sec:feasibility:dm}sec:feasibility:dm553,38416
+data store tables listed in table \ref{table:dm:indexes}table:dm:indexes571,39420
+\label{table:dm:indexes}table:dm:indexes587,40075
+wether the application already knows the source device information (figure \ref{fig:dm:interaction:known}fig:dm:interaction:known591,40202
+or not ( \ref{fig:dm:interaction:unknown}fig:dm:interaction:unknown592,40309
+                \label{fig:dm:interaction:unknown}fig:dm:interaction:unknown608,40908
+                \label{fig:dm:interaction:known}fig:dm:interaction:known615,41205
+        \label{fig:dm:interaction}fig:dm:interaction618,41634
+\subsection{Known Devices}Known621,41683
+\label{table:ops:dm-0-known}table:ops:dm-0-known636,42191
+triggers the operations seen in table \ref{table:ops:dm-0-known}table:ops:dm-0-known640,42305
+\subsection{Unknown Source}Unknown646,42622
+\label{table:ops:dm-0-unknown}table:ops:dm-0-unknown664,43355
+\ref{table:ops:dm-0-unknown}table:ops:dm-0-unknown672,43667
+\subsection{Optimizations}Optimizations692,44825
+                \label{fig:}fig:699,45121
+                \label{}706,45422
+        \label{fig:dm:performance}fig:dm:performance709,45527
+    dm-0 & Simple Key-Value  & \ref{sec:heimdall:datastore:kv}sec:heimdall:datastore:kv716,45664
+    dm-1 & Cross References  & \ref{sec:heimdall:datastore:cr}sec:heimdall:datastore:cr717,45731
+    dm-2 & Versioned Values & \ref{sec:heimdall:datastore:vr}sec:heimdall:datastore:vr718,45797
+    dm-3 & Column Store & \ref{sec:heimdall:datastore:cr}sec:heimdall:datastore:cr719,45862
+    dm-4 & Micro Components & \ref{sec:heimdall:datastore:mc}sec:heimdall:datastore:mc720,45923
+  \label{table:names:dm}table:names:dm724,46101
+Also with workload dm-4-\ref{table:}table:810,49664
+\subsection{Cache}Cache823,50226
+
+/Users/fabiim/Dropbox/TESE/final/tex/conclusion.tex,955
+First, we note that the performance results of our data store are similar to those reported for the original NOX and other popular SDN controllers\,\cite{Tootoonchian:2012:CPS:2228283.2228297}Tootoonchian:2012:CPS:2228283.22282979,933
+The average throughput for the Learning Switch application (the only application considered in\,\cite{Tootoonchian:2012:CPS:2228283.2228297}Tootoonchian:2012:CPS:2228283.222829710,1127
+Of course, the insightful reader will note that the results become quite distant from what is obtained with a controller that is optimized for performance, such as NOX-MT~\cite{Tootoonchian:2012:CPS:2228283.2228297}Tootoonchian:2012:CPS:2228283.222829714,1777
+As the second part of the argument, it is important to understand that every update to our data store represents an execution of the protocol of Fig. \ref{fig:paxos}fig:paxos15,2031
+\subsection{Limitations}Limitations42,5207
+\subsection{Future Work}Future49,6257
+
+/Users/fabiim/Dropbox/TESE/final/tex/apendices.tex,0

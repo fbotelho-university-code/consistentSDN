@@ -58,7 +58,7 @@
 
 \usepackage[font={small}]{caption}
 \usepackage{subcaption}
-\usepackage[sorting=none,  isbn=false,
+\usepackage[sortcites=true, firstinits=true, isbn=false,
 url=false, doi=false, eprint=false]{biblatex}
 
 \bibliography{bibliografia,web}
@@ -217,11 +217,8 @@ url=false, doi=false, eprint=false]{biblatex}
 \glsresetall
 \include{./tex/heimdall}fe
 \LIMPA
-
+\setlength{\epigraphwidth}{.95\textwidth}
 \chapter{Feasibility Study}
-%\setlength{\epigraphwidth}{.6\textwidth}
-%\epigraph{Eu já estou por tudo. Por mim reinicio o TomCat.}{MSI -   First year student.}
-\epigraph{}{}
 %%%% quote 
 
 %%%%

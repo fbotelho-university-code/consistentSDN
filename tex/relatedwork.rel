@@ -1,0 +1,140 @@
+;; RefTeX parse info file
+;; File: /Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex
+;; User: fabiim (Fabio Botelho)
+
+(set reftex-docstruct-symbol '(
+
+
+(xr nil "\\\\\\\\\\\\")
+
+(index-tags)
+
+(is-multi nil)
+
+(bibview-cache)
+
+(master-dir . "/Users/fabiim/Dropbox/TESE/final/tex/")
+
+(label-numbers)
+
+(bof "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex")
+
+(toc "toc" "    1 Software Defined Networks" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil 2 "1" "\\section{Software Defined Networks}" 2100)
+
+("sec:background:sdn" "s" "Software Defined Networking is a networking research field born from a distributed collaborative eff" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil)
+
+(toc "toc" "      1.1 Fundamentals" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil 3 "1.1" "\\subsection{Fundamentals}" 2379)
+
+(toc "toc" "        1.1.1 4D." "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil 4 "1.1.1" "\\subsubsection{4D.}" 2406)
+
+("fig:4d" "f" "The 4D architecture" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil)
+
+(toc "toc" "        1.1.2 Ethane." "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil 4 "1.1.2" "\\subsubsection{Ethane.}" 5115)
+
+(toc "toc" "        1.1.3 OpenFlow." "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil 4 "1.1.3" "\\subsubsection{OpenFlow.}" 8209)
+
+(toc "toc" "        1.1.4 Network Operating System." "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil 4 "1.1.4" "\\subsubsection{Network Operating System.}" 10113)
+
+(toc "toc" "      1.2 General Architecture" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil 3 "1.2" "\\subsection{General Architecture}" 12314)
+
+(toc "toc" "        1.2.1 General architecture." "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil 4 "1.2.1" "\\subsubsection{General architecture.}" 13322)
+
+("fig:sdn-stack" "f" "SDN Architecture" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil)
+
+(toc "toc" "        1.2.2 Types of Controllers." "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil 4 "1.2.2" "\\subsubsection{Types of Controllers.}" 16699)
+
+(toc "toc" "    2 Physically Centralized Controllers" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil 2 "2" "\\section{Physically Centralized  Controllers}" 18479)
+
+("sec:background:centralized" "s" "In this section we present an overview of relevant centralized controllers. Centralized controllers " "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil)
+
+(toc "toc" "      2.1 Existent Controllers" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil 3 "2.1" "\\subsection{Existent Controllers}" 18835)
+
+(toc "toc" "        2.1.1 NOX" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil 4 "2.1.1" "\\subsubsection{NOX}" 18987)
+
+("sec:nox" "s" "NOX \\cite{Gude:2008jd} was published and publicly released under GPL in 2008. It was both developed " "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil)
+
+("fig:nox-pipeline" "f" "NOX pipeline" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil)
+
+(toc "toc" "        2.1.2 Maestro" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil 4 "2.1.2" "\\subsubsection{Maestro}" 21618)
+
+("fig:maestro-pipeline" "f" "Maestro pipeline" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil)
+
+(toc "toc" "        2.1.3 Beacon" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil 4 "2.1.3" "\\subsubsection{Beacon}" 24427)
+
+("sec:beacon" "s" "Beacon is an open source controller built in Java, by David Erickson during his academic studies in " "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil)
+
+(toc "toc" "        2.1.4 Floodlight" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil 4 "2.1.4" "\\subsubsection{Floodlight}" 26260)
+
+(toc "toc" "      2.2 Controller Choice" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil 3 "2.2" "\\subsection{Controller Choice}" 27662)
+
+(toc "toc" "      2.3 NOX" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil 3 "2.3" "\\subsection{NOX}" 28072)
+
+("sec:nox" "s" "NOX \\cite{Gude:2008jd} was published and publicly released under GPL in 2008. It was both developed " "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil)
+
+("fig:nox-pipeline" "f" "NOX pipeline" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil)
+
+(toc "toc" "      2.4 Maestro" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil 3 "2.4" "\\subsection{Maestro}" 30700)
+
+("fig:maestro-pipeline" "f" "Maestro pipeline" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil)
+
+(toc "toc" "      2.5 Beacon" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil 3 "2.5" "\\subsection{Beacon}" 33506)
+
+("sec:beacon" "s" "Beacon is an open source controller built in Java, by David Erickson during his academic studies in " "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil)
+
+(toc "toc" "      2.6 Floodlight" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil 3 "2.6" "\\subsection{Floodlight}" 35336)
+
+(toc "toc" "    3 Distributed Controllers" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil 2 "3" "\\section{Distributed Controllers}" 36736)
+
+("sec:relatedWork:distributed" "s" "In this section we provide an overview of Distributed Controllers existent in the literature. By our" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil)
+
+(toc "toc" "      3.1 HyperFlow" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil 3 "3.1" "\\subsection{HyperFlow}" 37063)
+
+(toc "toc" "        3.1.1 Architecture." "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil 4 "3.1.1" "\\subsubsection{Architecture.}" 37541)
+
+("fig:hyperflow-design" "f" "HyperFlow architecture" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil)
+
+(toc "toc" "        3.1.2 State Distribution." "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil 4 "3.1.2" "\\subsubsection{State Distribution.}" 39809)
+
+(toc "toc" "        3.1.3 Scalability." "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil 4 "3.1.3" "\\subsubsection{Scalability.}" 41747)
+
+(toc "toc" "        3.1.4 Programming Model." "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil 4 "3.1.4" "\\subsubsection{Programming Model.}" 43023)
+
+(toc "toc" "      3.2 Onix" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil 3 "3.2" "\\subsection{Onix}" 43917)
+
+(toc "toc" "        3.2.1 Architecture." "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil 4 "3.2.1" "\\subsubsection{Architecture.}" 45006)
+
+("fig:onix-design" "f" "Onix architecture" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil)
+
+("fig:onix-process" "f" "Onix configuration process" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil)
+
+(toc "toc" "        3.2.2 State Distribution." "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil 4 "3.2.2" "\\subsubsection{State Distribution.}" 47218)
+
+(toc "toc" "        3.2.3 Scalability." "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil 4 "3.2.3" "\\subsubsection{Scalability.}" 48343)
+
+(toc "toc" "        3.2.4 Programming Model." "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil 4 "3.2.4" "\\subsubsection{Programming Model.}" 49470)
+
+(toc "toc" "      3.3 Kandoo" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil 3 "3.3" "\\subsection{Kandoo}" 50656)
+
+(toc "toc" "        3.3.1 Architecture." "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil 4 "3.3.1" "\\subsubsection{Architecture.}" 51028)
+
+("fig:kandoo-design" "f" "Kandoo design" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil)
+
+(toc "toc" "        3.3.2 Scalability." "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil 4 "3.3.2" "\\subsubsection{Scalability.}" 52904)
+
+(toc "toc" "        3.3.3 Programming Model." "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil 4 "3.3.3" "\\subsubsection{Programming Model.}" 53654)
+
+(toc "toc" "    4 Consistent Data Stores" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil 2 "4" "\\section{Consistent Data Stores}" 56953)
+
+("sec:relatedWork:consistentDataStore" "s" "%Section data stores do artigo. The key idea of our controller architecture is to make the controlle" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil)
+
+("fig:paxos" "f" "Paxos/VR update protocol" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil)
+
+("table:smr-results" "t" "Performance of state machine replication systems" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil)
+
+(toc "toc" "    5 Consistent Data Planes" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil 2 "5" "\\section{Consistent Data Planes}" 61803)
+
+("sec:relatedWork:consistentPlane" "s" "Recent work on SDN has explored this need for consistency at different levels. Programming languages" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex" nil)
+
+(eof "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork.tex")
+))
+

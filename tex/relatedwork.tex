@@ -149,7 +149,11 @@ the deployment in the Stanford
 University  campus network. The  analysis performed suggests that a single
 desktop computer alone could handle a network with over 20K hosts. 
 
-\subsubsection{OpenFlow.} Both Ethane \cite{Casado:2007kb} and 4D \cite{Greenberg:2005boa}
+\subsubsection{OpenFlow.} 
+\label{section:background:of} % explain hard and soft
+                              % timeouts. Explain flow-removed,
+                              % flow-mod. 
+Both Ethane \cite{Casado:2007kb} and 4D \cite{Greenberg:2005boa}
 focused in the decoupling of the control plane from the data plane, however there is also required that the control plane can programatically define the data plane configuration. In Ethane this
 feature was presented in a monolithic  implementation of the controller.
 For general development of SDN  it is  necessary that a
@@ -1067,6 +1071,7 @@ is left for the root controller.
 \section{Consistent Data Stores}
 \glsresetall
 \label{sec:relatedWork:consistentDataStore}
+%explain 2f+1. 
 %Section data stores do artigo. 
 The key idea of our controller architecture is to make the controller instances coordinate their actions through a dependable data store in which all relevant state of the network and of its control applications is maintained in a consistent way.
 This data store is implemented with a set of servers (replicas) to avoid any single point of failure, without impairing consistency.

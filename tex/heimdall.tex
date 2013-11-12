@@ -49,12 +49,11 @@ This problem is being addressed in other recent efforts~\cite{kim2012,Reitblatt2
 \label{sec:heimdall:floodlight}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
 \section{Data Store}
 \glsresetall
 \label{sec:heimdall:dataStore}
 %Features  design, etc., 
-
+\label{sec:heimdall:datastore:bft-smart}
 FIXME : Alysson - será que posso justificar que a data store
 performance nao é importante quando comparada com o middleware? 
 
@@ -63,7 +62,7 @@ we had to change the library used of netty from netty-3.1.1.GA.jar to
 netty-3.2.6.Final.jar because it conflicted with floodlight. We are in
 the dark here. Do not known if this will cause problems... 
 
-\subsection{Design}
+\subsection{Implementation}
 
 \subsubsection{Map interface} 
 Actually motivated by the LearningSwitch application. The rest interface exposed the learning switch database (hash table ) directly. We implemented a class to Delegate the map interface methods to our KeyValueTable. We don't actually use it inside the applications we modified because we have some preference for static typing (which for arguably legitimate reasons does not appear in the Map interface). Nevertheless we could use it. putAll and containsValue are not implemented. No special reason just lazinesss.  
@@ -73,138 +72,55 @@ across replicas.
 
 \section{Something}
 \label{sec:heimdall:datastore:functionalities}
-\subsection{Cross References tables}
-\label{sec.datastore.cross.references}
-\subsection{Versions}
-It can be really painfull to use replace if equal based on byte
-representation. The serialization process may inocently output two
-different outputs for values that are equal (as specified by their
-equals method contract).  This can happen for something as simple as
-using differen List implementations or some more obscure reason (e.g.,
-when creating a deep copy object the method used to copy a list may
-cause some state such as the total size of an arraylist different from
-the original, if that value ends up affecting the output of the
-serialization process we end up with different values). 
-Example: Lists.newArrayList(existentList) from guava turned out to
-have a different byte representation from  simply creating a new array
-list and iterating over the existentList and insert one by one. We
-kind of lost 
 
-So all in all
-the usage of replace based on byte comparison is not
-advocated. Instead timestamps end up benefiting the user by being more
-space efficient in the message exchanged (with a possibly
-insignificant cost for carrying the timestamp value); and by being
-easier to work with. 
+There are 5 functionalities that we have build after integrating
+Floodlight existent applications with our simple Key Value Store. 
+Most of those functionalities can be found in off-the-shelf data stores (either SQL or NoSql). 
 
+\subsubsection{Cross References}
+Cross Reference tables are very similar to the secondary index functionality found in almost all SQL and  NoSQL  based data stores. 
+With it we can fetch a value in the data store using \BigO{1} (considering all the entries in a table) using any of the existent indexes. 
+We integrate Cross References tables since we typically found in memory based applications (\emph{Load Balancer} and \emph{Device Manager} and \emph{Topology Manager} )) that kept different hash tables in order to track the same value with different keys. 
+For example \emph{Device Manager}  keeps two tables for tracking devices by their  unique sequential identifier and a \gls{mac} address (which is also unique to a device). 
+This way values can be quickly found through different types of keys depending on the context causing the search. 
+If we were to use a single table to keep devices then searching all the devices to find the correspondant device to \gls{mac} then we would have $\Omega(\log n)$ for $n$ devices. 
 
-TODO measure the cost of a timestamp? 
-\subsection{Cache}
-\subsubsection{Cache? What about Consistentcy}
-Fine grained control. 
-Monotolically increase. problems caused with clocks. Use aphry blog
-post to talk about this kind of problems. 
+\subsubsection {Versioned}
+Another common functionality is concurrency control based on version numbers that are associated with an entry in a key value table. 
+On every update operation the data store increases this value by one.
+With this mechanism we enable a simple concurrent interface based on version numbers that allows different clients of the data store to manipulate it safely. 
+This mechanism is more commonly used in situations where we read a value, transform it and then update it. In order to not risk loosing the updates done by a concurrent client, we can use the version number of the original value when updating. The data store then can verify if the version is the least of the value or not. If not the update will fail, and we can proceed again.  
 
-\subsubsection{Implementation}
-So for the cache implementation we actually favored composition over
-composition over inheritance \ref{joshua98}  . The
-\texttt{CachedKeyValueTable} can be composed of any kind of
-\texttt{IKeyValueTable} and we use forwarding (i.e., the delegation
-pattern) to implement all methods. However, the cache layer implement
-on top of the key value table performs all the cache logic when
-retrieving and updating values. So we actually update the cache values
-when updating the data store. Given that we are building on top of the
-version interface this complicates things, since we would actually
-like need to know which is logical version the value will be
-associated in the data store. In some cases we can exploit the
-method sematics to achieve this. For example with \texttt{put} we get,
-as a return value, the previously present value. So, we can actually
-keep the newly inserted value in the cache together with its accurate
-version (previous version plus one)\footnote{This actually requires
-  the data store to expose and compromise its version update
-  algorithm. Changing it afterwards will off course, break the client
-  implementation. } As for other methods as \texttt{insert} where the
-return value only indicates the success of the operation, we can not
-actually know which version the newly inserted value will have in the
-data store. We are faced with two choices: to leave it out of the
-cache or keep it with no version associated to it.  
+We found examples of applications (Load Balancer and Device Manager) that used this simple concurrency control primitives as defined by the Java \emph{ConcurrentMap} interface. However this interface is based on values instead of version numbers. This requires clients to send two values: one that should be equal to the data store version (only then will the operation succeed)  ; and the new one. 
+In Java the concurrent hash table interfaces requires sending both the expected value and the new value. 
+However with remote data stores this is not practical for two reasons. 
+First, it incurs in a significant overhead since we have to send two values instead of one.
+Second, it can be painfully to make sure that byte array representations of values are actually equal. When marshalling a value (transform an object into a linear byte array representation) the process in place can output different values which are logically equivalent (as specified by their equals contract in the Java case).  This can make a list that contains the same objects to have different representations which is something hard to identify and correct since we have to verify every suspected attribute of a class. 
 
-We choose to keep it out of the cache. Otherwise we add more
-complexity to the client code which now must deal with one more outcome
-when retrieving data from a cached data store. In general we do not
-explicit compromise to anything in the current implemented
-interface. The client can not be sure of what will get inserted in the
-cache or not. This leave space open for future optimizations, or
-changes  without impacting the client code correctness. But overall
-the implementation on which this document is based actually updates
-the datastore value on the following methods. Every retrieval method
-such as get , getByReference, 
-updates or writes such as : put,  replace(key, knownVersion,newValue),
-putIfAbsent,    
-but those don't : replace (key, existentValue, newValue), remove,
-insert. 
+So all in all the usage of replace based on byte comparison is not advocated. Instead timestamps end up benefiting the user by being more space efficient in the message exchanged (with a possibly insignificant cost for carrying the timestamp value); and by being easier to work with. 
 
-So although it may be argued that the Cache is a implementation detail
-that should not be explicit (visible ) at the interface level we
-actually disagree in our case. Since the cache provides functional
-behaviour: fine-graine control, explicit control over consistency
-level of the data obtained from the data store. So the client, for
-correctness or optimizations reasons should be able to control whether
-the values obtained from the data store must be obtained with strong
-consistency semantics or not. Furthermore this should it should be
-able to make this choice dynamically in each call.  So our API must be
-designed with all this considerations in mind. 
+\subsubsection{Columns}
+Values can be composed of different attributes causing their space usage to be huge. In simple tests that we have performed we saw devices instances that would go up to 2kB. It may not seem much but remember that our middleware could support 20kOps/s with 1Kb and only 4.7kOps/s with 4kOps/s. 
 
-Cache are a common source  source of memory leaks \cite{joshua98}  in java
-applications since it is easy to forget values kept in the cache long
-after they are not need anymore.  
+So it pays offs to be economical in sizes. With column enabled data stores we do this by selectively reading one or more object attributes. 
+The columns that compose an object are not static, but defined by clients. Clients can add and delete columns from a single data store value  at any time (in one table, different values may have different columns). There are no empty columns.  
 
-It is also relevant that cross referenced values (section
-\ref{sec.datastore.cross.references} ) can be obtained in cache. So we
-also a method \texttt{getValueByReference(key, ts)} to this end. 
+The basic idea is to minimize the size of messages by being able to selectiveley access the sub elements of data store values that are constantly accessed on a per flow basis. 
+As an example (elaborated on the Evaluation section) Load Balancer requires reading an \gls{ip} address for every \gls{of} addressed at a balanced resource. By using an columnar approach we were able to improve from 224 bytes to 4 . So with columns we can reduce communication  with the data store to the very minimal. 
 
-\texttt{getCached(key)}  returns a cached value or nothing. Definitely
-does not goes to the data store. 
+\subsubsection{Cache}
+With cache we can have a fine graine control over the staleness of data. 
+This means that we can choose if we want consistency or not.
+And if we choose the latter, we can define the window of inconsistency accepted. 
 
-\texttt{get(key, delta} on the other hand obtaines the value from cache
-if the value is present and if the  difference between the current time and the time the value was
-added  is less or equal than the specified \texttt{delta}. Otherwise
-the data store is used. 
+The cache implementation is simple. 
+Every time a value is saved to  cache (either by fetching it from the data store or by updating it in the data store) we associate the local time with that value. 
+Then the data store client can fetch a value in cache by specifying the accepted staleness of that value (e.g., 200 ms , 10 ms, etc., ). 
+Cross References values are also kept in cache as well as column values. But with column values we  keep partially completed objects in cache. For example a client of the data store that requests the device \gls{mac} address columns get a Device in return.  That Device only has the \gls{mac} attribute set. 
 
-What about null values? The cache does not allows null values to be
-set as well as all other data store utilities.  FIXME actually null
-would be cool to known that the values are not present in the data
-store. 
+\subsubsection{Micro Components}
+A micro component its a magic method that the client can invoke on the data store which can make anything. Right now we copy/pasted the code of the controller to the data store. 
 
-It works on cross references as well (getValueByReference(K key , long
-ts) ). 
-
-
-With cache and cross references values you don't get read your writes
-consistency. That is because values are written through other tables
-interface. So we have no way of updating the cache . 
-
-\subsection{Columns}
-The basic idea is to minimize the size of messages by being able to
-selectiveley access the sub-parts of data store values. These
-sub-parts, the attributes of an object are usually a much smaller part
-than the whole, and in our experience with floodlight applications,
-there are a few required components  FIXME : lower, higher  (specify
-how much of the object space is used at maximum and minimum in the
-flow treatment)
-
-So, in such case it is obvious that we benefit from acessing only
-those componenents. We compose a prototype to analze the benefits
-that smaller messages will bring to the applications. 
-
-
-It becomes complicate when we deal with cross references
-tables. Because the key value store and colum based store are actually
-two separated entities. 
-
-\subsection{Micro Components}
-Micro components could also be done with transactions that allow to
-expressively manipulate the 
 %%% Local Variables: 
 %%% mode: latex
 %%% TeX-master: "../PEI"

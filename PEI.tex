@@ -7,7 +7,7 @@
 % - n.o 209 - 30 de Outubro de 2006)
 %
 \documentclass[12pt,openright,twoside]{report}
-\usepackage[show]{chato-notes}
+\usepackage[hide]{chato-notes}
 \usepackage[utf8]{inputenc}
 % Quem tiver problemas com os acentos, trocar utf8 por latin1
 
@@ -36,6 +36,10 @@
 \usepackage{makeidx}
 \makeindex
 
+%%%%%%%%%%%%%%%%%% BIG O 
+\usepackage{amsmath}
+\newcommand{\BigO}[1]{\ensuremath{\operatorname{O}\bigl(#1\bigr)}}
+%%%%%%%%%%%%%% BIG O
 %quotes
 \usepackage{epigraph}
 \usepackage{attrib}
@@ -215,13 +219,13 @@ url=false, doi=false, eprint=false]{biblatex}
 \LIMPA
 \chapter{Distributed Controller}
 \glsresetall
-\include{./tex/heimdall}fe
+\include{./tex/heimdall}
 \LIMPA
 
-\chapter{Feasibility Study}
+\chapter{Evaluation}
 %\setlength{\epigraphwidth}{.6\textwidth}
 %\epigraph{Eu já estou por tudo. Por mim reinicio o TomCat.}{MSI -   First year student.}
-\epigraph{}{}
+%\epigraph{}{}
 %%%% quote 
 
 %%%%

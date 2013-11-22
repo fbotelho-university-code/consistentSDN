@@ -11,6 +11,7 @@
 \usepackage[utf8]{inputenc}
 % Quem tiver problemas com os acentos, trocar utf8 por latin1
 
+%\usepackage{setspace}
 \usepackage[portuguese,english]{babel}
 \usepackage{times}
 \usepackage{url}
@@ -148,6 +149,8 @@ url=false, doi=false, eprint=false]{biblatex}
 
 \begin{document}
 
+%\doublespacing
+
 %Capa e pagina de rosto
 \include{./tex/capa}
 
@@ -194,7 +197,9 @@ url=false, doi=false, eprint=false]{biblatex}
 \setcounter{page}{1}
 \pagenumbering{arabic}
 
+
 \chapter{Introduction}
+%\epigraph{Um dia quando voçês forem programadores --- dois ou três de voçês vão ser programadores. O resto vai trabalhar com Java --- ... }{Professor de LEI - 1º ano}
 \glsresetall
 % contexto do trabalho
 % se resume o trabalho desenvolvido
@@ -213,18 +218,20 @@ url=false, doi=false, eprint=false]{biblatex}
 \LIMPA
 
 \chapter{Related Work}
+%\epigraph{Uma pessoa chega a qualquer algoritmo que encontra por aí. Pega, corta, abre, olha, vê.... É um hilo! Tudo é um hilomorfismo}{Professor de LEI - 2º ano}
 \glsresetall
 \include{./tex/relatedwork}
 
 \LIMPA
 \chapter{Distributed Controller}
+%\epigraph{Estamos no Mato...  E sem cão!}{Professor de LEI - 3º ano}
 \glsresetall
 \include{./tex/heimdall}
 \LIMPA
 
 \chapter{Evaluation}
 %\setlength{\epigraphwidth}{.6\textwidth}
-%\epigraph{Eu já estou por tudo. Por mim reinicio o TomCat.}{MSI -   First year student.}
+%\epigraph{Eu já estou por tudo. Por mim reinicio o TomCat.}{MSI - Estudante do 1º ano}
 %\epigraph{}{}
 %%%% quote 
 
@@ -235,6 +242,7 @@ url=false, doi=false, eprint=false]{biblatex}
 \LIMPA
 
 \chapter{Conclusions}
+%\epigraph{São tradeoffs Professor, são tradeoffs...}{MSI - José Sá Lopes}
 \glsresetall
 % sumario de trabalho realizado
 

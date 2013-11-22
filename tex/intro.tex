@@ -1,3 +1,20 @@
+``similar to the examples used to motivate SDN today. The issues of the day included network service provider frustration with the timescales necessary to develop and deploy new net- work services (so-called network ossification), third-party interest in value-added, fine-grained control to dynam- ically meet the needs of particular applications or net- work conditions, and researcher desire for a platform that would support experimentation at scale. Additionally, many early papers on active networking cited the prolif- eration of middleboxes, including firewalls, proxies, and transcoders, each of which had to be deployed separately and entailed a distinct (often vendor-specific) program- ming model. Active networking offered a vision of uni-''
+
+
+
+%TODO - tens que dizer logically centralized pode ser fisicamente distribuído. 
+
+
+%TODO - decomposed network goals - given an example.  Routing protocols handle dynamic topology changes but have to be configured individually (per device). Furthermore they do not work in concert witht other control functions such as firewalls implement as packet filters statements applied to each interface. As an example suppose that a router $r_i$ has two interfaces $i_1$ and $i_2$ and a packet filter statement denying traffic from a particular network $n$ . Then if the vent that   It is common to found that the latter can not be dynamically adapted to topology changes. 
+
+Distributed state management. Logically centralized route controllers faced challenges involving distributed state management. A logically centralized controller must be replicated to cope with controller failure; how- ever, inconsistencies can arise between the controller replicas. Researchers explored the likely failure scenar- ios and consistency requirements. At least in the case of routing control, the controller replicas did not need a general state management protocol, since each replica would eventually compute the same routes (after learn- ing the same topology and routing information) and tran- sient disruptions during routing-protocol convergence were acceptable even with legacy protocols [12]. This problem would arise again five years later in the con- text of distributed SDN controllers [47, 57]. \emph{Yet, dis- tributed SDN controllers face the far more general prob- lem of supporting arbitrary controller applications, re- quiring more sophisticated solutions for distributed state management.}
+
+DO NOT FORGET TO TALK ABOUT DEALING WITH ROUTING PROBLEMS IS EVENTUALLY CONSISTENT. 
+
+
+Use dijktra not bellman-ford 
+``This centralized paradigm is more flexible, since new functionality can be centrally programmed at the decision element that requireding a new distributed algorithm, but raises the specter of a single point of failure. However adequate resilience can be achieved by appling standard replication techniques to the decision element. The replication techniques are completely decoupled from the network control algorithms, so they do not impede application innovation''. 
+
 
 \section{Motivation}
 Despite its success, current IP networks suffer from several problems 
@@ -118,3 +135,8 @@ This document is structured as following:
 \item Chapter \ref{chapter:1} – AAA 
 \item Chapter \ref{chapter:2} – BBB 
 \end{itemize}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "../PEI"
+%%% End: 

@@ -39,6 +39,8 @@ As the number of SDN production networks increase the need for dependability bec
 % \item We distribute a control plane for three reasons: fault tolerante (reliability!), scalability and performance (in the controller case, this concerns the latency between switches and the controller). 
 
 
+
+
 \subsection{Limitations}
 \begin{itemize}
 \item Read entire tables, a common behaviour observed has not practical solution.  This will off course result in a giant overhead to the data store. Naturally this can be solved by introducing stale data with a cache, which may not be harmfull if the applications are not in a critical path to the network control goals (e.g., systems who display information). However we have seen this kind of code in Floodlight applications. In fact, there was one application that was left out of this work in a early stage, since after we adapt it to our data store and analyzed its behaviour we found that on each topological change to the network, it required reading all the data store state to behave 
@@ -46,6 +48,13 @@ As the number of SDN production networks increase the need for dependability bec
 other applications behaviour can impact on the workloads  by communicating with the application API.
 \end{itemize}
 
+
+\begin{itemize}
+\item The application behaviour found in the controller is too demaning for consistent data stores. And it can not even justify the usage of this data stores. 
+\item An example is the Device Manager which updates the last seen timestamp on every flow arriving at the controller. If this value is not careful choosen it may impose an extreme demand to the data store
+\item Another example is the Load Balancer. Even it Levin et. al suggest that a stale view of the network incurrs in beneath optimal (when compared to a consistent view) balancing performance the behaviour that we encounter in the Load Balancer application definitely limits the controller the controller scalability severely when contrasted with the single controller in multi-cores. 
+\item This issues can be addressed with two events: either the data store supports a more scalable consistency model or the applications have to be modified to be more pro-active. By pro-active we mean that hey must stop resorting to flow requests sent to the controller to maintain an updated network view. We reason that more efficient methods can be built that can be as much flexible as the existing ones and also more efficient given an controller with our characteristics. For example the Device Manager should resort to additional  events instead of flow requests to find out mobility, while the forwarding applications could install flows that expire on activity based rule space (there are works that adress the switch table problems without resorting to least recently used like cache mechanisms). This way the switch input rate imposed on the controller can be lowered possibly in ways that can be satisfied by our current data store performance. Also the Load Balancer could resort to periodically consult the switch channels condition (usage) and update the data store. By batching the entire switch domain conditions we could have a fined grained  view of the entire network state kept consistently in the data store. The controller can even choose to have different window of inconsistencies values for different subsets of the data plane according to the importance of the Load Balancer activity. 
+\end{itemize}
 \subsection{Future Work}
 \begin{itemize}
 \item Add applications that we believe to be fundamental to the data center: Topology Manager and Firewall.  Study the pipeline effect of all the applications together and improve on that. 

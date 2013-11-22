@@ -187,39 +187,77 @@
 
 (bof "/Users/fabiim/Dropbox/TESE/final/tex/heimdall.tex")
 
-(toc "toc" "    3.1 Shared Data Store Controller Architecture" "/Users/fabiim/Dropbox/TESE/final/tex/heimdall.tex" nil 2 "3.1" "\\section{Shared Data Store Controller Architecture}" 2)
+(toc "toc" "    3.1 Controller Design Ideas" "/Users/fabiim/Dropbox/TESE/final/tex/heimdall.tex" nil 2 "3.1" "\\section{Controller Design Ideas}" 3)
+
+(toc "toc" "      3.1.1 General Design" "/Users/fabiim/Dropbox/TESE/final/tex/heimdall.tex" nil 3 "3.1.1" "\\subsection{General Design}" 25)
+
+(toc "toc" "      3.1.2 Data Store" "/Users/fabiim/Dropbox/TESE/final/tex/heimdall.tex" nil 3 "3.1.2" "\\subsection{Data Store}" 6578)
+
+(toc "toc" "        3.1.2.1 Domains" "/Users/fabiim/Dropbox/TESE/final/tex/heimdall.tex" nil 4 "3.1.2.1" "\\subsubsection{Domains}" 6602)
+
+(toc "toc" "        3.1.2.2 Data Store Service" "/Users/fabiim/Dropbox/TESE/final/tex/heimdall.tex" nil 4 "3.1.2.2" "\\subsubsection{Data Store Service}" 7118)
+
+("tab:table-types" "t" "Table types" "/Users/fabiim/Dropbox/TESE/final/tex/heimdall.tex" nil)
+
+("fig:topologies" "f" "Topology tables in the data store. The local topology represents the entire topology seen by a contr" "/Users/fabiim/Dropbox/TESE/final/tex/heimdall.tex" nil "")
+
+(toc "toc" "      3.1.3 Transactional Memory" "/Users/fabiim/Dropbox/TESE/final/tex/heimdall.tex" nil 3 "3.1.3" "\\subsection{Transactional Memory}" 8697)
+
+("fig:pipeline" "f" "Processing events in the pipeline. A single thread pre-fetches everything that is not existent in ca" "/Users/fabiim/Dropbox/TESE/final/tex/heimdall.tex" nil)
+
+("fig:pipeline-seq" "f" "Processing events in the pipeline. " "/Users/fabiim/Dropbox/TESE/final/tex/heimdall.tex" nil)
+
+(toc "toc" "      3.1.4 Data Store Service" "/Users/fabiim/Dropbox/TESE/final/tex/heimdall.tex" nil 3 "3.1.4" "\\subsection{Data Store Service}" 10539)
+
+(toc "toc" "    3.2 Reliability" "/Users/fabiim/Dropbox/TESE/final/tex/heimdall.tex" nil 2 "3.2" "\\section{Reliability}" 11642)
+
+(toc "toc" "      3.2.1 Protocol" "/Users/fabiim/Dropbox/TESE/final/tex/heimdall.tex" nil 3 "3.2.1" "\\subsection{Protocol}" 11808)
+
+("fig:proto-heartbeats" "f" "Heartbeats sent to the data store. " "/Users/fabiim/Dropbox/TESE/final/tex/heimdall.tex" nil "")
+
+("fig:proto-c2-fails" "f" "C1 finds out that C2 has failed." "/Users/fabiim/Dropbox/TESE/final/tex/heimdall.tex" nil "")
+
+("fig:proto-c1-as-master" "f" "C1 has to set himself as master in S2. " "/Users/fabiim/Dropbox/TESE/final/tex/heimdall.tex" nil "")
+
+("fig:proto-c1-finishes" "f" "Finally tell the data store he controls S2. " "/Users/fabiim/Dropbox/TESE/final/tex/heimdall.tex" nil "")
+
+(toc "toc" "    3.3 Shared Data Store Controller Architecture" "/Users/fabiim/Dropbox/TESE/final/tex/heimdall.tex" nil 2 "3.3" "\\section{Shared Data Store Controller Architecture}" 14931)
 
 ("sec:heimdall:architecture" "s" "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" "/Users/fabiim/Dropbox/TESE/final/tex/heimdall.tex" nil)
 
 ("fig:architecture" "f" "Heimdall Architecture" "/Users/fabiim/Dropbox/TESE/final/tex/heimdall.tex" nil)
 
-(toc "toc" "    3.2 Floodlight" "/Users/fabiim/Dropbox/TESE/final/tex/heimdall.tex" nil 2 "3.2" "\\section{Floodlight}" 4418)
+(toc "toc" "    3.4 Floodlight" "/Users/fabiim/Dropbox/TESE/final/tex/heimdall.tex" nil 2 "3.4" "\\section{Floodlight}" 19424)
 
 ("sec:heimdall:floodlight" "s" "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% \\section{Data St" "/Users/fabiim/Dropbox/TESE/final/tex/heimdall.tex" nil)
 
-(toc "toc" "    3.3 Data Store" "/Users/fabiim/Dropbox/TESE/final/tex/heimdall.tex" nil 2 "3.3" "\\section{Data Store}" 4571)
+(toc "toc" "    3.5 Data Store" "/Users/fabiim/Dropbox/TESE/final/tex/heimdall.tex" nil 2 "3.5" "\\section{Data Store}" 19584)
 
-("sec:heimdall:dataStore" "s" "%Features design, etc., FIXME : Alysson - será que posso justificar que a data store performance nao" "/Users/fabiim/Dropbox/TESE/final/tex/heimdall.tex" nil)
+("sec:heimdall:dataStore" "s" "%Features design, etc.,  FIXME : Alysson - será que posso justificar que a data store performance na" "/Users/fabiim/Dropbox/TESE/final/tex/heimdall.tex" nil)
 
-(toc "toc" "      3.3.1 Smart" "/Users/fabiim/Dropbox/TESE/final/tex/heimdall.tex" nil 3 "3.3.1" "\\subsection{Smart}" 4790)
+("sec:heimdall:datastore:bft-smart" "s" "FIXME : Alysson - será que posso justificar que a data store performance nao é importante quando com" "/Users/fabiim/Dropbox/TESE/final/tex/heimdall.tex" nil)
 
-(toc "toc" "      3.3.2 Design" "/Users/fabiim/Dropbox/TESE/final/tex/heimdall.tex" nil 3 "3.3.2" "\\subsection{Design}" 5011)
+(toc "toc" "      3.5.1 Smart" "/Users/fabiim/Dropbox/TESE/final/tex/heimdall.tex" nil 3 "3.5.1" "\\subsection{Smart}" 19857)
 
-(toc "toc" "        3.3.2.1 Map interface" "/Users/fabiim/Dropbox/TESE/final/tex/heimdall.tex" nil 4 "3.3.2.1" "\\subsubsection{Map interface}" 5032)
+(toc "toc" "      3.5.2 Implementation" "/Users/fabiim/Dropbox/TESE/final/tex/heimdall.tex" nil 3 "3.5.2" "\\subsection{Implementation}" 20086)
 
-(toc "toc" "      3.3.3 Cross References tables" "/Users/fabiim/Dropbox/TESE/final/tex/heimdall.tex" nil 3 "3.3.3" "\\subsection{Cross References tables}" 5666)
+(toc "toc" "        3.5.2.1 Map interface" "/Users/fabiim/Dropbox/TESE/final/tex/heimdall.tex" nil 4 "3.5.2.1" "\\subsubsection{Map interface}" 20117)
 
-("sec.datastore.cross.references" "s" "\\subsection{Versions} It can be really painfull to use replace if equal based on byte representation" "/Users/fabiim/Dropbox/TESE/final/tex/heimdall.tex" nil)
+(toc "toc" "    3.6 Data store" "/Users/fabiim/Dropbox/TESE/final/tex/heimdall.tex" nil 2 "3.6" "\\section{Data store}" 20772)
 
-(toc "toc" "      3.3.4 Versions" "/Users/fabiim/Dropbox/TESE/final/tex/heimdall.tex" nil 3 "3.3.4" "\\subsection{Versions}" 5742)
+("sec:heimdall:datastore:functionalities" "s" "Most of those functionalities can be found in off-the-shelf data stores (either SQL or NoSql). \\subs" "/Users/fabiim/Dropbox/TESE/final/tex/heimdall.tex" nil)
 
-(toc "toc" "      3.3.5 Cache" "/Users/fabiim/Dropbox/TESE/final/tex/heimdall.tex" nil 3 "3.3.5" "\\subsection{Cache}" 6908)
+(toc "toc" "        3.6.0.1 Cross References" "/Users/fabiim/Dropbox/TESE/final/tex/heimdall.tex" nil 4 "3.6.0.1" "\\subsubsection{Cross References}" 20943)
 
-(toc "toc" "        3.3.5.1 Cache? What about Consistentcy" "/Users/fabiim/Dropbox/TESE/final/tex/heimdall.tex" nil 4 "3.3.5.1" "\\subsubsection{Cache? What about Consistentcy}" 6927)
+(toc "toc" "        3.6.0.2 {Versioned} Another common functionality is concurrency control based on version numbers that are as" "/Users/fabiim/Dropbox/TESE/final/tex/heimdall.tex" nil 4 "3.6.0.2" "\\subsubsection {Versioned}
+Another common functionality is concurrency control based on version numbers that are associated with an entry in a key value table. 
+Every" 21980)
 
-(toc "toc" "        3.3.5.2 Implementation" "/Users/fabiim/Dropbox/TESE/final/tex/heimdall.tex" nil 4 "3.3.5.2" "\\subsubsection{Implementation}" 7109)
+(toc "toc" "        3.6.0.3 Columns" "/Users/fabiim/Dropbox/TESE/final/tex/heimdall.tex" nil 4 "3.6.0.3" "\\subsubsection{Columns}" 24954)
 
-(toc "toc" "      3.3.6 Columns" "/Users/fabiim/Dropbox/TESE/final/tex/heimdall.tex" nil 3 "3.3.6" "\\subsection{Columns}" 11288)
+(toc "toc" "        3.6.0.4 Cache" "/Users/fabiim/Dropbox/TESE/final/tex/heimdall.tex" nil 4 "3.6.0.4" "\\subsubsection{Cache}" 26696)
+
+(toc "toc" "        3.6.0.5 Micro Components" "/Users/fabiim/Dropbox/TESE/final/tex/heimdall.tex" nil 4 "3.6.0.5" "\\subsubsection{Micro Components}" 27624)
 
 (eof "/Users/fabiim/Dropbox/TESE/final/tex/heimdall.tex")
 

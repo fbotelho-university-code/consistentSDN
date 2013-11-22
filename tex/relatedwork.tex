@@ -1,56 +1,121 @@
 
-Software Defined Networks (SDN) change the traditional model of network
-architecture and design. Traditionally,  networking  relied and evolved over a non-transparent distributed model for
-the deployment  of  protocols and configuration of devices. This model
-lead to complex protocols and management functions. SDN presents a new way of thinking in networking,
-shifting the complexity of protocols and management functions from  the  networks
-devices to a general purpose logically centralized service. 
 
-Historically  the network academic environment has followed an 
-ad-hoc approach to networking where protocols are introduced as a
-response to specific problems. Scoot
-Shenker, a networking researcher from Berkley\footnote{Scoot Shenker has played a fundamental role in SDN development, collaborating in many papers. He is also co-founder of both ONF \cite{onf} and Nicira Networks - both very important to SDN.}, ironically sums up  this contribution to networking as a ``big bag of
-protocols'' \cite{Shenker:2011ys}. In his opinion there is a lack of
-\emph{control abstractions} in current network architectures that, allied  with  their  distributed nature,
-lead to the  complex infrastructure available today. Additionally the
-network field has failed to developed the appropriate tools for
-managing such complexity. 
+%TODO - short paragrah introducing the general background idea
 
-SDN breaks this complex model through the
-physical detachment of the control and data planes.  The motivation behind this
-decoupling is the following: if the distributed network state can be collected
-and presented to a logically centralized service then it is simpler to both to
-specify network level objectives as well as to translate these
-objectives into the appropriate configuration of network devices. These
-planes, when loosely coupled, can simplify the development of protocols
-and the management of network infrastructures. 
+This chapter outlines the major contributions supporting that have defined the current state of art for Software Defined Networks. 
+The area is marked by three phases, but we skip the first one of programmable networks that introduced Active networks whereby network hardware was programmed either by code carried in-band in data packets or out-band according to different mechanism. 
+Falar do artigo do feamster como review. 
 
-In this section we present a historical perspective
-of contributions leading to the standardization process of SDN and a
-terminology/concept section necessary for
-proper understanding of the remaining discussion in this document.  
+
+``Active Networks introduced programmable functions the network to lower the barrier to innovation'' ``did not see widespread deployment''
+``control and data plane separation (from 2001 to 2007) which developed open interfaces between the control and data planes'' 
+``The OpenFlow API (2007-2010), which represent the first instance of widespread adoption of an open interface and developed ways to make contro-data plane separation scalable and practical'' 
+
+
+Software Defined Networks is already a big field with a lot of existent work. 
+Software Defined Networking is a networking research field born from a  distributed
+collaborative effort. In this section we outline some of the major contributions that have led to its current state. 
+
+
+
+%TODO - section History covers the historical path of the data and control plane separation starting at a routing systems and culminating in SDN. 
+
+
+%----------
+
+Software Defined Networks (SDN) changed the traditional model of network architecture and design. 
+%FIXME - bad phrase  
+Traditionally, networking  relied and evolved over a non-transparent distributed model for
+the deployment  of  protocols and configuration of devices. 
+This model lead to complex protocols and management functions. 
+SDN presents a new way of thinking in networking, shifting the complexity of protocols and management functions from  the  networks devices to a general purpose logically centralized service. 
+
+Historically  the network academic environment has followed an  ad-hoc approach to networking where protocols are introduced as a response to specific problems. 
+Scoot Shenker, a networking researcher from Berkley\footnote{Scoot Shenker has played a fundamental role in SDN development, collaborating in many papers. He is also co-founder of both ONF \cite{onf} and Nicira Networks - both very important to SDN.}, ironically sums up  this contribution to networking as a ``big bag of protocols'' \cite{Shenker:2011ys}. 
+In his opinion there is a lack of \emph{control abstractions} in current network architectures that in alliance  with  their  distributed nature, leads to the  complex infrastructure available today. 
+Additionally the network field has failed to developed the appropriate tools for managing such complexity. 
+
+%FIXME - move to intro
+SDN breaks this complex model through the physical detachment of the control and data planes.  
+The motivation behind this decoupling is the following: if the distributed network state can be collected and presented to a logically centralized service then it is simpler to both to specify network level objectives as well as to translate these objectives into the appropriate configuration of network devices. 
+These planes, when loosely coupled, can simplify the development of protocols and the management of network infrastructures. 
 
 
 \section{Software Defined Networks}
 \glsresetall
 \label{sec:background:sdn}
-Software Defined Networking is a networking research field born from a  distributed
-collaborative effort. In this section we
-outline some of the major contributions that have
-led to its current state. 
 
-\subsection{Fundamentals} 
-\subsubsection{4D.} The origins of SDN can be traced back to the 4D architecture published in  2005 that ``generated both broad consensus and wide disagreements from
+
+\subsection{History}
+
+\subsubsection{RCP}
+\begin{itemize}
+\item  In 2004 Feamster et. al.  \cite{Feamster:2004tg}   presented the design of \gls{rcp}.
+\item  Has been implemented a year later by Caesar et. al.  \cite{Caesar:2005wsa}
+
+\item Background : ``The routers in an \gls{as} must distribute information they learn about how to reach external destinations'. Unfortunely today's internal \gls{ibgp} architectures have serious problems: a ``full mesh'' \gls{ibgp} configuration does not scale to large networks and ``route reflection'' can introducen problems.'' ``The routers in a single \gls{as} exchange routes to external destinations using a protocol called \gls{ibgp}'' `` n quadradado não escala porque é preciso manter um numero elevado de conexões com bastante estado associada para uma das conexões'' ``route reflectors structure the network in an hierarchy''
+
+\item Basic idea : logically centralized platform separated from the data plane that manages the routing decision process instead of routers. 
+\item Interestingly ~\gls{rcp} decouples the control plane from the data plane to solve scalability problem of the \gls{bgp} protocol that required a full meshed network (\bigO{$N^2$} for $N$ routers)   to work correctly. 
+\item Route reflection mitigates the scalability problem  with an hierarchy scheme between routers to limit their vision of other regions. 
+
+\item The existent alternative at the time was to use a route-reflector solution that ``alleviated'' the  scalability problem introduced incorrectness in the routing tables (routes oscilation and forwarding loops, in some cases persistant). 
+
+\item In \gls{rcp} each router in an \gls{as}  maintains a connection to a logically centralized control plane. 
+\item Control plane maintains a global view of all routes collected by each of the routers.
+\item It scales because there is a much lower number of connections instead of the previous mesh network
+\item It also scales because the authors developed appropriate data structures that save memory when keeping the route state. 
+\item It is correct because the logically centralized controll plane maintains a global view of the network.
+
+
+\item To be robust to network partitions avoid a single point of failure the \gls{rcp} control plane is replicated and each router can connect to more than one server. 
+This scheme introduces the possibility of inconsistency since  \gls{gls} replicas have different views of the network. 
+And different replicas could install conflicting rules in the same router. 
+The authors show in the paper that there is no need to have consistency protocols between \gls{rcp} replicas to prevent such conflicts. 
+This does not affects the safety of their system given that it is designed such that each replica makes routing decisions only for the partitions for which it has a complete interior topology view. But for the same reason it can affect liveness since each since different RCSes may fail to assign routes to routers. 
+We note that this is proof takes the assumption that the replicas have already converged to what the authors name a steady ``state''  where the progation of route updates has already converged in the \gls{replicas}. 
+
+
+\item It is paradoxically that this same work who is partially motivated by problems caused by lack of consistency in the network state that is distributed across routers ends up being eventually consistent in the state distribution plane. 
+\end{itemize}
+
+\subsubsection{4D}
+\begin{itemize}
+\item  The origins of SDN as an architectural principle for networks can be traced back to the 4D architecture published in  2005 that ``generated both broad consensus and wide disagreements from
 the reviewers''  \cite{Greenberg:2005boa}. In this seminal work the authors identify essential
 problems governing  the traditional network architecture and  present an
 explanation of the design process behind a clean-slate architectural
-pattern for  the development of new networks. 
+pattern for network management and innovation.  
 
-The authors identify  the root cause of the complexity inherent to the
+%TODO - root problem is coupling of control plane with data plane. 
+%TODO - results in the lack of way to specify network wide goals
+%TODO - management goals are decomposed in ad-hoc manual scripts distributed by the data plane infrastructure. 
+
+\item The authors identify  the root cause of the complexity inherent to the
 classic Internet design as the  entanglement  of control and
 forwarding functions in the network devices. They advocate that this complexity is tied to the lack of accessible control abstractions in the network devices. 
 
- With this in mind they present the  4D architecture. Their  design is led by the
+\item\gls{rcp} focus in control the \gls{bgp} routes only. But 4D envisions global control over all data plane forwarding mechanisms (e.g., FIB entries, packet filters, NAt's, tunnels, packet scheduling and buffer management) that should be available as a unifed  resourced to satisfy network goals. 
+
+\item Named 4D due to the 4 planes of this architecture. 
+
+\begin{itemize}
+\item[] \textbf{Decision:}  defines network-level goals and 
+  translates them to configuration primitives of the network
+  equipment. This plane maintains a representation of the current state of the network (i.e., the network view); 
+\item[] \textbf{Dissemination:}  connects the Decision and Data plane. Must be
+  done with robustness guarantees; Is independent of the data plane network guarantees. 
+\item[] \textbf{Discovery:} provides discovery information (e.g., network
+  equipment, interfaces, etc.) from the Data plane to the Decision plane; Discover physical components in the network. 
+\item[] \textbf{Data:}  is governed by the network equipment
+  infrastructure. Provides packet forwarding functions and implements
+  an interface to the Decision plane;  
+\end{itemize}
+
+The 4D project [34] advocated four main layers—the data plane (for processing packets based on configurable rules), the discovery plane (for collecting topology and traffic measurements), the dissemination plane (for in- stalling packet-processing rules), and a decision plane (consisting of logically centralized controllers that con- vert network-level objectives into packet-handling state). Several groups proceeded to design and build systems that applied this high-level approach to new application areas, beyond route control.
+
+
+\item  With this in mind they present the  4D architecture. Their  design is led by the
 decoupling of the control plane from the data plane. Additionally, they
 identify three key requirements for the 4D architecture: specification of  network level goals (e.g., routing,
 security policy);  centralization of the network state (e.g.,
@@ -61,15 +126,6 @@ The 4D architecture can be seen
 in Figure \ref{fig:4d}. A description of the four layers
 follows: 
 
-\begin{figure}
-  \centering 
-  \footnotesize
-  \includegraphics[scale=0.5]{pic/4d.png}
-  \caption[The 4D architecture]{\textbf{The 4D architecture}: is
-    composed by 4 planes. Notice that Discovery operates
-  in the Dissemination plane.}
-  \label{fig:4d}
-\end{figure}
 
 \begin{itemize}
 \item[] \textbf{Decision:}  defines network-level goals and 
@@ -94,14 +150,22 @@ presented a significant mark in the history of SDN by setting the
 ground for discussion and evolution focused on this essential
 decoupling of control and data planes.  
 
-\subsubsection{Ethane.}Ethane \cite{Casado:2007kb} was published in 2007 and presents a
+
+\subsubsection{Ethane}
+\begin{itemize}
+\item Particular expansion of the 4D project. 
+\item Casado et. al. present in 2007  \cite{Casado:2007kb}
+\item Ethane \cite{Casado:2007kb} was published in 2007 and presents a
 network architecture for the enterprise with emphasis in
 security. This work adapts the 4D design to implement a centralized
 high-level security policy manager in the controller allied with a namespace  for users and nodes
 available in the Network Information base (NIB). The Decision plane is also responsible for
 authentication of both users and nodes. 
 
-In Ethane the 4D Decision plane  is instantiated in a complex software
+\item Begin with this: The controller plays the interposition role
+between any two pair of hosts.
+\item In Ethane the switches are dumb. ``reduced to a flow tables machines that are populated by the controller based on high-level security policies''
+\item In Ethane the 4D Decision plane  is instantiated in a complex software
 running in a server named \emph{controller}. The controller guarantees
 that the security policy is respected. To do so, it can manipulate the network
 devices available in the network. The devices perform  flow-based
@@ -116,43 +180,24 @@ high-level names. As
 authentication is performed in the controller it is easy to maintain
 bindings between these names and dynamic addresses. 
 
-In the paper several replication techniques are presented 
-as possibilities for ensuring fault tolerance of the Ethane controller. These are the following: 
 
-\begin{itemize}
-\item[] \textbf{Cold standby:}  In this mode backup controllers are passive entities
-  waiting to take over if  the active controller fails. Backup
-  controllers participate in the
-  Minimum Spanning Tree (MST) protocol where the active controller  is
-  defined as the root of the tree. Upon failure of the active
-  controller the tree converges to a new root (i.e., a new
-  controller). Replication only covers authentication and
-  network security policy state with simple (unspecified) consistency
-  properties that are not strong enough to avoid requiring 
-  re-authentication of a subset of  the users when the active
-  controller fails. 
-\item[] \textbf{Warm-Standby:} In this case  passive controllers recovery
-  faster as separate  MST's are maintained for every controller. In this replication
-  method the authors also replicate bindings across
-  Controllers. However, 
-  these are replicated with weak consistency and as so, may require
-  re-authentication from users or nodes upon failure of the active controller.
 
-\item[] \textbf{Fully-Replicated}: In this approach two or more active
-  controllers are fully replicated. The authors advocate the use 
-  of weak-consistent methods based on gossiping but also leave 
-  the study open for the use of a fully replicated state machine.
-\end{itemize}
+\item We again see the discussion  for distributed control for improving resilience in the control plane.
+In Ethane.
+And in additions scalability.
+The authors expose different modes for this distribution. In the primary-backup mode there is an active controller while other standby to take over its place in the event of failure. 
+In this mode the standby controllers can keep slow-changing state (such as configuration and user registration) consistently while the binding information that associates network devices to users is kept under eventual consistency semantic. The only problem identified in the paper with this mode is that in the event of failures some users may need to reauthenticate. 
+In contrast in the active mode, the two or more active Controllers take over the network. The authors envision that switches can balance their requests across these different controllers. Under this mode the authors argue that  the use of eventually consistency semantics for replication is sufficient in most implementations. Also they state that to solve conflicts in this data replication the use of consistency aware data structures such as convergent data structures or simple partitioning schemes (e.g., separate \gls{ip} address space across controllers for \gls{dhcp} allocation that is conflict free). Albeit arguing for eventual consistency they do state that is a need for further study and stronger consistency guarantees as the \gls{smr} can be employed when desired. 
 
-Ethane major contribution comes from the practical  experience with
+\item Ethane major contribution comes from the practical  experience with
 the deployment in the Stanford
 University  campus network. The  analysis performed suggests that a single
 desktop computer alone could handle a network with over 20K hosts. 
 
-\subsubsection{OpenFlow.} 
-\label{section:background:of} % explain hard and soft
-                              % timeouts. Explain flow-removed,
-                              % flow-mod. 
+\end{itemize}
+
+
+\subsubsection{OpenFlow}
 Both Ethane \cite{Casado:2007kb} and 4D \cite{Greenberg:2005boa}
 focused in the decoupling of the control plane from the data plane, however there is also required that the control plane can programatically define the data plane configuration. In Ethane this
 feature was presented in a monolithic  implementation of the controller.
@@ -169,7 +214,7 @@ $\langle match,action \rangle$. The $match$ entry allows the device to match
 arriving packets, while  $action$
 specifies the forwarding behavior. Matches can be performed against
 standard fields in Ethernet, IP and transport headers while actions can
-range from dropping packets; forwarding to single port(s); and/or forwarding to controller. As in Ethane, a non-matching flow is forwarded to the controller who in
+range from dropping packets; forwarding to single port(s); and/or forwarding to controller. As in Ethane, a non-matching flow is usually forwarded to the controller who in
 turn should instruct  the network device on future behavior through
 the modification of the device flow table. Once the table is instructed, 
 subsequent packet with matching headers can be forwarded without
@@ -179,12 +224,32 @@ Currently the OpenFlow specification is maintained by the Open Network
 Foundation (ONF). At the time of writing, the version 1.3 \cite{of13} is available with
 several improvements over the original paper \cite{openflow}. 
 
-\subsubsection{Network Operating System.} The Network Operating System (NOS) terminology  was initially used in the
+\begin{itemize}
+\item The decoupling was established as solid architectural principle, but there was the lack of an standard interface on network devices. 
+\item 
+\item programmable hardware lowers the barrier to inovate. 
+\item OpenFLow leverages on existent switch hardware. 
+\item Become immediately deployable. 
+\item  Enable a wide range of controller applications
+\item So the data plane interface become immediately standardized. 
+\item looking for ways to conduct exmperimental work on ``clean-slate'' network architectures 
+\item Generalize the behaviour. Instead of ip based , \gls{of} can define forwarding behavior on traffic flow based on 13 different packet headers. 
+\item A router is ip, a switch is mac and a firewall is (ip, port and transport protocol). 
+\end{itemize}
+\subsubsection{Network Operating System}
+\begin{itemize}
+\item After \gls{OpenFlow} 
+\item Nox and Maestro. Concurrently introduced in 2008 . 
+
+\item The Network Operating System (NOS) terminology  was initially used in the
 context of Operating Systems (OS's) to name OS's with network services available. In the
 context of SDN it was, to our knowledge,
 introduced by Gude et al. \cite{Gude:2008jd} and
-Cai et al. \cite{Z.-Cai:2008fk}. 
+Cai et al. \cite{Z.-Cai:2008fk}.
 
+\item ``More generally, the emergence of a network operating system offered a conceptual decomposition of network operation into three layers [47]: (1) a data plane with an open inter- face; (2) a state management layer that is responsible for maintaining a consistent view of network state; (3) con- trol logic that performs various operations depending on its view of network state. Although the development of the OpenFlow protocol itself was mostly an engineering effort, efforts to drive adoption have also produced several contributions''
+
+\item 
 The role
 of the Network Operating System is to provide
 applications residing above it the ability to effectively control and
@@ -219,7 +284,11 @@ running outside the kernel.
 
 %TODO - they can be a challenge to distributed controllers. 
 
-\subsection{General Architecture}
+\end{itemize}
+
+\subsection{Fundamentals}
+
+\subsubsection{Architecture}
 In March 2011 the Open Network Foundation was created with the
 participation and support from several industry partners \cite{onf}. ONF  is a ``non-profit consortium
 dedicated to the transformation of networking through the development
@@ -337,7 +406,98 @@ three categories of controllers are discussed:
 \end{itemize}
 
 
+\begin{itemize}
+\item ``Whenever a switch sees a flow's first packet, because there is no flow entry configured on the switch's flow table to match this flow, the first packet will be forwared to the controller. We call this packet a ``flow request''. The controller runs user defined applications to process a flow request, for example the controller computers a path for this flow and installs flow entries on every switch along the chosen path, so that subsequent packets of this flow can be handled by the switches locally. Finally the flow requet packet itself is sent back to the origin switch'' 
 
+
+\item This reactive model is not ideally. One could also have a proactive model where network changes are applied to the data store view,  resulting (possibly) in configuration changes to the data plane. But typically requirements for the network view are event driven, for example, the location of hosts with OpenFlow is limited to listening and processing packet-in events for flow requests that did not match a flow in the switch table. Typically the installed flow rules to access a host expired on a time basis and/or usage based. This serves two purposes: first it recycles the switch flow tables such that it does not lead to exhaustion of the switch hardware capabilities, but also allows applications to refresh the devices location which can be essential in mobility scenarios caused by mobiles users, virtual machine migration or others. 
+But by reverting this tendency to a proactive model with more device drivers (e.g., snmp or others) to access the servers we can avoid this behaviour and have an proactive model whereby the traffic that reaches the controller can possibly decrease in magnitude. Data center measurements suggest that 
+
+\end{itemize}
+\subsubsection{OpenFlow}
+
+From openflow.1.3.spec \cite{openflow-spec}
+Timeouts : (specified in flow_mod messages). 
+idle timeout - `` If set and the \texttt{hard\_timeout} is zero the entry must expire after \texttt{idle\_timeout} seconds with no received traffic. ''
+hard timout  - ``if set the entry must be expired in the specified number of seconds regardless of whether or not packets are hitting the entry. A value of 0 means that a timeout has not been set''
+``If the idle_timeout is set and the hard_timeout is zero, the entry must expire after idle_timeout
+seconds with no received traffic. If the idle\_timeout is zero and the hard_timeout is set, the entry
+must expire in hard_timeout seconds regardless of whether or not packets are hitting the entry. If both
+idle_timeout and hard\_timeout are set, the 
+ow entry will timeout after idle_timeout seconds with
+no trafficc, or hard_timeout seconds, whichever comes first. If both idle\_timeout and hard\_timeout are
+zero, the entry is considered permanent and will never time out. It can still be removed with a flow_mod
+message of type OFPFC\_DELETE.''
+
+OpenFlow: flowmod and flow removed FIXME 
+Maybe talk a little about the asynchronous problems and lacks of guarantees. 
+\begin{table}[ht]
+  \centering
+  \begin{tabular}[ht]{lll}
+    Match Fields &  Instructions & Timeouts \\ \toprule 
+    source MAC = 10:20:. \emph{AND}  protocol = ICMP  & port 2,3 & 5,10 ms \\ 
+    source IP = 10.0.0.0/24  & port 1 &  0/0 \\
+    source IP = 10.0.0.0/24 \emph{AND} protocol = TCP & controller & 0/0 \\ 
+    any & controller & 0/0 \\ \bottomrule 
+  \end{tabular}
+  \caption{Simplified representation of a flow table in OpenFlow switches }
+  
+\end{table}
+
+
+\begin{itemize}
+\item Not event the first packet must go to the controller
+\item Wide array of matching. By default each packet is set to a match any . Bitmask masking if supported by the switch (notice the 10.0.0.0/24). 
+\item We use an explicit message, but table misses can also be configured to be forwarded to the controller. 
+\item wide range of instructions , including multi processing with the use of different flow tables. For our purposes it suffices to understand that we can control the forwarding process with commands as  forward or drop . In the table we only show example that forward the flow to different ports, including an example that forwards it to two different ports. 
+\item Hard timeout and idle timeout
+
+\end{itemize}
+
+\begin{itemize}
+\item Controller to switch communication. 
+\item ``Interface that connects each OpenFLow switch to a controller .  Through this interface, the controller configures and manages the switch, receives events from the switch , and sends packets out the switch'' 
+\item Over TCP 
+
+\item Controller to switch
+  \begin{itemize}
+  \item Messages that are initiated by the controller and may or may note rquire a response from the switch. 
+\item Modify state : manage state on the switch and add, delete and modify flow entries in  the OpenFlow tables. 
+  \item Packet-out messages used by the controller to send specific messages out a port. 
+  \item Barrier messages to ensure message dependencies have been met or to receive notifications for completed operations. 
+  \end{itemize}
+\item Asynchronous messages 
+  \begin{itemize}
+  \item Packet-in transfer the control of a packet to the controller. For all packets forwarded to the controller reserved port using a flow entry or the table-miss flow entry. This message contains at least the headers of the data plane message that causes it. In some cases the entire message is sent. Throughout the text we abuse the language and use  the data plane event to refer the packet-in message received at the controller. For example we might say: the controller receives an \gls{ip} request when in practice it receives a packet-in request triggered by an \gls{ip} request at the switch. 
+  \item Flow-removed inform the controller about the removal of a flow entry from a flow table. 
+  \end{itemize}
+
+\end{itemize}
+
+
+Message handling
+\begin{itemize}
+\item Provides reliable message delivery and processing, but does not automatically provide acknowledgements or ensure ordered message processing;
+\item It is built over \gls{tcp} but it can not ensure message ordering because multi connections can be open to enhance parallelism; 
+\item Messsages are guaranteed eventual delivery unlesss the channel fail; unless the OpenFlow channel fails entirely, in which case the controller should not assume anything about the switch state (e.g., the switch may have gone into ``fail standalone mode'' ) 
+\item Ordering can be ensured through the use of barrier messages. in the absence of barrier messages, switches may arbitrarily reorder messages to maximize performance; hence controllers should not depend on a specific processing order. 
+\end{itemize}
+
+\begin{itemize}
+\item The OpenFlow channel supports multi controllers connectivity
+\item The hand-over between controllers is entirely managed by the controllers themselfes.
+\item A controller can operate in one of three modes : 
+\item In the master mode it has full access to the switch. The switch ensures that only one controller is responsible for this role.  When a controller change its role to master the previous controller is immediately changed to the slave role. 
+\item In the slave role the controller only has read-only access to the switch and by default does not receive switch asynchronous messages (except the port status messages that are triggered by changed in the a particular port status - up or down). If this controller attempts to modify the switch state (e.g., flow  modification message) then the switch will reply with an error message
+\item Finally the equal role is identical to the master role , but several controller may have it. 
+\item Any controller in any role can specify what kind of switch asynchronous messages are received in the controller and which ones it does not cares about. 
+\item There is a master identifier to identify how many times the mastership has changed. It is a monotonically increasing counter. When changing a role, the controller must specify an id in the request that is greater than the currently counter seen at the switch, otherwise the message is discarded
+
+\item The switch must be configured at startup with the ip address of the switch. 
+\item In case the switch looses connection to all controllers it can enter the fail secure mode or fail standalone mode. In te first the only change is that packets destined to the controller are dropped. Timeout entries are eventually dropped. In the second the switch behaves as a legacy Ethernet switch or router. 
+\item On reconnection the flow entries remain. 
+
+\end{itemize}
 \section{Physically Centralized  Controllers}
 \glsresetall
 \label{sec:background:centralized}
@@ -354,6 +514,42 @@ different controllers processes over onde or more servers.
 %TODO - thin. 
 \subsubsection{NOX}
 \label{sec:nox}
+
+
+%TODO - move to network operating system 
+Network Operating System
+%TODO make references to section of network operating system 
+\begin{itemize}
+\item ``Focused on the network operating systems providing an uniform and centralized programmatic interface to the entire network''
+\item ``Analalogous to the read and write access to various resources provided by the computer operating systems, a network operating systems provides the ability to observe and controll a network''
+\item ``Does not manages the network itself; it merely provides a programmatic interface . Applications implemented on top of the network operating systems perform the actual management tasks.''
+\item This interfaces provides the core of a controller. Applications belong to the management layer whereby decisions that affect the switch state is done. The core just affects the controller state (the network view). 
+\item Openflow can be seen as a device driver to be used by the network operating system. 
+\end{itemize}
+
+NOX
+\begin{itemize}
+\item Network view.  Could be distributed with standard replication techniques (unspecified) for resilience; 
+\item ``The network view contains switch-level topology; the locations of users, hosts, middleboxes and other network elements; and the services (e.g., HTTP or NFS )  being offered but does not include the current state of network traffic;''
+\item According to the authors this choice of observation granularity provides adequate information for many network managements tasks and changes slowly enough that it can be scalably maintained in the network; 
+\item The choice of flow limits the control application in kind. It can't easily do deep packet inspect for example as it would hinder scalability too much; 
+\item ``In terms of consistency; the only network state that is global (i.e., must be used consistently across the controller processes) is the network view; this consistency requirements arises because applications use data from the network view to make control decisions, and those decisions should be the same no matter to which controller instance the flow has been sent. In constract, since neither packet state nor flow state are part of the network, they can be kept in local storage (i.e., packet state in switches, and flow state in controller instances).'' 
+\item The netowrk view is a set of indexed hashtables, with extensions for distributed access with local caching to aid scaling across multiple controller instances. 
+\item ``Thus, NOX applications should only write to it when a change is detected in the network, and not for every received packet'' 
+
+\item Reactive. Event based.   Pipeline based 
+\item The core controller has applications that maintain a switch and host level topology in the network view. Other applications include: discovery of network services, user and host authentication, network policy enforcement, and detect network scanning. 
+\item ``Some events are generated directly by \gls{of} messages such as switch koin, switch leave, packet received, port up/dow, and statistics received'';;
+\item set of handlers, registered to execute when a particular event handles. Even handlers are executed in order of their priority.
+\item Each handlers decides if the event should go further in the pipeline or not
+\item Applications handle events and trigger events also. 
+\item ``Each service is coupled with an associated event that can be leveraged by other applications''. 
+
+
+\item It is very intersting to see that the Nox authors consider that NOX can easily scale since the events affecting the network view are in the order of tens of events per second for networks of thousands of hosts. ``The global data structure, the network view, changes slowly enough that it can be maintained centrally (or for resilience, it can be kept consistently on a small set of replicas) for even very large networks'' 
+\end{itemize}
+
+
 NOX \cite{Gude:2008jd}  was published and publicly released under
 GPL in 2008. It was both developed in C++ and Python. NOX enables a standard interface for the integration of  Management applications 
 in the controller. These applications control
@@ -403,6 +599,39 @@ Linux and a Python  based controller (POX) available for
 several environments \cite{nox}.
 
 \subsubsection{Maestro}
+\begin{itemize}
+\item ``In general operating systems can be sseen as revolving around two basic purposes: providing applications with a higher level of abstraction so they need not deal with low-level details, and (ii) controlling the interactions between applications. Maestro focuses on the second , ``orchestrating" the contrl decisions made by various management applications''
+\end{itemize}
+
+Performance , fairness 
+\begin{itemize}
+\item Focused in fair service from the controller to the switches requests. while achieving the maximum performance requirements (low request handling and scalability on multi core processors
+\item ``We investiage what software design strategies would optimize the eprformacen of a controller machine under the workload characteristics of OpenFlow; assuming the hardware is a commodity computer based on a modern multi-core processor architecture''
+\item Otpimizing performacen requires a balancen between fairness, latency, and throughput 
+\item The controlelr must be able to run multiple copies of user applications in parallel to scale up throughput on multi-core processors and must do so while maintaining fairness and controlable latency.
+\item Users of the system must have the option to write simple single-threaded applications and leave it to the controller to parallelize them. 
+\item Found that the round-robin design achieves far superior and near optimal fairness while having excellent scalability, second only to the dynamic partition design. 
+\item Also present a workload-adapative request batching algorithm that automatically selects the granularity for batching requests for improved throughput while ensuring request handling latency is well controlled. 
+\item NOX and BEacon both statically assign the request from a fixed subset of the network switches to each worker thread. This design maximizes parallelism and is conceptually ideal when requests are uniformly arriving from all switches. 
+\item Maestro shows that even under a uniform workload from the swithces, not all worker threads run at exactly the same rate in practice, leading to a performance bias towards some switches. When not uniform, this design suffers from poor fairness and potentially suboptimal throughput due the under-utilization of some worker threads. 
+\item Maestro shows that while NOX and Beacon can achieve impressive raw aggregate throughput, as expected such a static batching strategy laeds to unnessarily large request handling latency when the system is under heavy load. 
+
+
+\item Maestro dynamically creates multiple worker threads, to work on multiple instances of the parallelized application. Furthermore it can stall pending application instances until the update of the shared network state is updated. 
+\end{itemize}
+
+\begin{description}
+\item[Shared-Queue] A select thread to read the incoming requests from the switches without blocking; Afterwars the requests are put inside a queue shared by all worker threads. One of the workers fetches the requests and leads him through the pipeline until completion;
+\item[Maestro-Static-Partition] Adresses the previous design by statically distributing each (or groups of ) switch socket to a different thread. This removes the need for synchronization in the shared queue design; This is the model followed by both NOX and Maestro 
+\item[Maestro-Dynamic-Partition] Improves by measuring the switch recent input rates and dynamically arranging the workers-to-switch-sockets binginds. This improves the system since a static partition model does not takes into account that different switches can impose different workloads on the controller 
+\item[Round Robin ] Each worker thread is individually running a round-robin service loop among all switch sockets. Each flow request is processed entirely by one of the worker threads, 
+\end{description}
+
+\begin{itemize}
+\item Found that round robin achieves the most balanced performance for the Controller but stays second best in throughput scalability. The first is dynamic partition but at the cost of increased delay. 
+\item Interesting analysis and complete study of the tradeoffs. But it may be that this parallel model is not well adapted to some controller requirements. It is not clear for instance if switches events can be processed out of order. For instances two successive events considering the state of a port are better handled in \emph{First-In-First-Out} (FIFO) sequence). But not even the \gls{of} standard specifies this clearly. 
+\item This also does not take into consideration the impact of blocking calls made by the worker threads to remote services that have an impact of latency. 
+\end{itemize}
 
 Maestro is the undergoing work of Zeng Cai covered in
 \cite{maestro}. It is presented as a Network Operating System focused
@@ -458,6 +687,7 @@ available on the controller.
 
 Currently Maestro is available under the LGPL 2.1 licence. It ships
 with usual switching  and routing capabilities \cite{maestro}.
+
 
 \subsubsection{Beacon}
 \label{sec:beacon}
@@ -712,6 +942,16 @@ the simplicity of management applications  in  centralized controllers. It
 is built as a \emph{C++} application on top of the NOX 
 controller \cite{Gude:2008jd} requiring minor modifications to the
 controller core and is not publicly available. 
+\begin{itemize}
+\item Passively syncrhonizing network-wide views. HyperFlow localizes decision making to individual controllers, thus minimizing the control plane response time to data plane request. 
+\item All controllers share the same eventually consistent view. But no conflicts should arise if the applications respect the rules. 
+\item HyperFlow has the benefit of requiring only minor modifications to existing control applications 
+\item The author point out that controlelrs benefit from having the state locally since request can be served locally. 
+\item Proactively pushes state to other controllers. 
+\item Each controller runs as if they are running the entire network. The HyperFlow application captures commands to switches and responses  and redirects them to the appropriate controllers. 
+\item CRITIC: Under failure it has to replay all events. This can be time consuming and events grow indefinitely. Under this time the controller can not serve requests. If instead this recovery mechanism is isolated from the controllers then a recovered controller (or other in its place) can start processing network events almost immediately. 
+\end{itemize}
+
 
 \subsubsection{Architecture.} HyperFlow is composed of two main components: the controller application
 and an event propagation system. The overall architecture can be seen
@@ -719,7 +959,7 @@ in figure \ref{fig:hyperflow-design}. The controller component is
 an application built on top of NOX \cite{Gude:2008jd} which implements an event logger
 responsible for subscribing to OpenFlow events and a command proxy
 capable of sending OpenFlow commands to  network devices. In essence
-HyperFlow interposes acts as an intermediate layer between NOX and
+HyperFlow interposes  between NOX and
 Management applications. The event
 propagation system allows  communication between HyperFlow
 instances and  is built over a distributed filesystem. Communication
@@ -737,7 +977,7 @@ interested receivers subscribe to publishers through some form of
 subscription logic (e.g., channel, topics, etc.). The Publish/Subscribe
 model allows the decoupling of both space and time in the
 communication between publishers and subscribers. 
-HyperFlow requires that the communication system  provides:
+HyperFlow leverages on an existing Publish/Subscribe system that provides: 
 persistent storage of the events published; \emph{FIFO}
 (First-In-First-Out)  ordered delivery of
 the messages published by the same controller; and resilience against
@@ -763,12 +1003,8 @@ data channel. Every controller subscribes to the
 data channel and replays the events received on it, thus changing its
 NIB in a similar way.  The view  is maintained by the Management applications
 residing in the controller and outside the domain of
-HyperFlow (as in NOX). Although not specified in the article HyperFlow attempts to
-behave in a similar form to a distributed state machine. However it
-lacks total order and does not specify that applications should be
-replicated and deterministic. 
-
-HyperFlow does not guarantee strong
+HyperFlow (as in NOX). HyperFlow is, in concept,  identical to a \gls{smr} system with the controllers as replicas. State changing events are distributed to all replicas, that execute them to converge to the same state of others. 
+But HyperFlow does not guarantee strong
 consistency as events are not totally ordered  between controllers. 
 Notice that even with FIFO based channels some controller $c$ might receive event $e_i$ followed by event
 $e_j$ sent from controllers $i$ and $j$, while a controller $c'$
@@ -1152,4 +1388,12 @@ Frenetic offers a high level language and a run-time system that, besides other 
 In~\cite{reitblatt2012abstractions} the authors propose two abstractions --- per-packet and per-flow consistency --- and mechanisms to guarantee that on a network update a packet (or a flow) is processed by exactly one consistent global network configuration. 
 STN extends these works by proposing a transactional solution to provide consistent rule installation in a distributed setting. 
 Our work targets consistency at a different level.
-Our datastore ensures strong control-plane consistency for network and/or applications state, which means policy decisions are always based on a consistent state.
+Our datastore ensures strong control-plane consistency for network
+and/or applications state, which means policy decisions are always
+based on a consistent state.
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "../PEI"
+%%% End: 

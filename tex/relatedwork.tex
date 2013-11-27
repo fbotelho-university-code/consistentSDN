@@ -1,27 +1,13 @@
 
-
 %TODO - short paragrah introducing the general background idea
 
-This chapter outlines the major contributions supporting that have defined the current state of art for Software Defined Networks. 
-The area is marked by three phases, but we skip the first one of programmable networks that introduced Active networks whereby network hardware was programmed either by code carried in-band in data packets or out-band according to different mechanism. 
-Falar do artigo do feamster como review. 
-
-
-``Active Networks introduced programmable functions the network to lower the barrier to innovation'' ``did not see widespread deployment''
-``control and data plane separation (from 2001 to 2007) which developed open interfaces between the control and data planes'' 
-``The OpenFlow API (2007-2010), which represent the first instance of widespread adoption of an open interface and developed ways to make contro-data plane separation scalable and practical'' 
-
-
-Software Defined Networks is already a big field with a lot of existent work. 
-Software Defined Networking is a networking research field born from a  distributed
-collaborative effort. In this section we outline some of the major contributions that have led to its current state. 
-
+This chapter outlines the major contributions leading to the current state of art for Software Defined Networks. 
+This area is marked by three phases: the introduction of programmable network hardware; the control and data plane separation; and, finally the de facto standardization of the data plane interface. 
+We will cover selected papers from the last two phases that have most influence to work. 
+For an overview of all the existing work we redirect the read to the paper by Feamster et. al, \cite{},  
 
 
 %TODO - section History covers the historical path of the data and control plane separation starting at a routing systems and culminating in SDN. 
-
-
-%----------
 
 Software Defined Networks (SDN) changed the traditional model of network architecture and design. 
 %FIXME - bad phrase  
@@ -46,57 +32,76 @@ These planes, when loosely coupled, can simplify the development of protocols an
 \label{sec:background:sdn}
 
 
-\subsection{History}
+\subsection{Evolution}
 
 \subsubsection{RCP}
+
 \begin{itemize}
-\item  In 2004 Feamster et. al.  \cite{Feamster:2004tg}   presented the design of \gls{rcp}.
-\item  Has been implemented a year later by Caesar et. al.  \cite{Caesar:2005wsa}
+\item PARAGRAFO - Tal fez coiso. Coiso  decouplou para resolver vários problemas existentes no ibgp que é tal e coiso. A year later coiso. 
+\begin{itemize}
+  \item  In 2004 Feamster et. al.  \cite{Feamster:2004tg} published an paper described the architecture of \gls{rcp}.
+  \item Establishes one of the first decoupled approaches to network management. 
+  \item Decoupled the control plane from the data plane to centralize it only for routing. 
+  \item This work addressed problems in the \gls{ibgp} protocol, used between peers inside an \gls{as} to distribute external routing information. 
+  \item  This protocol is a fundamental in the Internet. \gls{bgp}  
+  \item  Has been implemented a year later by Caesar et. al.  \cite{Caesar:2005wsa}
+\end{itemize}
 
-\item Background : ``The routers in an \gls{as} must distribute information they learn about how to reach external destinations'. Unfortunely today's internal \gls{ibgp} architectures have serious problems: a ``full mesh'' \gls{ibgp} configuration does not scale to large networks and ``route reflection'' can introducen problems.'' ``The routers in a single \gls{as} exchange routes to external destinations using a protocol called \gls{ibgp}'' `` n quadradado não escala porque é preciso manter um numero elevado de conexões com bastante estado associada para uma das conexões'' ``route reflectors structure the network in an hierarchy''
-
-\item Basic idea : logically centralized platform separated from the data plane that manages the routing decision process instead of routers. 
-\item Interestingly ~\gls{rcp} decouples the control plane from the data plane to solve scalability problem of the \gls{bgp} protocol that required a full meshed network (\bigO{$N^2$} for $N$ routers)   to work correctly. 
-\item Route reflection mitigates the scalability problem  with an hierarchy scheme between routers to limit their vision of other regions. 
-
-\item The existent alternative at the time was to use a route-reflector solution that ``alleviated'' the  scalability problem introduced incorrectness in the routing tables (routes oscilation and forwarding loops, in some cases persistant). 
-
-\item In \gls{rcp} each router in an \gls{as}  maintains a connection to a logically centralized control plane. 
-\item Control plane maintains a global view of all routes collected by each of the routers.
-\item It scales because there is a much lower number of connections instead of the previous mesh network
-\item It also scales because the authors developed appropriate data structures that save memory when keeping the route state. 
-\item It is correct because the logically centralized controll plane maintains a global view of the network.
+\item PARAGRAFO - Problemas que o césar identificou
+  \begin{itemize}
+  \item Cesar lists the scalability limitation of full mesh configuration in \gls{ibgp} and the inconsistency problems of route reflectors as the majors problems in \gls{ibgp} architectures. 
+  \item  Indeed, the full mesh configuration by operating with %\BigO{$n^2$} network connections (and associated protocol state) between $n$ routers, challenges the scalability of the network. 
+  \item Likewise, the route reflection technique used to mitigate the scalability problem imposes an hierarchy structure between routers that limits their vision of the entire routing state. As a result, this technique can lead to routing problems such as route oscillations and forwarding loops (in some cases persistent).  
+  \end{itemize}
 
 
-\item To be robust to network partitions avoid a single point of failure the \gls{rcp} control plane is replicated and each router can connect to more than one server. 
-This scheme introduces the possibility of inconsistency since  \gls{gls} replicas have different views of the network. 
+\item PARAGRAFO RCP solves this with a logically centralized control plane that maintains a  global network state, of the routing state, in spite of operating  with $n$ connections (for $n$ routers).  
+  \begin{itemize}
+  \item  Manages the routing decision process instead of routers. 
+  \item  It scales for two reasons : lower number of connections, and specialized domain data structures that save memory to keep the route state. 
+  \item It is correct because the control plane has an complete view of the routing information. 
+  \end{itemize}
+
+\item PARAGRAFO \gls{rcp} is distributed for reliability. 
+  \begin{itemize}
+  \item Each router connects to more than one server. 
+  \item It is able to operate even in the presence of network partitions, and avoids a single point of failure. 
+  \end{itemize}
+
+\item PARAGRAFO Interestingly, the authors proof that an \gls{rcp} does not requires more than an eventually consistent protocol in order to operate correctly. 
+  \begin{itemize}
+  \item In this context operate incorrectly means that different \gls{rcp} replicas assign different routes to an router.
+  \item The authors are able to proof this, since they assume both that they can identify a steady state on the routing protocol (where all route information has been delivered to the \gls{rcp} replicas. 
+\item Additionally they also assume that replicas, only assign routes  for routers in a partition for which they have full routing information (both exterior and interior). 
+\item As such, and as point out by the authors, lack of a consistency protocol 
+  \end{itemize}
+
+This scheme introduces the possibility of inconsistency since  \gls{rcp} replicas have different views of the network. 
 And different replicas could install conflicting rules in the same router. 
 The authors show in the paper that there is no need to have consistency protocols between \gls{rcp} replicas to prevent such conflicts. 
 This does not affects the safety of their system given that it is designed such that each replica makes routing decisions only for the partitions for which it has a complete interior topology view. But for the same reason it can affect liveness since each since different RCSes may fail to assign routes to routers. 
-We note that this is proof takes the assumption that the replicas have already converged to what the authors name a steady ``state''  where the progation of route updates has already converged in the \gls{replicas}. 
-
+We note that this is proof takes the assumption that the replicas have already converged to what the authors name a steady ``state''  where the progation of route updates has already converged in the \gls{rcp} replicas. 
 
 \item It is paradoxically that this same work who is partially motivated by problems caused by lack of consistency in the network state that is distributed across routers ends up being eventually consistent in the state distribution plane. 
 \end{itemize}
 
 \subsubsection{4D}
+
+
 \begin{itemize}
-\item  The origins of SDN as an architectural principle for networks can be traced back to the 4D architecture published in  2005 that ``generated both broad consensus and wide disagreements from
-the reviewers''  \cite{Greenberg:2005boa}. In this seminal work the authors identify essential
-problems governing  the traditional network architecture and  present an
-explanation of the design process behind a clean-slate architectural
-pattern for network management and innovation.  
+\item  PARAGRAFO - \gls{rcp} is great but is focused on a single control function (routing). There needs more. 
+  \begin{itemize}
+     \item In 2005, Greenberg et. al., published a seminal paper that proposes a clean slate architecture to address the (arguably) root problems of existent architectures. 
+     \item Identify the root problem of existent architectures. 
+     \item The authors arguments is manifold. But it rooted in the complexity manifested from twisting the control and data plane in the same hardware. 
+  \end{itemize}
 
-%TODO - root problem is coupling of control plane with data plane. 
-%TODO - results in the lack of way to specify network wide goals
-%TODO - management goals are decomposed in ad-hoc manual scripts distributed by the data plane infrastructure. 
 
-\item The authors identify  the root cause of the complexity inherent to the
-classic Internet design as the  entanglement  of control and
-forwarding functions in the network devices. They advocate that this complexity is tied to the lack of accessible control abstractions in the network devices. 
+The proposed architecture is based on three fundamental principles: specification of  global network level goals (e.g., routing, security policy);  centralization of the entire network state (e.g., topology, link state) and finally; direct control of the underlying network devices. 
 
-\item\gls{rcp} focus in control the \gls{bgp} routes only. But 4D envisions global control over all data plane forwarding mechanisms (e.g., FIB entries, packet filters, NAt's, tunnels, packet scheduling and buffer management) that should be available as a unifed  resourced to satisfy network goals. 
+\item Paragrafo sobre as 4 layers do 4D
 
+%4 layers
 \item Named 4D due to the 4 planes of this architecture. 
 
 \begin{itemize}
@@ -112,53 +117,42 @@ forwarding functions in the network devices. They advocate that this complexity 
   an interface to the Decision plane;  
 \end{itemize}
 
-The 4D project [34] advocated four main layers—the data plane (for processing packets based on configurable rules), the discovery plane (for collecting topology and traffic measurements), the dissemination plane (for in- stalling packet-processing rules), and a decision plane (consisting of logically centralized controllers that con- vert network-level objectives into packet-handling state). Several groups proceeded to design and build systems that applied this high-level approach to new application areas, beyond route control.
+
+The 4D project [34] advocated four main layers—the data plane (for processing packets based on configurable rules), the discovery plane (for collecting topology and traffic measurements), the dissemination plane (for in- stalling packet-processing rules), and a decision plane (consisting of logically centralized controllers that con- vert network-level objectives into packet-handling state). 
+% 4 layers 
+
+\item\gls{rcp} focus in control the \gls{bgp} routes only. But 4D envisions global control over all data plane forwarding mechanisms (e.g., FIB entries, packet filters, NAT's, tunnels, packet scheduling and buffer management) that should be available as a unifed  resourced to satisfy network goals. 
 
 
-\item  With this in mind they present the  4D architecture. Their  design is led by the
-decoupling of the control plane from the data plane. Additionally, they
-identify three key requirements for the 4D architecture: specification of  network level goals (e.g., routing,
-security policy);  centralization of the network state (e.g.,
-topology) and finally; direct control of the underlying network
-devices.
 
-The 4D architecture can be seen
-in Figure \ref{fig:4d}. A description of the four layers
-follows: 
+The 4D architecture, even without a concrete implementation,   presented a significant mark in the history of SDN by setting the  ground for discussion and evolution focused on this essential  decoupling of control and data planes.  PASSAR PARA O RCP. 
 
+% \item  The origins of SDN as an architectural principle for networks can be traced back to the 4D architecture published in  2005 that ``generated both broad consensus and wide disagreements from
+% the reviewers''  \cite{Greenberg:2005boa}. In this seminal work the authors identify essential
+% problems governing  the traditional network architecture and  present an
+% explanation of the design process behind a clean-slate architectural
+% pattern for network management and innovation.  
 
-\begin{itemize}
-\item[] \textbf{Decision:}  defines network-level goals and 
-  translates them to configuration primitives of the network
-  equipment. This plane maintains a representation of the current state of the network (i.e., the network view); 
-\item[] \textbf{Dissemination:}  connects the Decision and Data plane. Must be
-  done with robustness guarantees; 
-\item[] \textbf{Discovery:} provides discovery information (e.g., network
-  equipment, interfaces, etc.) from the Data plane to the Decision plane; 
-\item[] \textbf{Data:}  is governed by the network equipment
-  infrastructure. Provides packet forwarding functions and implements
-  an interface to the Decision plane;  
-\end{itemize}
+%TODO - root problem is coupling of control plane with data plane. 
+%TODO - results in the lack of way to specify network wide goals
+%TODO - management goals are decomposed in ad-hoc manual scripts distributed by the data plane infrastructure. 
 
-4D effectively removes network logic  from the Data plane
-responsibilities. It advocates that what was previously done through complex
-routing protocols and per-box configurations (e.g., security policy
-definitions)  can be specified in the Decision plane. 
+% The authors identify  the root cause of the complexity inherent to the classic Internet design as the  entanglement  of control and forwarding functions in the network devices. They advocate that this complexity is tied to the lack of accessible control abstractions in the network devices. 
 
-The 4D architecture, even without a concrete implementation, 
-presented a significant mark in the history of SDN by setting the
-ground for discussion and evolution focused on this essential
-decoupling of control and data planes.  
-
+% 4D effectively removes network logic  from the Data plane
+% responsibilities. It advocates that what was previously done through complex
+% routing protocols and per-box configurations (e.g., security policy
+% definitions)  can be specified in the Decision plane. 
 
 \subsubsection{Ethane}
+
 \begin{itemize}
 \item Particular expansion of the 4D project. 
 \item Casado et. al. present in 2007  \cite{Casado:2007kb}
 \item Ethane \cite{Casado:2007kb} was published in 2007 and presents a
 network architecture for the enterprise with emphasis in
 security. This work adapts the 4D design to implement a centralized
-high-level security policy manager in the controller allied with a namespace  for users and nodes
+high-level security policy manager in the controller allied with a namespace for users and nodes
 available in the Network Information base (NIB). The Decision plane is also responsible for
 authentication of both users and nodes. 
 
@@ -238,7 +232,7 @@ several improvements over the original paper \cite{openflow}.
 \end{itemize}
 \subsubsection{Network Operating System}
 \begin{itemize}
-\item After \gls{OpenFlow} 
+\item After \gls{of} 
 \item Nox and Maestro. Concurrently introduced in 2008 . 
 
 \item The Network Operating System (NOS) terminology  was initially used in the
@@ -417,17 +411,17 @@ But by reverting this tendency to a proactive model with more device drivers (e.
 \subsubsection{OpenFlow}
 
 From openflow.1.3.spec \cite{openflow-spec}
-Timeouts : (specified in flow_mod messages). 
+Timeouts : (specified in flow\_mod messages). 
 idle timeout - `` If set and the \texttt{hard\_timeout} is zero the entry must expire after \texttt{idle\_timeout} seconds with no received traffic. ''
 hard timout  - ``if set the entry must be expired in the specified number of seconds regardless of whether or not packets are hitting the entry. A value of 0 means that a timeout has not been set''
-``If the idle_timeout is set and the hard_timeout is zero, the entry must expire after idle_timeout
-seconds with no received traffic. If the idle\_timeout is zero and the hard_timeout is set, the entry
-must expire in hard_timeout seconds regardless of whether or not packets are hitting the entry. If both
-idle_timeout and hard\_timeout are set, the 
-ow entry will timeout after idle_timeout seconds with
-no trafficc, or hard_timeout seconds, whichever comes first. If both idle\_timeout and hard\_timeout are
-zero, the entry is considered permanent and will never time out. It can still be removed with a flow_mod
-message of type OFPFC\_DELETE.''
+%``If the idle_timeout is set and the hard_timeout is zero, the entry must expire after idle\_timeout
+% seconds with no received traffic. If the idle\_timeout is zero and the hard_timeout is set, the entry
+% must expire in hard_timeout seconds regardless of whether or not packets are hitting the entry. If both
+% idle_timeout and hard\_timeout are set, the 
+% ow entry will timeout after idle_timeout seconds with
+% no trafficc, or hard_timeout seconds, whichever comes first. If both idle\_timeout and hard\_timeout are
+% zero, the entry is considered permanent and will never time out. It can still be removed with a flow_mod
+% message of type OFPFC\_DELETE.''
 
 OpenFlow: flowmod and flow removed FIXME 
 Maybe talk a little about the asynchronous problems and lacks of guarantees. 

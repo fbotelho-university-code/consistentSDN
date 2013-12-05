@@ -1,0 +1,50 @@
+
+\section{Shared Data Store Controller Architecture} 
+\glsresetall 
+
+\subsection{General Architecture}
+Given an overview of the general architecture. 
+
+\begin{itemize}
+\item The control plane is restless 
+\item Cache 
+\end{itemize}
+
+\subsection{Data Store}
+\begin{itemize}
+\item Domains 
+\item 
+\end{itemize}
+\subsection{Controller}
+
+\begin{itemize}
+\item event driven; Pipeline manager. Our current implementation based on Floodlight... 
+\item Native applications 
+\item Data Store service allows the creation of tables, Clients use this to create local objects. 
+Manages the cache inside the controller. 
+\item Limitations : We need some kind of publish/subscribe mechanism to alert applications. Or instead we may need pooling to interact with other applications. 
+\end{itemize}
+
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\textwidth]{./pic/heimdall/controller-architecture}
+  \caption{Controller components. }
+  \label{fig:heimdall:architecture}
+\end{figure}
+
+\subsection{Tolerating Faults}
+
+\section{Data Store Prototype}
+\glsresetall 
+
+\subsection{Cross References}
+\subsection{Versioning}
+\subsection{Columns}
+\subsection{Micro Components}
+\subsection{Cache}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "../PEI"
+%%% End: 

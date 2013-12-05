@@ -412,7 +412,10 @@ We cover OpenFlow in more detail later. Namely we give an brief overview of the 
 % % idle_timeout and hard\_timeout are set, the 
 % % ow entry will timeout after idle_timeout seconds with
 % % no trafficc, or hard_timeout seconds, whichever comes first. If both idle\_timeout and hard\_timeout are
-% % zero, the entry is considered permanent and will never time out. It can still be removed with a flow_mod
+% % zero, the entry is considered permanent and will never time
+% % out. It can still be removed with a flow_mod
+
+
 % % message of type OFPFC\_DELETE.''
 
 % OpenFlow: flowmod and flow removed FIXME 
@@ -540,618 +543,616 @@ development cycle. Additionally one can expect most of SDN functionality to be h
 % \subsubsection{OpenFlow}
 
 
-% \section{Physically Centralized  Controllers}
-% \glsresetall
-% \label{sec:background:centralized}
-
-
-% In this section we present an overview of relevant centralized
-% controllers. Centralized controllers are, by our definition, control
-% planes that do not show any explicit support in the deployment of a
-% different controllers processes over onde or more servers. 
-% \subsection{Existent Controllers}
-% %TODO - what defines a centralized controller. 
-% %TODO - pipeline as a common model
-% %TODO - event based
-% %TODO - thin. 
-% \subsubsection{NOX}
-% \label{sec:nox}
-
-% %TODO - move to network operating system 
-% Network Operating System
-% %TODO make references to section of network operating system 
-% \begin{itemize}
-% \item ``Focused on the network operating systems providing an uniform and centralized programmatic interface to the entire network''
-% \item ``Analalogous to the read and write access to various resources provided by the computer operating systems, a network operating systems provides the ability to observe and controll a network''
-% \item ``Does not manages the network itself; it merely provides a programmatic interface . Applications implemented on top of the network operating systems perform the actual management tasks.''
-% \item This interfaces provides the core of a controller. Applications belong to the management layer whereby decisions that affect the switch state is done. The core just affects the controller state (the network view). 
-% \item Openflow can be seen as a device driver to be used by the network operating system. 
-% \end{itemize}
-
-% NOX
-% \begin{itemize}
-% \item Network view.  Could be distributed with standard replication techniques (unspecified) for resilience; 
-% \item ``The network view contains switch-level topology; the locations of users, hosts, middleboxes and other network elements; and the services (e.g., HTTP or NFS )  being offered but does not include the current state of network traffic;''
-% \item According to the authors this choice of observation granularity provides adequate information for many network managements tasks and changes slowly enough that it can be scalably maintained in the network; 
-% \item The choice of flow limits the control application in kind. It can't easily do deep packet inspect for example as it would hinder scalability too much; 
-% \item ``In terms of consistency; the only network state that is global (i.e., must be used consistently across the controller processes) is the network view; this consistency requirements arises because applications use data from the network view to make control decisions, and those decisions should be the same no matter to which controller instance the flow has been sent. In constract, since neither packet state nor flow state are part of the network, they can be kept in local storage (i.e., packet state in switches, and flow state in controller instances).'' 
-% \item The netowrk view is a set of indexed hashtables, with extensions for distributed access with local caching to aid scaling across multiple controller instances. 
-% \item ``Thus, NOX applications should only write to it when a change is detected in the network, and not for every received packet'' 
-
-% \item Reactive. Event based.   Pipeline based 
-% \item The core controller has applications that maintain a switch and host level topology in the network view. Other applications include: discovery of network services, user and host authentication, network policy enforcement, and detect network scanning. 
-% \item ``Some events are generated directly by \gls{of} messages such as switch koin, switch leave, packet received, port up/dow, and statistics received'';;
-% \item set of handlers, registered to execute when a particular event handles. Even handlers are executed in order of their priority.
-% \item Each handlers decides if the event should go further in the pipeline or not
-% \item Applications handle events and trigger events also. 
-% \item ``Each service is coupled with an associated event that can be leveraged by other applications''. 
-
-
-% \item It is very intersting to see that the Nox authors consider that NOX can easily scale since the events affecting the network view are in the order of tens of events per second for networks of thousands of hosts. ``The global data structure, the network view, changes slowly enough that it can be maintained centrally (or for resilience, it can be kept consistently on a small set of replicas) for even very large networks'' 
-% \end{itemize}
-
-
-% NOX \cite{Gude:2008jd}  was published and publicly released under
-% GPL in 2008. It was both developed in C++ and Python. NOX enables a standard interface for the integration of  Management applications 
-% in the controller. These applications control
-% network objectives and also cooperate to define the current
-% network view (i.e., the NIB). The view is shared between applications. One of the
-% contributions of the article was the definition of the Network
-% Operating System abstraction for the controller service. However, NOX
-% is a Thin Controller. 
-
-% \begin{figure}
-%   \centering 
-%   \footnotesize
-%   \includegraphics[scale=0.5]{pic/nox-pipeline}
-%   \caption[NOX pipeline] {\textbf{NOX pipeline} An overview of the NOX
-%     pipeline used for event processing by the Management applications. NOX
-%   receives events that have originated either in the Infrastructure of
-% the Management layer and dispatches them through a pipeline of
-% applications who have registered for processing these events. 
-%  As an example: \emph{PACKET\_IN} is a network event while
-% \emph{USER\_AUTHENTICATED} could be an application event.}
-%   \label{fig:nox-pipeline}
-% \end{figure}
-
-% NOX is a component framework with primitives for
-% construction and deconstruction of OpenFlow
-% based messages. The programming model is event-based. Applications (the components) are registered in a
-% priority based pipeline with event handlers associated to either
-% OpenFlow or applications events. This process can be seen in Figure
-% \ref{fig:nox-pipeline}, which describes the NOX dispatching behavior. Notice
-% that applications decide if the event should continue to be processed
-% by the pipeline. NOX  currently ships
-% with several applications (e.g., forwarding, topology discovery, host
-% tracking, spanning tree, layer two switch behavior, etc.).
-
-% NOX is a centralized controller  but the authors argue that it can easily be distributed for resilience if the shared state (the \emph{view}) is consistently distributed. 
-% Initially it was a single threaded application not focused on
-% performance. However, from its publishing date 
-% several improvements have taken place
-% \cite{Tootoonchian:2012uia,zen-doc-thesis} that have significantly improved
-% NOX performance. Under the set of improvements we highlight the
-% natural evolution to a multi-core aware application
-% that statically distributes network requests to different threads. 
-
-% In the time of writing, NOX is publicly available but has ramified into
-% two different applications: A C++ based controller available in
-% Linux and a Python  based controller (POX) available for
-% several environments \cite{nox}.
-
-% \subsubsection{Maestro}
-% \begin{itemize}
-% \item ``In general operating systems can be sseen as revolving around two basic purposes: providing applications with a higher level of abstraction so they need not deal with low-level details, and (ii) controlling the interactions between applications. Maestro focuses on the second , ``orchestrating" the contrl decisions made by various management applications''
-% \end{itemize}
-
-% Performance , fairness 
-% \begin{itemize}
-% \item Focused in fair service from the controller to the switches requests. while achieving the maximum performance requirements (low request handling and scalability on multi core processors
-% \item ``We investiage what software design strategies would optimize the eprformacen of a controller machine under the workload characteristics of OpenFlow; assuming the hardware is a commodity computer based on a modern multi-core processor architecture''
-% \item Otpimizing performacen requires a balancen between fairness, latency, and throughput 
-% \item The controlelr must be able to run multiple copies of user applications in parallel to scale up throughput on multi-core processors and must do so while maintaining fairness and controlable latency.
-% \item Users of the system must have the option to write simple single-threaded applications and leave it to the controller to parallelize them. 
-% \item Found that the round-robin design achieves far superior and near optimal fairness while having excellent scalability, second only to the dynamic partition design. 
-% \item Also present a workload-adapative request batching algorithm that automatically selects the granularity for batching requests for improved throughput while ensuring request handling latency is well controlled. 
-% \item NOX and BEacon both statically assign the request from a fixed subset of the network switches to each worker thread. This design maximizes parallelism and is conceptually ideal when requests are uniformly arriving from all switches. 
-% \item Maestro shows that even under a uniform workload from the swithces, not all worker threads run at exactly the same rate in practice, leading to a performance bias towards some switches. When not uniform, this design suffers from poor fairness and potentially suboptimal throughput due the under-utilization of some worker threads. 
-% \item Maestro shows that while NOX and Beacon can achieve impressive raw aggregate throughput, as expected such a static batching strategy laeds to unnessarily large request handling latency when the system is under heavy load. 
-
-
-% \item Maestro dynamically creates multiple worker threads, to work on multiple instances of the parallelized application. Furthermore it can stall pending application instances until the update of the shared network state is updated. 
-% \end{itemize}
-
-% \begin{description}
-% \item[Shared-Queue] A select thread to read the incoming requests from the switches without blocking; Afterwars the requests are put inside a queue shared by all worker threads. One of the workers fetches the requests and leads him through the pipeline until completion;
-% \item[Maestro-Static-Partition] Adresses the previous design by statically distributing each (or groups of ) switch socket to a different thread. This removes the need for synchronization in the shared queue design; This is the model followed by both NOX and Maestro 
-% \item[Maestro-Dynamic-Partition] Improves by measuring the switch recent input rates and dynamically arranging the workers-to-switch-sockets binginds. This improves the system since a static partition model does not takes into account that different switches can impose different workloads on the controller 
-% \item[Round Robin ] Each worker thread is individually running a round-robin service loop among all switch sockets. Each flow request is processed entirely by one of the worker threads, 
-% \end{description}
-
-% \begin{itemize}
-% \item Found that round robin achieves the most balanced performance for the Controller but stays second best in throughput scalability. The first is dynamic partition but at the cost of increased delay. 
-% \item Interesting analysis and complete study of the tradeoffs. But it may be that this parallel model is not well adapted to some controller requirements. It is not clear for instance if switches events can be processed out of order. For instances two successive events considering the state of a port are better handled in \emph{First-In-First-Out} (FIFO) sequence). But not even the \gls{of} standard specifies this clearly. 
-% \item This also does not take into consideration the impact of blocking calls made by the worker threads to remote services that have an impact of latency. 
-% \end{itemize}
-
-% Maestro is the undergoing work of Zeng Cai covered in
-% \cite{maestro}. It is presented as a Network Operating System focused
-% in coordination and isolation of the applications  that control the
-% infrastructure layer. Cai recognizes that Management components do not
-% operate independently and in isolation. Instead, they operate
-% concurrently with inter-dependent state (present in the NIB). With this in mind
-% it aims to exploit parallell computing benefits in the control plane. 
-
-% Maestro splits the regular pipeline execution such that it can
-% be concurrently executed. As seen in Figure \ref{fig:maestro-pipeline} events may
-% follow different execution paths since singular control components are
-% not interested in every single event. Thus, Maestro can manage to
-% execute several applications concurrently. However, in order to
-% coordinate the control component access to the NIB Maestro opts to
-% have a more granular network state model. The author argues that it is
-% common to control components to be  interested only in  subsets of the
-% NIB. In order to employ concurrent execution Maestro requires that
-% applications specify  what subsets of the NIB they require as input
-% and what subsets they modify as output. 
-
-% Maestro employs
-% coordination of the  execution of the applications with performance in
-% mind. As an example based on Figure \ref{fig:maestro-pipeline} if the routing table
-% (subset of the NIB) is updated while the RouteFlow application is running, then
-% Maestro makes sure that the application will use the old version of
-% the RoutingTable.
-
-% \begin{figure}
-%   \centering 
-%   \footnotesize
-%   \includegraphics[scale=0.5]{pic/maestro-pipeline.png}
-%   \caption[Maestro pipeline]{\textbf{Maestro pipeline} Maestro split the pipeline execution
-%   into several concurrent pipelines based on the events applications
-%   process and the state they access or modify. In the figure we can
-%   see two execution paths: \textbf{Topology Changes} processes the
-%   events triggered by changes in the Infrastructure and \textbf{Flow
-%     Requests} processes new flow events.}
-%   \label{fig:maestro-pipeline}
-% \end{figure}
-
-
-% The fundamental objective of Maestro is to maximize scalability in a
-% centralized control plane. To do so it attempts to exploit
-% parallelization in the controller server. Three major design goals
-% shape Maestro: fair distribution of work across cores; minimal
-% overhead introduced by cross-core and cache synchronization and;
-% minimal memory consumption. In addition, it also
-% exploits throughput optimization through batching. The results
-% published show that Maestro linearly scales the throughput with the number of cores
-% available on the controller. 
-
-
-% Currently Maestro is available under the LGPL 2.1 licence. It ships
-% with usual switching  and routing capabilities \cite{maestro}.
-
-
-% \subsubsection{Beacon}
-% \label{sec:beacon}
-% Beacon is an open source controller built in Java, by David Erickson during his academic studies in Stanford University. 
-% He is, to our knowledge, the only official maintainer of the
-% application. 
-
-% Beacon is also a Thin Controller with  an event-based programming model. Applications register for
-% specific type of events and process these  in the order
-% configured by the user. Any application processing an event chooses to forward the
-% event further in the pipeline or terminate its execution. It is also
-% multi-threaded, binding switches to particular threads. Applications receive data from all threads.
-
-% Applications in Beacon are implemented as \emph{bundles}. A bundle is the
-% unit of abstraction in the OSGI \cite{osgi} framework - a component and service
-% platform for the Java programming language with dynamic capabilities -
-% allowing features such as \emph{hot-swapping} (i.e., deploy, start and
-% stop modules in run time). 
-% Beacon provides a central service (the registry) for registration of bundles as
-% services. Each bundle implements a service, exports it to the registry and
-% other bundles may consume it. Applications events in Beacon take place
-% through the service abstraction: bundles may register in other bundles as
-% listeners to be notified when for specific events take place. 
-% %TODO - reescrever essa ultima frase. 
-
-% Beacon does not provide any NIB service. The network state is
-% decentralized and encapsulated in the bundle abstraction. There are
-% no persistance  mechanisms also. 
-
-% At the time of writing the applications available are the following: 
-%  learning switch, hub, device manager , topology, layer 2
-% shortest path routing, arp  proxy, dhcp proxy. 
-
-% %\cite{Controllers: Beacon with David Erickson. Open Network Summit
-% %  http://www.youtube.com/watch?v=tZ3G_FDuMjg}
-
-% \subsubsection{Floodlight}
-% Floodlight is an open source Apache licensed controller. It was
-% initially forked from Beacon. It  is developed and maintained by an open community of developers that is mainly composed of Big Switch\footnote{A SDN vendor with a commercial
-% distributed controller named Big Controller \cite{:vn}.} employers. It is written in Java, but applications can either be
-% implemented in Java, Jython or through the REST service
-% available in the NOS (with limited functionality). Floodlight is also a Thin Controller. 
-
-% Floodlight follows the common event driven
-% programming model of most  controllers. Although Floodlight was originally
-% forked from Beacon, the OSGI support was taken for performance and
-% deployment reasons. The overall functionality is based on modules
-% (i.e., applications) that implement services that can be consumed by
-% other modules. It is similar to Beacon in this regard, however the
-% module/service functionality is directly provided by Floodlight
-% instead of delegated to a third-party framework as OSGI. 
-
-% Floodlight is also multi-threaded. It accomplishes this through an
-% asynchronous event based multithreaded library named Netty \cite{netty} that manages Input/Ouput communication with the managed
-% switches. 
-
-% Currently the applications available are: topology manager,  link
-% discovery, forwarding, device manager, storage, firewall and
-% static flow pusher.  
-
-% \subsection{Controller Choice}
-% In this section we present an overview of relevant centralized
-% controllers. Centralized controllers are, by our definition, control
-% planes that do not show any explicit support in the deployment of a
-% different controllers processes over onde or more servers. 
-
-% %TODO - what defines a centralized controller. 
-% %TODO - pipeline as a common model
-% %TODO - event based
-% %TODO - thin. 
-% \subsection{NOX}
-% \label{sec:nox}
-% NOX \cite{Gude:2008jd}  was published and publicly released under
-% GPL in 2008. It was both developed in C++ and Python. NOX enables a standard interface for the integration of  Management applications 
-% in the controller. These applications control
-% network objectives and also cooperate to define the current
-% network view (i.e., the NIB). The view is shared between applications. One of the
-% contributions of the article was the definition of the Network
-% Operating System abstraction for the controller service. However, NOX
-% is a Thin Controller. 
-
-% \begin{figure}
-%   \centering 
-%   \footnotesize
-%   \includegraphics[scale=0.5]{pic/nox-pipeline}
-%   \caption[NOX pipeline] {\textbf{NOX pipeline} An overview of the NOX
-%     pipeline used for event processing by the Management applications. NOX
-%   receives events that have originated either in the Infrastructure of
-% the Management layer and dispatches them through a pipeline of
-% applications who have registered for processing these events. 
-%  As an example: \emph{PACKET\_IN} is a network event while
-% \emph{USER\_AUTHENTICATED} could be an application event.}
-%   \label{fig:nox-pipeline}
-% \end{figure}
-
-% NOX is a component framework with primitives for
-% construction and deconstruction of OpenFlow
-% based messages. The programming model is event-based. Applications (the components) are registered in a
-% priority based pipeline with event handlers associated to either
-% OpenFlow or applications events. This process can be seen in Figure
-% \ref{fig:nox-pipeline}, which describes the NOX dispatching behavior. Notice
-% that applications decide if the event should continue to be processed
-% by the pipeline. NOX  currently ships
-% with several applications (e.g., forwarding, topology discovery, host
-% tracking, spanning tree, layer two switch behavior, etc.).
-
-% NOX is a centralized controller  but the authors argue that it can easily be distributed for resilience if the shared state (the \emph{view}) is consistently distributed. 
-% Initially it was a single threaded application not focused on
-% performance. However, from its publishing date 
-% several improvements have taken place
-% \cite{Tootoonchian:2012uia,zen-doc-thesis} that have significantly improved
-% NOX performance. Under the set of improvements we highlight the
-% natural evolution to a multi-core aware application
-% that statically distributes network requests to different threads. 
-
-% In the time of writing, NOX is publicly available but has ramified into
-% two different applications: A C++ based controller available in
-% Linux and a Python  based controller (POX) available for
-% several environments \cite{nox}.
-
-% \subsection{Maestro}
-
-% Maestro is the undergoing work of Zeng Cai covered in
-% \cite{maestro}. It is presented as a Network Operating System focused
-% in coordination and isolation of the applications  that control the
-% infrastructure layer. Cai recognizes that Management components do not
-% operate independently and in isolation. Instead, they operate
-% concurrently with inter-dependent state (present in the NIB). With this in mind
-% it aims to exploit parallell computing benefits in the control plane. 
-
-% Maestro splits the regular pipeline execution such that it can
-% be concurrently executed. As seen in Figure \ref{fig:maestro-pipeline} events may
-% follow different execution paths since singular control components are
-% not interested in every single event. Thus, Maestro can manage to
-% execute several applications concurrently. However, in order to
-% coordinate the control component access to the NIB Maestro opts to
-% have a more granular network state model. The author argues that it is
-% common to control components to be  interested only in  subsets of the
-% NIB. In order to employ concurrent execution Maestro requires that
-% applications specify  what subsets of the NIB they require as input
-% and what subsets they modify as output. 
-
-% Maestro employs
-% coordination of the  execution of the applications with performance in
-% mind. As an example based on Figure \ref{fig:maestro-pipeline} if the routing table
-% (subset of the NIB) is updated while the RouteFlow application is running, then
-% Maestro makes sure that the application will use the old version of
-% the RoutingTable.
-
-% \begin{figure}
-%   \centering 
-%   \footnotesize
-%   \includegraphics[scale=0.5]{pic/maestro-pipeline.png}
-%   \caption[Maestro pipeline]{\textbf{Maestro pipeline} Maestro split the pipeline execution
-%   into several concurrent pipelines based on the events applications
-%   process and the state they access or modify. In the figure we can
-%   see two execution paths: \textbf{Topology Changes} processes the
-%   events triggered by changes in the Infrastructure and \textbf{Flow
-%     Requests} processes new flow events.}
-%   \label{fig:maestro-pipeline}
-% \end{figure}
-
-
-% The fundamental objective of Maestro is to maximize scalability in a
-% centralized control plane. To do so it attempts to exploit
-% parallelization in the controller server. Three major design goals
-% shape Maestro: fair distribution of work across cores; minimal
-% overhead introduced by cross-core and cache synchronization and;
-% minimal memory consumption. In addition, it also
-% exploits throughput optimization through batching. The results
-% published show that Maestro linearly scales the throughput with the number of cores
-% available on the controller. 
-
-
-% Currently Maestro is available under the LGPL 2.1 licence. It ships
-% with usual switching  and routing capabilities \cite{maestro}.
-
-% \subsection{Beacon}
-% \label{sec:beacon}
-% Beacon is an open source controller built in Java, by David Erickson during his academic studies in Stanford University. 
-% He is, to our knowledge, the only official maintainer of the
-% application. 
-
-% Beacon is also a Thin Controller with  an event-based programming model. Applications register for
-% specific type of events and process these  in the order
-% configured by the user. Any application processing an event chooses to forward the
-% event further in the pipeline or terminate its execution. It is also
-% multi-threaded, binding switches to particular threads. Applications receive data from all threads.
-
-% Applications in Beacon are implemented as \emph{bundles}. A bundle is the
-% unit of abstraction in the OSGI \cite{osgi} framework - a component and service
-% platform for the Java programming language with dynamic capabilities -
-% allowing features such as \emph{hot-swapping} (i.e., deploy, start and
-% stop modules in run time). 
-% Beacon provides a central service (the registry) for registration of bundles as
-% services. Each bundle implements a service, exports it to the registry and
-% other bundles may consume it. Applications events in Beacon take place
-% through the service abstraction: bundles may register in other bundles as
-% listeners to be notified when for specific events take place. 
-% %TODO - reescrever essa ultima frase. 
-
-% Beacon does not provide any NIB service. The network state is
-% decentralized and encapsulated in the bundle abstraction. There are
-% no persistance  mechanisms also. 
-
-% At the time of writing the applications available are the following: 
-%  learning switch, hub, device manager , topology, layer 2
-% shortest path routing, arp  proxy, dhcp proxy. 
-
-% %\cite{Controllers: Beacon with David Erickson. Open Network Summit
-% %  http://www.youtube.com/watch?v=tZ3G_FDuMjg}
-
-% \subsection{Floodlight}
-% Floodlight is an open source Apache licensed controller. It was
-% initially forked from Beacon. It  is developed and maintained by an open community of developers that is mainly composed of Big Switch\footnote{A SDN vendor with a commercial
-% distributed controller named Big Controller \cite{:vn}.} employers. It is written in Java, but applications can either be
-% implemented in Java, Jython or through the REST service
-% available in the NOS (with limited functionality). Floodlight is also a Thin Controller. 
-
-% Floodlight follows the common event driven
-% programming model of most  controllers. Although Floodlight was originally
-% forked from Beacon, the OSGI support was taken for performance and
-% deployment reasons. The overall functionality is based on modules
-% (i.e., applications) that implement services that can be consumed by
-% other modules. It is similar to Beacon in this regard, however the
-% module/service functionality is directly provided by Floodlight
-% instead of delegated to a third-party framework as OSGI. 
-
-% Floodlight is also multi-threaded. It accomplishes this through an
-% asynchronous event based multithreaded library named Netty \cite{netty} that manages Input/Ouput communication with the managed
-% switches. 
-
-% Currently the applications available are: topology manager,  link
-% discovery, forwarding, device manager, storage, firewall and
-% static flow pusher.  
-
-
-% \section{Distributed Controllers}
-% \glsresetall
-% \label{sec:relatedWork:distributed}
-
-% In this section we provide an overview of Distributed Controllers
-% existent in the literature. By our definition an distributed
-% controllers provides explicit support to the deployment of several
-% controller processes over one or more servers. 
-
-% \subsection{HyperFlow}
-% Motivated by the lack of scalability in centralized controllers, HyperFlow \cite{Tootoonchian:2010vy} 
-% was created as a distributed controller. The 
-% authors aim was to provide scalability without sacrificing
-% the simplicity of management applications  in  centralized controllers. It
-% is built as a \emph{C++} application on top of the NOX 
-% controller \cite{Gude:2008jd} requiring minor modifications to the
-% controller core and is not publicly available. 
-% \begin{itemize}
-% \item Passively syncrhonizing network-wide views. HyperFlow localizes decision making to individual controllers, thus minimizing the control plane response time to data plane request. 
-% \item All controllers share the same eventually consistent view. But no conflicts should arise if the applications respect the rules. 
-% \item HyperFlow has the benefit of requiring only minor modifications to existing control applications 
-% \item The author point out that controlelrs benefit from having the state locally since request can be served locally. 
-% \item Proactively pushes state to other controllers. 
-% \item Each controller runs as if they are running the entire network. The HyperFlow application captures commands to switches and responses  and redirects them to the appropriate controllers. 
-% \item CRITIC: Under failure it has to replay all events. This can be time consuming and events grow indefinitely. Under this time the controller can not serve requests. If instead this recovery mechanism is isolated from the controllers then a recovered controller (or other in its place) can start processing network events almost immediately. 
-% \end{itemize}
-
-
-% \subsubsection{Architecture.} HyperFlow is composed of two main components: the controller application
-% and an event propagation system. The overall architecture can be seen
-% in figure \ref{fig:hyperflow-design}. The controller component is
-% an application built on top of NOX \cite{Gude:2008jd} which implements an event logger
-% responsible for subscribing to OpenFlow events and a command proxy
-% capable of sending OpenFlow commands to  network devices. In essence
-% HyperFlow interposes  between NOX and
-% Management applications. The event
-% propagation system allows  communication between HyperFlow
-% instances and  is built over a distributed filesystem. Communication
-% is done through channels implemented as files. There are three types of channels: the
-% control channel where controllers advertise themselves; the data
-% channel where general interest events are published by every
-% controller;  and finally the individual controller channel for OpenFlow
-% commands relevant to the controller who owns the channel. The
-% communication system is based on the well known \emph{Publish/Subscribe}
-% model  whereby one defines publishers as senders of
-% messages and subscribers as the receivers. Publishers do not send
-% messages directly  to receivers.  Instead,
-% messages are published in a medium (in this case the channels) and
-% interested receivers subscribe to publishers through some form of
-% subscription logic (e.g., channel, topics, etc.). The Publish/Subscribe
-% model allows the decoupling of both space and time in the
-% communication between publishers and subscribers. 
-% HyperFlow leverages on an existing Publish/Subscribe system that provides: 
-% persistent storage of the events published; \emph{FIFO}
-% (First-In-First-Out)  ordered delivery of
-% the messages published by the same controller; and resilience against
-% network partitioning.
-
-% \begin{figure}
-%   \centering 
-%   \footnotesize
-%   \includegraphics[scale=0.5]{pic/hyperflow-design.png}
-%   \caption[HyperFlow architecture]{\textbf{HyperFlow architecture} is  similar to
-%     NOX  with the addition of an Publish/Subscribe middleware
-%     used between the HyperFlow Management application. The
-%     Publish/Subscribe system is used for all communication between controllers.}
-%   \label{fig:hyperflow-design}
-% \end{figure}
-
-
-% \subsubsection{State Distribution.} State distribution in HyperFlow is accomplished through the
-% Publish/Subscribe event propagation system. The NIB  is
-% replicated in all instances and HyperFlow distributes the events
-% that cause changes to it. This is done through event publishing in the shared
-% data channel. Every controller subscribes to the
-% data channel and replays the events received on it, thus changing its
-% NIB in a similar way.  The view  is maintained by the Management applications
-% residing in the controller and outside the domain of
-% HyperFlow (as in NOX). HyperFlow is, in concept,  identical to a \gls{smr} system with the controllers as replicas. State changing events are distributed to all replicas, that execute them to converge to the same state of others. 
-% But HyperFlow does not guarantee strong
-% consistency as events are not totally ordered  between controllers. 
-% Notice that even with FIFO based channels some controller $c$ might receive event $e_i$ followed by event
-% $e_j$ sent from controllers $i$ and $j$, while a controller $c'$
-% perceives $e_j$ followed by $e_i$. It is possible that such occurrence
-% leads controllers to divergent states. The article explicitly adverts
-% that Management applications should not rely in event ordering "except
-% those targeting the same entity (e.g., the same switch or link)'' as
-% those guarantee FIFO ordering. 
-
-% Additionally, Hyperflow  also addresses incorrectness problems caused by
-% transient inconsistency across controllers  by defining an
-% \emph{authoritative}  controller for each flow. This controller is
-% responsible for orchestrating changes in the network regarding some
-% flow. As an example, to avoid loop-free forwarding \emph{authoritative}
-% controllers are solely  responsible for setting the flow paths across the forwarding
-% plane for some specific flow. For this, applications must relay
-% requests for some flow to its \emph{authoritative} controller. 
-
-% \subsubsection{Scalability.} HyperFlow addresses scalability of the control plane by minimizing the
-% number of events that an instance replicates to others. Thus it is
-% focused on the scalability of the CPU and does not address state
-% scalability since the NIB is fully replicated in every controller. 
-
-% To minimize the number of events  processed by
-% instances, HyperFlow filters the dissemination of events. To this end
-% it requires that applications tag locally generated events that affect
-% the NIB. Only these events are worth distributing as others are redundant. 
-
-% Local events are generated either by the Management or
-% Infrastructure layers but Management applications trigger events as a
-% response to the processing of other events (i.e., there is a causality
-% relationship between events). Thus, HyperFlow
-% minimizes distribution of events even further and if, for example,
-% some event $e$ is triggered due to the processing event $i$, it 
-% distributes only event $i$. To this end, Management applications
-% triggering events have to, both flag the event if it affects the NIB state
-% but also to associate the event that caused it. As one single event
-% can cause several application events to be triggered this can reduce
-% the volume of traffic and processing of redundant events.
-
-% \subsubsection{Programming Model.} Applications running on HyperFlow act as they control the entire
-% network. Behind the scenes  HyperFlow redirects requests to the
-% network equipment  either to the \emph{authoritative} controller or to the
-% controller managing the equipment which the request addresses. The choice depends on the type of
-% the request. HyperFlow also routes back  responses to the controller
-% responsible for  the request. Also, as previously said, every state
-% changing event is seen by every controller. So in the end the NIB of
-% the network contains updated information from every  equipment present
-% in the network.
-
-% The programming model itself is identical to NOX  (event driven,
-% pipeline based) thus
-% maintains its simplicity. Some overhead complexity is added as
-% HyperFlow requires the applications to tag  state changing events and
-% identify parent events as explained above. 
-
-% \subsection{Onix}
-% Onix \cite{Koponen:2010th}  was build upon the NOX legacy and
-% provides two major contributions: it is the first general controller
-% published in the literature, and also the first to provide strong consistency.  Onix 
-% provides an improved Network Operating System interface on 
-% which the northbound API does not reflect the southbound
-% API. Management applications are programmed against a network
-% graph of Typed Entities very similar to the Object Oriented paradigm
-% and are not aware of the southbound characteristics (e.g., the use of Openflow). The graph is implemented in 
-% the \emph{Network Information Base}
-% (NIB) and can be distributed across a  cluster of  Onix
-% controllers. Applications have the choice to specify consistency and
-% durability requirements  per network entity  present in the NIB. 
-% Onix was the result of a joint effort between Google, NEC, Nicira,
-% ISCI and Berkely, and (at least)  both Google and Ericson have
-% developed their controllers based on from Onix \cite{The-Valley-of-the-Nerd.:fk}. At the time of
-% writing Onix is not publicly available. 
-
-% \subsubsection{Architecture.} Onix architecture is presented in figure \ref{fig:onix-design}. Only
-% one application resides on the 
-% Management layer and may communicate with other applications in other
-% controllers instances for coordination. The NIB is the
-% only element in Onix northbound interface. The Management layer
-% directly modifies the NIB and subscribes to changes on it. The Infrastructure layer
-% indirectly modifies the NIB (trough the NOS layer). The NOS has to
-% guarantee that changes in the Infrastructure are reflected in the NIB
-% and vice versa. For this, it translates network events into changes in
-% the NIB and changes in the NIB to changes in the Infrastructure configuration. Onix
-% supports This process is represented in figure
-% \ref{fig:onix-process}.  OpenFlow but it could transparently move to another
-% southbound API. 
-
-% Each Onix instance  independently manages a subset of the
-% Infrastructure. However the NIB  exposes all the network for each
-% instance. As such, each time a local Onix instance alters the NIB these
-% changes are reflected in all other instances. Thus, the NIB is also
-% the distribution mechanism of the Onix controller. The  distribution
-% itself is done by the datastores that back up  the NIB state (seen
-% in figure \ref{fig:onix-design}).
-
-% \begin{figure}
-%   \centering 
-%   \includegraphics[scale=0.5]{pic/onix-design.png}
-%   \caption[Onix architecture] {\textbf{Onix achitecture.} In Onix the NIB is the
-%     solely entity used as the northbound api and Managements program
-%     directly against it. The NIB is supported by
-%     two replicated datastores accessible across Onix instances.  The
-%     Management layer communicates across instances for coordination.}
-%   \label{fig:onix-design}
-% \end{figure}
+\section{Physically Centralized  Controllers}
+\glsresetall
+\label{sec:background:centralized}
+
+
+In this section we present an overview of relevant centralized
+controllers. Centralized controllers are, by our definition, control
+planes that do not show any explicit support in the deployment of a
+different controllers processes over onde or more servers. 
+\subsection{Existent Controllers}
+%TODO - what defines a centralized controller. 
+%TODO - pipeline as a common model
+%TODO - event based
+%TODO - thin. 
+\subsubsection{NOX}
+\label{sec:nox}
+
+%TODO - move to network operating system 
+Network Operating System
+%TODO make references to section of network operating system 
+\begin{itemize}
+\item ``Focused on the network operating systems providing an uniform and centralized programmatic interface to the entire network''
+\item ``Analalogous to the read and write access to various resources provided by the computer operating systems, a network operating systems provides the ability to observe and controll a network''
+\item ``Does not manages the network itself; it merely provides a programmatic interface . Applications implemented on top of the network operating systems perform the actual management tasks.''
+\item This interfaces provides the core of a controller. Applications belong to the management layer whereby decisions that affect the switch state is done. The core just affects the controller state (the network view). 
+\item Openflow can be seen as a device driver to be used by the network operating system. 
+\end{itemize}
+
+NOX
+\begin{itemize}
+\item Network view.  Could be distributed with standard replication techniques (unspecified) for resilience; 
+\item ``The network view contains switch-level topology; the locations of users, hosts, middleboxes and other network elements; and the services (e.g., HTTP or NFS )  being offered but does not include the current state of network traffic;''
+\item According to the authors this choice of observation granularity provides adequate information for many network managements tasks and changes slowly enough that it can be scalably maintained in the network; 
+\item The choice of flow limits the control application in kind. It can't easily do deep packet inspect for example as it would hinder scalability too much; 
+\item ``In terms of consistency; the only network state that is global (i.e., must be used consistently across the controller processes) is the network view; this consistency requirements arises because applications use data from the network view to make control decisions, and those decisions should be the same no matter to which controller instance the flow has been sent. In constract, since neither packet state nor flow state are part of the network, they can be kept in local storage (i.e., packet state in switches, and flow state in controller instances).'' 
+\item The netowrk view is a set of indexed hashtables, with extensions for distributed access with local caching to aid scaling across multiple controller instances. 
+\item ``Thus, NOX applications should only write to it when a change is detected in the network, and not for every received packet'' 
+
+\item Reactive. Event based.   Pipeline based 
+\item The core controller has applications that maintain a switch and host level topology in the network view. Other applications include: discovery of network services, user and host authentication, network policy enforcement, and detect network scanning. 
+\item ``Some events are generated directly by \gls{of} messages such as switch koin, switch leave, packet received, port up/dow, and statistics received'';;
+\item set of handlers, registered to execute when a particular event handles. Even handlers are executed in order of their priority.
+\item Each handlers decides if the event should go further in the pipeline or not
+\item Applications handle events and trigger events also. 
+\item ``Each service is coupled with an associated event that can be leveraged by other applications''. 
+
+
+\item It is very intersting to see that the Nox authors consider that NOX can easily scale since the events affecting the network view are in the order of tens of events per second for networks of thousands of hosts. ``The global data structure, the network view, changes slowly enough that it can be maintained centrally (or for resilience, it can be kept consistently on a small set of replicas) for even very large networks'' 
+\end{itemize}
+
+
+NOX \cite{Gude:2008jd}  was published and publicly released under
+GPL in 2008. It was both developed in C++ and Python. NOX enables a standard interface for the integration of  Management applications 
+in the controller. These applications control
+network objectives and also cooperate to define the current
+network view (i.e., the NIB). The view is shared between applications. One of the
+contributions of the article was the definition of the Network
+Operating System abstraction for the controller service. However, NOX
+is a Thin Controller. 
+
+\begin{figure}
+  \centering 
+  \footnotesize
+  \includegraphics[scale=0.5]{pic/nox-pipeline}
+  \caption[NOX pipeline] {\textbf{NOX pipeline} An overview of the NOX
+    pipeline used for event processing by the Management applications. NOX
+  receives events that have originated either in the Infrastructure of
+the Management layer and dispatches them through a pipeline of
+applications who have registered for processing these events. 
+ As an example: \emph{PACKET\_IN} is a network event while
+\emph{USER\_AUTHENTICATED} could be an application event.}
+  \label{fig:nox-pipeline}
+\end{figure}
+
+NOX is a component framework with primitives for
+construction and deconstruction of OpenFlow
+based messages. The programming model is event-based. Applications (the components) are registered in a
+priority based pipeline with event handlers associated to either
+OpenFlow or applications events. This process can be seen in Figure
+\ref{fig:nox-pipeline}, which describes the NOX dispatching behavior. Notice
+that applications decide if the event should continue to be processed
+by the pipeline. NOX  currently ships
+with several applications (e.g., forwarding, topology discovery, host
+tracking, spanning tree, layer two switch behavior, etc.).
+
+NOX is a centralized controller  but the authors argue that it can easily be distributed for resilience if the shared state (the \emph{view}) is consistently distributed. 
+Initially it was a single threaded application not focused on
+performance. However, from its publishing date 
+several improvements have taken place
+\cite{Tootoonchian:2012uia,zen-doc-thesis} that have significantly improved
+NOX performance. Under the set of improvements we highlight the
+natural evolution to a multi-core aware application
+that statically distributes network requests to different threads. 
+
+In the time of writing, NOX is publicly available but has ramified into
+two different applications: A C++ based controller available in
+Linux and a Python  based controller (POX) available for
+several environments \cite{nox}.
+
+\subsubsection{Maestro}
+\begin{itemize}
+\item ``In general operating systems can be sseen as revolving around two basic purposes: providing applications with a higher level of abstraction so they need not deal with low-level details, and (ii) controlling the interactions between applications. Maestro focuses on the second , ``orchestrating" the contrl decisions made by various management applications''
+\end{itemize}
+
+Performance , fairness 
+\begin{itemize}
+\item Focused in fair service from the controller to the switches requests. while achieving the maximum performance requirements (low request handling and scalability on multi core processors
+\item ``We investiage what software design strategies would optimize the eprformacen of a controller machine under the workload characteristics of OpenFlow; assuming the hardware is a commodity computer based on a modern multi-core processor architecture''
+\item Otpimizing performacen requires a balancen between fairness, latency, and throughput 
+\item The controlelr must be able to run multiple copies of user applications in parallel to scale up throughput on multi-core processors and must do so while maintaining fairness and controlable latency.
+\item Users of the system must have the option to write simple single-threaded applications and leave it to the controller to parallelize them. 
+\item Found that the round-robin design achieves far superior and near optimal fairness while having excellent scalability, second only to the dynamic partition design. 
+\item Also present a workload-adapative request batching algorithm that automatically selects the granularity for batching requests for improved throughput while ensuring request handling latency is well controlled. 
+\item NOX and BEacon both statically assign the request from a fixed subset of the network switches to each worker thread. This design maximizes parallelism and is conceptually ideal when requests are uniformly arriving from all switches. 
+\item Maestro shows that even under a uniform workload from the swithces, not all worker threads run at exactly the same rate in practice, leading to a performance bias towards some switches. When not uniform, this design suffers from poor fairness and potentially suboptimal throughput due the under-utilization of some worker threads. 
+\item Maestro shows that while NOX and Beacon can achieve impressive raw aggregate throughput, as expected such a static batching strategy laeds to unnessarily large request handling latency when the system is under heavy load. 
+
+
+\item Maestro dynamically creates multiple worker threads, to work on multiple instances of the parallelized application. Furthermore it can stall pending application instances until the update of the shared network state is updated. 
+\end{itemize}
+
+\begin{description}
+\item[Shared-Queue] A select thread to read the incoming requests from the switches without blocking; Afterwars the requests are put inside a queue shared by all worker threads. One of the workers fetches the requests and leads him through the pipeline until completion;
+\item[Maestro-Static-Partition] Adresses the previous design by statically distributing each (or groups of ) switch socket to a different thread. This removes the need for synchronization in the shared queue design; This is the model followed by both NOX and Maestro 
+\item[Maestro-Dynamic-Partition] Improves by measuring the switch recent input rates and dynamically arranging the workers-to-switch-sockets binginds. This improves the system since a static partition model does not takes into account that different switches can impose different workloads on the controller 
+\item[Round Robin ] Each worker thread is individually running a round-robin service loop among all switch sockets. Each flow request is processed entirely by one of the worker threads, 
+\end{description}
+
+\begin{itemize}
+\item Found that round robin achieves the most balanced performance for the Controller but stays second best in throughput scalability. The first is dynamic partition but at the cost of increased delay. 
+\item Interesting analysis and complete study of the tradeoffs. But it may be that this parallel model is not well adapted to some controller requirements. It is not clear for instance if switches events can be processed out of order. For instances two successive events considering the state of a port are better handled in \emph{First-In-First-Out} (FIFO) sequence). But not even the \gls{of} standard specifies this clearly. 
+\item This also does not take into consideration the impact of blocking calls made by the worker threads to remote services that have an impact of latency. 
+\end{itemize}
+
+Maestro is the undergoing work of Zeng Cai covered in
+\cite{maestro}. It is presented as a Network Operating System focused
+in coordination and isolation of the applications  that control the
+infrastructure layer. Cai recognizes that Management components do not
+operate independently and in isolation. Instead, they operate
+concurrently with inter-dependent state (present in the NIB). With this in mind
+it aims to exploit parallell computing benefits in the control plane. 
+
+Maestro splits the regular pipeline execution such that it can
+be concurrently executed. As seen in Figure \ref{fig:maestro-pipeline} events may
+follow different execution paths since singular control components are
+not interested in every single event. Thus, Maestro can manage to
+execute several applications concurrently. However, in order to
+coordinate the control component access to the NIB Maestro opts to
+have a more granular network state model. The author argues that it is
+common to control components to be  interested only in  subsets of the
+NIB. In order to employ concurrent execution Maestro requires that
+applications specify  what subsets of the NIB they require as input
+and what subsets they modify as output. 
+
+Maestro employs
+coordination of the  execution of the applications with performance in
+mind. As an example based on Figure \ref{fig:maestro-pipeline} if the routing table
+(subset of the NIB) is updated while the RouteFlow application is running, then
+Maestro makes sure that the application will use the old version of
+the RoutingTable.
+
+\begin{figure}
+  \centering 
+  \footnotesize
+  \includegraphics[scale=0.5]{pic/maestro-pipeline.png}
+  \caption[Maestro pipeline]{\textbf{Maestro pipeline} Maestro split the pipeline execution
+  into several concurrent pipelines based on the events applications
+  process and the state they access or modify. In the figure we can
+  see two execution paths: \textbf{Topology Changes} processes the
+  events triggered by changes in the Infrastructure and \textbf{Flow
+    Requests} processes new flow events.}
+  \label{fig:maestro-pipeline}
+\end{figure}
+
+
+The fundamental objective of Maestro is to maximize scalability in a
+centralized control plane. To do so it attempts to exploit
+parallelization in the controller server. Three major design goals
+shape Maestro: fair distribution of work across cores; minimal
+overhead introduced by cross-core and cache synchronization and;
+minimal memory consumption. In addition, it also
+exploits throughput optimization through batching. The results
+published show that Maestro linearly scales the throughput with the number of cores
+available on the controller. 
+
+
+Currently Maestro is available under the LGPL 2.1 licence. It ships
+with usual switching  and routing capabilities \cite{maestro}.
+
+
+\subsubsection{Beacon}
+\label{sec:beacon}
+Beacon is an open source controller built in Java, by David Erickson during his academic studies in Stanford University. 
+He is, to our knowledge, the only official maintainer of the
+application. 
+
+Beacon is also a Thin Controller with  an event-based programming model. Applications register for
+specific type of events and process these  in the order
+configured by the user. Any application processing an event chooses to forward the
+event further in the pipeline or terminate its execution. It is also
+multi-threaded, binding switches to particular threads. Applications receive data from all threads.
+
+Applications in Beacon are implemented as \emph{bundles}. A bundle is the
+unit of abstraction in the OSGI \cite{osgi} framework - a component and service
+platform for the Java programming language with dynamic capabilities -
+allowing features such as \emph{hot-swapping} (i.e., deploy, start and
+stop modules in run time). 
+Beacon provides a central service (the registry) for registration of bundles as
+services. Each bundle implements a service, exports it to the registry and
+other bundles may consume it. Applications events in Beacon take place
+through the service abstraction: bundles may register in other bundles as
+listeners to be notified when for specific events take place. 
+%TODO - reescrever essa ultima frase. 
+
+Beacon does not provide any NIB service. The network state is
+decentralized and encapsulated in the bundle abstraction. There are
+no persistance  mechanisms also. 
+
+At the time of writing the applications available are the following: 
+ learning switch, hub, device manager , topology, layer 2
+shortest path routing, arp  proxy, dhcp proxy. 
+
+%\cite{Controllers: Beacon with David Erickson. Open Network Summit
+%  http://www.youtube.com/watch?v=tZ3G_FDuMjg}
+
+\subsubsection{Floodlight}
+Floodlight is an open source Apache licensed controller. It was
+initially forked from Beacon. It  is developed and maintained by an open community of developers that is mainly composed of Big Switch\footnote{A SDN vendor with a commercial
+distributed controller named Big Controller \cite{:vn}.} employers. It is written in Java, but applications can either be
+implemented in Java, Jython or through the REST service
+available in the NOS (with limited functionality). Floodlight is also a Thin Controller. 
+
+Floodlight follows the common event driven
+programming model of most  controllers. Although Floodlight was originally
+forked from Beacon, the OSGI support was taken for performance and
+deployment reasons. The overall functionality is based on modules
+(i.e., applications) that implement services that can be consumed by
+other modules. It is similar to Beacon in this regard, however the
+module/service functionality is directly provided by Floodlight
+instead of delegated to a third-party framework as OSGI. 
+
+Floodlight is also multi-threaded. It accomplishes this through an
+asynchronous event based multithreaded library named Netty \cite{netty} that manages Input/Ouput communication with the managed
+switches. 
+
+Currently the applications available are: topology manager,  link
+discovery, forwarding, device manager, storage, firewall and
+static flow pusher.  
+
+\subsection{Controller Choice}
+In this section we present an overview of relevant centralized
+controllers. Centralized controllers are, by our definition, control
+planes that do not show any explicit support in the deployment of a
+different controllers processes over onde or more servers. 
+
+%TODO - what defines a centralized controller. 
+%TODO - pipeline as a common model
+%TODO - event based
+%TODO - thin. 
+\subsection{NOX}
+\label{sec:nox}
+NOX \cite{Gude:2008jd}  was published and publicly released under
+GPL in 2008. It was both developed in C++ and Python. NOX enables a standard interface for the integration of  Management applications 
+in the controller. These applications control
+network objectives and also cooperate to define the current
+network view (i.e., the NIB). The view is shared between applications. One of the
+contributions of the article was the definition of the Network
+Operating System abstraction for the controller service. However, NOX
+is a Thin Controller. 
+
+\begin{figure}
+  \centering 
+  \footnotesize
+  \includegraphics[scale=0.5]{pic/nox-pipeline}
+  \caption[NOX pipeline] {\textbf{NOX pipeline} An overview of the NOX
+    pipeline used for event processing by the Management applications. NOX
+  receives events that have originated either in the Infrastructure of
+the Management layer and dispatches them through a pipeline of
+applications who have registered for processing these events. 
+ As an example: \emph{PACKET\_IN} is a network event while
+\emph{USER\_AUTHENTICATED} could be an application event.}
+  \label{fig:nox-pipeline}
+\end{figure}
+
+NOX is a component framework with primitives for
+construction and deconstruction of OpenFlow
+based messages. The programming model is event-based. Applications (the components) are registered in a
+priority based pipeline with event handlers associated to either
+OpenFlow or applications events. This process can be seen in Figure
+\ref{fig:nox-pipeline}, which describes the NOX dispatching behavior. Notice
+that applications decide if the event should continue to be processed
+by the pipeline. NOX  currently ships
+with several applications (e.g., forwarding, topology discovery, host
+tracking, spanning tree, layer two switch behavior, etc.).
+
+NOX is a centralized controller  but the authors argue that it can easily be distributed for resilience if the shared state (the \emph{view}) is consistently distributed. 
+Initially it was a single threaded application not focused on
+performance. However, from its publishing date 
+several improvements have taken place
+\cite{Tootoonchian:2012uia,zen-doc-thesis} that have significantly improved
+NOX performance. Under the set of improvements we highlight the
+natural evolution to a multi-core aware application
+that statically distributes network requests to different threads. 
+
+In the time of writing, NOX is publicly available but has ramified into
+two different applications: A C++ based controller available in
+Linux and a Python  based controller (POX) available for
+several environments \cite{nox}.
+
+\subsection{Maestro}
+
+Maestro is the undergoing work of Zeng Cai covered in
+\cite{maestro}. It is presented as a Network Operating System focused
+in coordination and isolation of the applications  that control the
+infrastructure layer. Cai recognizes that Management components do not
+operate independently and in isolation. Instead, they operate
+concurrently with inter-dependent state (present in the NIB). With this in mind
+it aims to exploit parallell computing benefits in the control plane. 
+
+Maestro splits the regular pipeline execution such that it can
+be concurrently executed. As seen in Figure \ref{fig:maestro-pipeline} events may
+follow different execution paths since singular control components are
+not interested in every single event. Thus, Maestro can manage to
+execute several applications concurrently. However, in order to
+coordinate the control component access to the NIB Maestro opts to
+have a more granular network state model. The author argues that it is
+common to control components to be  interested only in  subsets of the
+NIB. In order to employ concurrent execution Maestro requires that
+applications specify  what subsets of the NIB they require as input
+and what subsets they modify as output. 
+
+Maestro employs
+coordination of the  execution of the applications with performance in
+mind. As an example based on Figure \ref{fig:maestro-pipeline} if the routing table
+(subset of the NIB) is updated while the RouteFlow application is running, then
+Maestro makes sure that the application will use the old version of
+the RoutingTable.
+
+\begin{figure}
+  \centering 
+  \footnotesize
+  \includegraphics[scale=0.5]{pic/maestro-pipeline.png}
+  \caption[Maestro pipeline]{\textbf{Maestro pipeline} Maestro split the pipeline execution
+  into several concurrent pipelines based on the events applications
+  process and the state they access or modify. In the figure we can
+  see two execution paths: \textbf{Topology Changes} processes the
+  events triggered by changes in the Infrastructure and \textbf{Flow
+    Requests} processes new flow events.}
+  \label{fig:maestro-pipeline}
+\end{figure}
+
+
+The fundamental objective of Maestro is to maximize scalability in a
+centralized control plane. To do so it attempts to exploit
+parallelization in the controller server. Three major design goals
+shape Maestro: fair distribution of work across cores; minimal
+overhead introduced by cross-core and cache synchronization and;
+minimal memory consumption. In addition, it also
+exploits throughput optimization through batching. The results
+published show that Maestro linearly scales the throughput with the number of cores
+available on the controller. 
+
+
+Currently Maestro is available under the LGPL 2.1 licence. It ships
+with usual switching  and routing capabilities \cite{maestro}.
+
+\subsection{Beacon}
+\label{sec:beacon}
+Beacon is an open source controller built in Java, by David Erickson during his academic studies in Stanford University. 
+He is, to our knowledge, the only official maintainer of the
+application. 
+
+Beacon is also a Thin Controller with  an event-based programming model. Applications register for
+specific type of events and process these  in the order
+configured by the user. Any application processing an event chooses to forward the
+event further in the pipeline or terminate its execution. It is also
+multi-threaded, binding switches to particular threads. Applications receive data from all threads.
+
+Applications in Beacon are implemented as \emph{bundles}. A bundle is the
+unit of abstraction in the OSGI \cite{osgi} framework - a component and service
+platform for the Java programming language with dynamic capabilities -
+allowing features such as \emph{hot-swapping} (i.e., deploy, start and
+stop modules in run time). 
+Beacon provides a central service (the registry) for registration of bundles as
+services. Each bundle implements a service, exports it to the registry and
+other bundles may consume it. Applications events in Beacon take place
+through the service abstraction: bundles may register in other bundles as
+listeners to be notified when for specific events take place. 
+%TODO - reescrever essa ultima frase. 
+
+Beacon does not provide any NIB service. The network state is
+decentralized and encapsulated in the bundle abstraction. There are
+no persistance  mechanisms also. 
+
+At the time of writing the applications available are the following: 
+ learning switch, hub, device manager , topology, layer 2
+shortest path routing, arp  proxy, dhcp proxy. 
+
+%\cite{Controllers: Beacon with David Erickson. Open Network Summit
+%  http://www.youtube.com/watch?v=tZ3G_FDuMjg}
+
+\subsection{Floodlight}
+Floodlight is an open source Apache licensed controller. It was
+initially forked from Beacon. It  is developed and maintained by an open community of developers that is mainly composed of Big Switch\footnote{A SDN vendor with a commercial
+distributed controller named Big Controller \cite{:vn}.} employers. It is written in Java, but applications can either be
+implemented in Java, Jython or through the REST service
+available in the NOS (with limited functionality). Floodlight is also a Thin Controller. 
+
+Floodlight follows the common event driven
+programming model of most  controllers. Although Floodlight was originally
+forked from Beacon, the OSGI support was taken for performance and
+deployment reasons. The overall functionality is based on modules
+(i.e., applications) that implement services that can be consumed by
+other modules. It is similar to Beacon in this regard, however the
+module/service functionality is directly provided by Floodlight
+instead of delegated to a third-party framework as OSGI. 
+
+Floodlight is also multi-threaded. It accomplishes this through an
+asynchronous event based multithreaded library named Netty \cite{netty} that manages Input/Ouput communication with the managed
+switches. 
+
+Currently the applications available are: topology manager,  link
+discovery, forwarding, device manager, storage, firewall and
+static flow pusher.  
+
+
+\section{Distributed Controllers}
+\glsresetall
+\label{sec:relatedWork:distributed}
+
+In this section we provide an overview of Distributed Controllers
+existent in the literature. By our definition an distributed
+controllers provides explicit support to the deployment of several
+controller processes over one or more servers. 
+
+\subsection{HyperFlow}
+Motivated by the lack of scalability in centralized controllers, HyperFlow \cite{Tootoonchian:2010vy} 
+was created as a distributed controller. The 
+authors aim was to provide scalability without sacrificing
+the simplicity of management applications  in  centralized controllers. It
+is built as a \emph{C++} application on top of the NOX 
+controller \cite{Gude:2008jd} requiring minor modifications to the
+controller core and is not publicly available. 
+\begin{itemize}
+\item Passively syncrhonizing network-wide views. HyperFlow localizes decision making to individual controllers, thus minimizing the control plane response time to data plane request. 
+\item All controllers share the same eventually consistent view. But no conflicts should arise if the applications respect the rules. 
+\item HyperFlow has the benefit of requiring only minor modifications to existing control applications 
+\item The author point out that controlelrs benefit from having the state locally since request can be served locally. 
+\item Proactively pushes state to other controllers. 
+\item Each controller runs as if they are running the entire network. The HyperFlow application captures commands to switches and responses  and redirects them to the appropriate controllers. 
+\item CRITIC: Under failure it has to replay all events. This can be time consuming and events grow indefinitely. Under this time the controller can not serve requests. If instead this recovery mechanism is isolated from the controllers then a recovered controller (or other in its place) can start processing network events almost immediately. 
+\end{itemize}
+
+
+\subsubsection{Architecture.} HyperFlow is composed of two main components: the controller application
+and an event propagation system. The overall architecture can be seen
+in figure \ref{fig:hyperflow-design}. The controller component is
+an application built on top of NOX \cite{Gude:2008jd} which implements an event logger
+responsible for subscribing to OpenFlow events and a command proxy
+capable of sending OpenFlow commands to  network devices. In essence
+HyperFlow interposes  between NOX and
+Management applications. The event
+propagation system allows  communication between HyperFlow
+instances and  is built over a distributed filesystem. Communication
+is done through channels implemented as files. There are three types of channels: the
+control channel where controllers advertise themselves; the data
+channel where general interest events are published by every
+controller;  and finally the individual controller channel for OpenFlow
+commands relevant to the controller who owns the channel. The
+communication system is based on the well known \emph{Publish/Subscribe}
+model  whereby one defines publishers as senders of
+messages and subscribers as the receivers. Publishers do not send
+messages directly  to receivers.  Instead,
+messages are published in a medium (in this case the channels) and
+interested receivers subscribe to publishers through some form of
+subscription logic (e.g., channel, topics, etc.). The Publish/Subscribe
+model allows the decoupling of both space and time in the
+communication between publishers and subscribers. 
+HyperFlow leverages on an existing Publish/Subscribe system that provides: 
+persistent storage of the events published; \emph{FIFO}
+(First-In-First-Out)  ordered delivery of
+the messages published by the same controller; and resilience against
+network partitioning.
+
+\begin{figure}
+  \centering 
+  \footnotesize
+  \includegraphics[scale=0.5]{pic/hyperflow-design.png}
+  \caption[HyperFlow architecture]{\textbf{HyperFlow architecture} is  similar to
+    NOX  with the addition of an Publish/Subscribe middleware
+    used between the HyperFlow Management application. The
+    Publish/Subscribe system is used for all communication between controllers.}
+  \label{fig:hyperflow-design}
+\end{figure}
+
+
+\subsubsection{State Distribution.} State distribution in HyperFlow is accomplished through the
+Publish/Subscribe event propagation system. The NIB  is
+replicated in all instances and HyperFlow distributes the events
+that cause changes to it. This is done through event publishing in the shared
+data channel. Every controller subscribes to the
+data channel and replays the events received on it, thus changing its
+NIB in a similar way.  The view  is maintained by the Management applications
+residing in the controller and outside the domain of
+HyperFlow (as in NOX). HyperFlow is, in concept,  identical to a \gls{smr} system with the controllers as replicas. State changing events are distributed to all replicas, that execute them to converge to the same state of others. 
+But HyperFlow does not guarantee strong
+consistency as events are not totally ordered  between controllers. 
+Notice that even with FIFO based channels some controller $c$ might receive event $e_i$ followed by event
+$e_j$ sent from controllers $i$ and $j$, while a controller $c'$
+perceives $e_j$ followed by $e_i$. It is possible that such occurrence
+leads controllers to divergent states. The article explicitly adverts
+that Management applications should not rely in event ordering "except
+those targeting the same entity (e.g., the same switch or link)'' as
+those guarantee FIFO ordering. 
+
+Additionally, Hyperflow  also addresses incorrectness problems caused by
+transient inconsistency across controllers  by defining an
+\emph{authoritative}  controller for each flow. This controller is
+responsible for orchestrating changes in the network regarding some
+flow. As an example, to avoid loop-free forwarding \emph{authoritative}
+controllers are solely  responsible for setting the flow paths across the forwarding
+plane for some specific flow. For this, applications must relay
+requests for some flow to its \emph{authoritative} controller. 
+
+\subsubsection{Scalability.} HyperFlow addresses scalability of the control plane by minimizing the
+number of events that an instance replicates to others. Thus it is
+focused on the scalability of the CPU and does not address state
+scalability since the NIB is fully replicated in every controller. 
+
+To minimize the number of events  processed by
+instances, HyperFlow filters the dissemination of events. To this end
+it requires that applications tag locally generated events that affect
+the NIB. Only these events are worth distributing as others are redundant. 
+
+Local events are generated either by the Management or
+Infrastructure layers but Management applications trigger events as a
+response to the processing of other events (i.e., there is a causality
+relationship between events). Thus, HyperFlow
+minimizes distribution of events even further and if, for example,
+some event $e$ is triggered due to the processing event $i$, it 
+distributes only event $i$. To this end, Management applications
+triggering events have to, both flag the event if it affects the NIB state
+but also to associate the event that caused it. As one single event
+can cause several application events to be triggered this can reduce
+the volume of traffic and processing of redundant events.
+
+\subsubsection{Programming Model.} Applications running on HyperFlow act as they control the entire
+network. Behind the scenes  HyperFlow redirects requests to the
+network equipment  either to the \emph{authoritative} controller or to the
+controller managing the equipment which the request addresses. The choice depends on the type of
+the request. HyperFlow also routes back  responses to the controller
+responsible for  the request. Also, as previously said, every state
+changing event is seen by every controller. So in the end the NIB of
+the network contains updated information from every  equipment present
+in the network.
+
+The programming model itself is identical to NOX  (event driven,
+pipeline based) thus
+maintains its simplicity. Some overhead complexity is added as
+HyperFlow requires the applications to tag  state changing events and
+identify parent events as explained above. 
+
+\subsection{Onix}
+Onix \cite{Koponen:2010th}  was build upon the NOX legacy and
+provides two major contributions: it is the first general controller
+published in the literature, and also the first to provide strong consistency.  Onix 
+provides an improved Network Operating System interface on 
+which the northbound API does not reflect the southbound
+API. Management applications are programmed against a network
+graph of Typed Entities very similar to the Object Oriented paradigm
+and are not aware of the southbound characteristics (e.g., the use of \gls{of}). The graph is implemented in 
+the \gls{nib}  and can be distributed across a  cluster of  Onix
+controllers. Applications have the choice to specify consistency and
+durability requirements  per network entity  present in the \gls{nib}. 
+Onix was the result of a joint effort between Google, NEC, Nicira,
+ISCI and Berkely, and (at least)  both Google and Ericson have
+developed their controllers based on from Onix \cite{The-Valley-of-the-Nerd.:fk}. At the time of
+writing Onix is not publicly available. 
+
+Onix architecture is presented in figure \ref{fig:onix-design}. 
+Only one application resides on the  Management layer and may
+communicate with other applications in other controllers instances for
+coordination. 
+The \gls{nib} is the only element in Onix northbound interface. 
+The Management layer directly modifies the \gls{nib} and subscribes to
+changes on it. 
+The data plane  indirectly modifies the \gls{nib} (trough the controller). 
+
+The controller  has to guarantee that changes in the Infrastructure are reflected in the \gls{nib} and vice versa. 
+For this, it translates network events into changes in the \gls{nib}
+and changes in the \gls{nib} to changes in the data plane
+configuration. 
+Onix supports  \gls{of} but it could transparently move to another southbound API. 
+
+Each Onix instance independently manages a subset of the data plane. 
+However each instance can be exposed to the entire network state through  the \gls{nib}.  
+Under such scenarion, each time a local Onix instance would alter the \gls{nib} these changes would be reflected in all other instances. 
+Thus, the \gls{nib} is also the distribution mechanism of the Onix controller. 
+The distribution itself is done by the datastores that back up  the \gls{nib} state (seen in figure \ref{fig:onix-design}).
+
+\begin{figure}
+  \centering 
+  \includegraphics[scale=0.5]{pic/onix-design.png}
+  \caption[Onix architecture] {\textbf{Onix achitecture.} In Onix the NIB is the
+    solely entity used as the northbound api and Managements program
+    directly against it. The NIB is supported by
+    two replicated datastores accessible across Onix instances.  The
+    Management layer communicates across instances for coordination.}
+  \label{fig:onix-design}
+\end{figure}
 
 % \begin{figure}
 %   \centering 
@@ -1164,274 +1165,262 @@ development cycle. Additionally one can expect most of SDN functionality to be h
 %   \label{fig:onix-process}
 % \end{figure}
 
-% \subsubsection{State Distribution.} Onix defines a flexible distribution model for the NIB 
-% whereby  it offers the application
-% designer the choice of consistency guarantees. Two
-% replicated datastores are present, covering  strong 
-% and  eventually consistency. Strong consistency data is
-% provided through a transactional persistent database backed up by a replicated
-% state machine. This datastore is
-% favored for data with low-frequency changes  as its performance limitations are
-% significant. The eventually consistent datastore consists in 
-% an one hop memory based DHT  (as Dynamo 
-% \cite{DeCandia:2007cn}) favored for  volatile data with high update
-% rates. 
+Onix defines a flexible distribution model for the \gls{nib} whereby  it offers the application designer the choice of consistency guarantees. 
+Two replicated datastores are present, covering  strong  and
+eventually consistency. 
 
-% The NIB reflects the state of both datastores. Both the integration of
-% datastores and the inconsistency  characteristics of the DHT can lead the
-% NIB to an inconsistent state where reads performed in some entity may
-% return more than one result. Thus Onix provides primitives
-% for the integration of inconsistency resolution logic as well as 
-% direct integration of a distributed
-% coordination framework (see  ZooKeeper \cite{Hunt:2010ux}) in the
-% northbound interface. 
+Strong consistency data is provided through a transactional persistent
+database backed up by a replicated state machine. 
+This datastore is favored for data with low-frequency changes  as its performance limitations are significant. 
+The eventually consistent datastore consists in  an one hop memory
+based DHT  (as Dynamo  \cite{DeCandia:2007cn}) favored for  volatile
+data with high update rates. 
 
-% \subsubsection{Scalability.} Onix is intended for large scale Infrastructure where scalability is
-% fundamental. In each Onix instance the NIB
-% size reflecting the network state could lead to memory
-% exhaustion   and the processing of both network events and
-% subscriptions 
-% to changes in  the NIB can lead to CPU exhaustion.
+The NIB reflects the state of both datastores. Both the integration of
+datastores and the inconsistency  characteristics of the DHT can lead the
+NIB to an inconsistent state where reads performed in some entity may
+return more than one result. Thus Onix provides primitives
+for the integration of inconsistency resolution logic as well as 
+direct integration of a distributed
+coordination framework (see  ZooKeeper \cite{Hunt:2010ux}) in the
+northbound interface. 
 
-% In order to introduce scalability and avoid exhaustion, partition and
-% aggregation based techniques can be configured in the Management
-% layer. Partition avoids full replication of both data  and workload
-% such that additional instances do not only replicate overall work but
-% also relief it. As for aggregation it can, for example, allow network entities to be
-% aggregated and exposed for other Onix instances as only one.
+\subsubsection{Scalability.} Onix is intended for large scale Infrastructure where scalability is
+fundamental. In each Onix instance the NIB
+size reflecting the network state could lead to memory
+exhaustion   and the processing of both network events and
+subscriptions 
+to changes in  the NIB can lead to CPU exhaustion.
 
-% In practice partition in Onix is present in the division of the
-% Infrastructure across different Onix instances. 
-% This way
-% instances process fewer events. Additionally the Management logic can
-% configure Onix instances to keep only subsets of the NIB in memory and
-% up to date. For aggregation, an Onix instance can be configured to
-% expose a subset of the NIB as an aggregated element. 
+In order to introduce scalability and avoid exhaustion, partition and
+aggregation based techniques can be configured in the Management
+layer. Partition avoids full replication of both data  and workload
+such that additional instances do not only replicate overall work but
+also relief it. As for aggregation it can, for example, allow network entities to be
+aggregated and exposed for other Onix instances as only one.
 
-% \subsubsection{Programming Model.} Applications are built against the NIB graph data structure that is
-% composed of \emph{Typed Entities} supporting the Object
-% Oriented paradigm (i.e., encapsulation of data, functions over
-% entities, hierarchy, etc.). Onix supports extensible representations of
-% network entities. The
-% API provides essential functions to search, inspect, create, destroy and
-% modify entities present in the NIB. It is also possible to register
-% notifications for creation, removal and updates of data
-% entities. When network events of other Onix instances update the
-% datastores those changes must be reflected on the local NIB and the
-% application must be notified through a callback function. 
-% All operations are asynchronous, with
-% eventual delivery and no ordering or latency guarantees given
-% therefore a \emph{barrier} synchronization primitive is available
-% allowing the application to wait as
-% updates are translated and applied in the network devices and/or other
-% controllers. 
+In practice partition in Onix is present in the division of the
+Infrastructure across different Onix instances. 
+This way
+instances process fewer events. Additionally the Management logic can
+configure Onix instances to keep only subsets of the NIB in memory and
+up to date. For aggregation, an Onix instance can be configured to
+expose a subset of the NIB as an aggregated element. 
 
-% Finally it is worth mentioning that Onix employs coarse-grained
-% locking mechanisms over the NIB. Applications are given the guarantee
-% that no other local thread concurrently updates the NIB. 
+\subsubsection{Programming Model.} Applications are built against the NIB graph data structure that is
+composed of \emph{Typed Entities} supporting the Object
+Oriented paradigm (i.e., encapsulation of data, functions over
+entities, hierarchy, etc.). Onix supports extensible representations of
+network entities. The
+API provides essential functions to search, inspect, create, destroy and
+modify entities present in the NIB. It is also possible to register
+notifications for creation, removal and updates of data
+entities. When network events of other Onix instances update the
+datastores those changes must be reflected on the local NIB and the
+application must be notified through a callback function. 
+All operations are asynchronous, with
+eventual delivery and no ordering or latency guarantees given
+therefore a \emph{barrier} synchronization primitive is available
+allowing the application to wait as
+updates are translated and applied in the network devices and/or other
+controllers. 
 
-% \subsection{Kandoo}
-% Kandoo \cite{Yeganeh:2012jm} is an hierarchical controller for
-% scalable infrastructures. The main
-% contribution comes from the deployment of isolated controllers near
-% the switches that shield a parent  controller from processing all
-% events originating at the network. It is implemented in a mixture of
-% C, C++ and Python and is not publicly available. 
+Finally it is worth mentioning that Onix employs coarse-grained
+locking mechanisms over the NIB. Applications are given the guarantee
+that no other local thread concurrently updates the NIB. 
 
-% \subsubsection{Architecture.} In Kandoo --- see Figure  \ref{fig:kandoo-design} --- the controller is split in two levels: in the top level (Network Operating System layer) we
-% have the root controller responsible for normal operation. In the
-% bottom (at the Infrastructure layer) we have local controllers that are (ideally)  closer to the
-% managed switches. This two level design allows  shielding the
-% controller from frequent events triggered by 
-% the network devices. Notice that  the entire SDN
-% stack is replicated in the Infrastructure with the exception of the
-% NIB since the bottom Management layer should not require direct access to the NIB services. If necessary access to NIB
-% must be directed to the root controller.
+\subsection{Kandoo}
+Kandoo \cite{Yeganeh:2012jm} is an hierarchical controller for
+scalable infrastructures. The main
+contribution comes from the deployment of isolated controllers near
+the switches that shield a parent  controller from processing all
+events originating at the network. It is implemented in a mixture of
+C, C++ and Python and is not publicly available. 
 
-% \begin{figure}
-%   \centering 
-%   \includegraphics[scale=0.5]{pic/kandoo-design.png}
-%   \caption[Kandoo design] {\textbf{Kandoo design.} Kandoo decomposes the usual controller
-%     design into two layers. For this, it brings both controllers and
-%     applications closer to the Infrastructure. The controllers
-%     residing in the Infrastructure layer are responsible for
-%     processing frequent events that do not require access to the
-%     network state present at the NIB.} 
-%   \label{fig:kandoo-design}
-% \end{figure}
+\subsubsection{Architecture.} In Kandoo --- see Figure  \ref{fig:kandoo-design} --- the controller is split in two levels: in the top level (Network Operating System layer) we
+have the root controller responsible for normal operation. In the
+bottom (at the Infrastructure layer) we have local controllers that are (ideally)  closer to the
+managed switches. This two level design allows  shielding the
+controller from frequent events triggered by 
+the network devices. Notice that  the entire SDN
+stack is replicated in the Infrastructure with the exception of the
+NIB since the bottom Management layer should not require direct access to the NIB services. If necessary access to NIB
+must be directed to the root controller.
 
-% This design is motivated by the ideia of bringing control
-% functionality towards the datapath. As such, \emph{Local Apps} should
-% require no network wide state and the bottom controllers should stay
-% close to switches. The deployment of the bottom control plane can
-% even happen directly at the switches if they support this
-% functionality (e.g., software switches). 
+\begin{figure}
+  \centering 
+  \includegraphics[scale=0.5]{pic/kandoo-design.png}
+  \caption[Kandoo design] {\textbf{Kandoo design.} Kandoo decomposes the usual controller
+    design into two layers. For this, it brings both controllers and
+    applications closer to the Infrastructure. The controllers
+    residing in the Infrastructure layer are responsible for
+    processing frequent events that do not require access to the
+    network state present at the NIB.} 
+  \label{fig:kandoo-design}
+\end{figure}
 
-% The remaining design of the controller is not well specified in the
-% paper. However, other architectures can complement the Kandoo architecture.
-% The authors stress that even distributing the root
-% control plane through Onix or HyperFlow is orthogonal to the remaining design.
+This design is motivated by the ideia of bringing control
+functionality towards the datapath. As such, \emph{Local Apps} should
+require no network wide state and the bottom controllers should stay
+close to switches. The deployment of the bottom control plane can
+even happen directly at the switches if they support this
+functionality (e.g., software switches). 
 
-% \subsubsection{Scalability.} In Kandoo scalability is supported by the introduction of the two
-% level hierarchy. The bottom control plane  shields the root
-% control from processing of events. As the bottom plane does not
-% requires access to the NIB it remains simple and
-% efficient. Additionally, as it is closer to the data plane latency
-% penalties are lower. However the effectiveness of this
-% scalability mechanism depends on the Management functionality. For
-% effective shielding one requires Management applications capable of
-% operating without access to the network state. The article does not
-% specifies how practical or significant are this class of
-% applications beyond exemplifying local policy enforcement  and the
-% Link Layer Discovery Protocol. 
+The remaining design of the controller is not well specified in the
+paper. However, other architectures can complement the Kandoo architecture.
+The authors stress that even distributing the root
+control plane through Onix or HyperFlow is orthogonal to the remaining design.
 
-% \subsubsection{Programming Model.} In Kandoo the NOS layer is responsible for the deployment of local
-% applications in the bottom control plane. The application model only
-% requires that the applications deployed at the NOS have a flag
-% that sets its scope (i.e., local or non-local). All the remaining work
-% is left for the root controller. 
+\subsubsection{Scalability.} In Kandoo scalability is supported by the introduction of the two
+level hierarchy. The bottom control plane  shields the root
+control from processing of events. As the bottom plane does not
+requires access to the NIB it remains simple and
+efficient. Additionally, as it is closer to the data plane latency
+penalties are lower. However the effectiveness of this
+scalability mechanism depends on the Management functionality. For
+effective shielding one requires Management applications capable of
+operating without access to the network state. The article does not
+specifies how practical or significant are this class of
+applications beyond exemplifying local policy enforcement  and the
+Link Layer Discovery Protocol. 
 
-% % \subsection{Comparison to Blah, Critic}
-% % This section is only a scratch for future work orientation. It is
-% % intended as a comparison to the use of the NIB we are going to build
-% % and also to criticize the limitations and problems of both HyperFlow
-% % and Onix. 
-% % \begin{description}
-% % \item[TODO] make it clear that HyperFlow replicates controllers. 
-% % \item[Scalability in Onix] It doesn't exist in the published work (By
-% %   now it should exist off course). There is quite a bit of blah in the
-% %   paper about techniques and such but in reality all is left for the
-% %   application layer to implement relying (again!) on distributed
-% %   coordination and locking mechanisms; 
-% % \item[Strong consistency in Onix] Not 100 \% sure about this: it does
-% %   not exist in practice. If an application mixtures Strong consistency
-% %   nodes with eventually consistent  links (i.e., (Object A is strong consistent and
-% %   contains B eventual consistent) it must be prepared to deal
-% %   with inconsistent resolution upon dealing with the node. The paper
-% %   suggests this. It is
-% %   overly complicated in the application logic. 100 \% strong
-% %   consistency simplifies a lot the application development. 
-% % \item[Typed entities, Nib Abstraction in Onix] Really cool. higher
-% %   level of abstraction, another level of indirection. Typed entities
-% %   combined with the NIB is eternal code loosely coupled to management
-% %   protocols used in the management of network equipment. Casado
-% %   defends in a network post
-% %   [http://networkheresy.com/2011/08/09/what-might-an-sdn-controller-api-look-like-and-should-we-standardize-it/]
-% %   that it is a general loosely coupled layer, independent of the state
-% %   distribution mechanism. I disagree, at least in the published
-% %   work. The state distribution is ``à vista'' in the application layer
-% %   (define consistency per entity, conflict resolution). It is not
-% %   fully transparent and consequently not loosely coupled. 
+\subsubsection{Programming Model.} In Kandoo the NOS layer is responsible for the deployment of local
+applications in the bottom control plane. The application model only
+requires that the applications deployed at the NOS have a flag
+that sets its scope (i.e., local or non-local). All the remaining work
+is left for the root controller. 
 
-% % \item[HyperFlow concept] Kind of reminds a distributed state machine
-% %   at application level (replay all relevant controller events -i.e.,
-% %   state changing events) but lacks ordering requirements. 
+% \subsection{Comparison to Blah, Critic}
+% This section is only a scratch for future work orientation. It is
+% intended as a comparison to the use of the NIB we are going to build
+% and also to criticize the limitations and problems of both HyperFlow
+% and Onix. 
+% \begin{description}
+% \item[Scalability in Onix] It doesn't exist in the published work (By
+%   now it should exist off course). There is quite a bit of blah in the
+%   paper about techniques and such but in reality all is left for the
+%   application layer to implement relying (again!) on distributed
+%   coordination and locking mechanisms; 
+% \item[Strong consistency in Onix] Not 100 \% sure about this: it does
+%   not exist in practice. If an application mixtures Strong consistency
+%   nodes with eventually consistent  links (i.e., (Object A is strong consistent and
+%   contains B eventual consistent) it must be prepared to deal
+%   with inconsistent resolution upon dealing with the node. The paper
+%   suggests this. It is
+%   overly complicated in the application logic. 100 \% strong
+%   consistency simplifies a lot the application development. 
+% \item[Typed entities, Nib Abstraction in Onix] Really cool. higher
+%   level of abstraction, another level of indirection. Typed entities
+%   combined with the NIB is eternal code loosely coupled to management
+%   protocols used in the management of network equipment. Casado
+%   defends in a network post
+%   [http://networkheresy.com/2011/08/09/what-might-an-sdn-controller-api-look-like-and-should-we-standardize-it/]
+%   that it is a general loosely coupled layer, independent of the state
+%   distribution mechanism. I disagree, at least in the published
+%   work. The state distribution is ``à vista'' in the application layer
+%   (define consistency per entity, conflict resolution). It is not
+%   fully transparent and consequently not loosely coupled. 
 
-% % \item[HyperFlow] favors availability over consistency. O nosso não
-% %   fará isso. 
-% % \item[HyperFlow] sucks. guarantees a bounded window of inconsistency
-% %   if the network changes trigger less than around 1000 events per
-% %   seconds. 
-% % \item[Onix] allows both. The Management deciding. Sacrificing
-% %   transparency, simplicity. Also, it sucks. 
+% \item[Onix] allows both. The Management deciding. Sacrificing
+%   transparency, simplicity. Also, it sucks. 
 
-% % \item[Resumo] Hyerflow distribui os eventos o que e estupido porque há
-% %   muito mais eventos que alteracoes na NIB. Então ele distribui só os
-% %   eventos que mudam a NIB. O Onix oferece os dois tipos de coerencia
-% %   mas complica a programacao porque Entities que combinam dois tipos de
-% %   coerencia podem sempre retornar dois resultados. O Kandoo mete
-% %   hierarquia ao barulho para minimizar o numero de eventos. 
+% \item[Resumo] Hyerflow distribui os eventos o que e estupido porque há
+%   muito mais eventos que alteracoes na NIB. Então ele distribui só os
+%   eventos que mudam a NIB. O Onix oferece os dois tipos de coerencia
+%   mas complica a programacao porque Entities que combinam dois tipos de
+%   coerencia podem sempre retornar dois resultados. O Kandoo mete
+%   hierarquia ao barulho para minimizar o numero de eventos. 
 
 
-% % \end{description}
+% \end{description}
 
-% \section{Consistent Data Stores}
-% \glsresetall
-% \label{sec:relatedWork:consistentDataStore}
-% %explain 2f+1. 
-% %Section data stores do artigo. 
-% The key idea of our controller architecture is to make the controller instances coordinate their actions through a dependable data store in which all relevant state of the network and of its control applications is maintained in a consistent way.
-% This data store is implemented with a set of servers (replicas) to avoid any single point of failure, without impairing consistency.
-% One of the most popular techniques for implementing such replicated data store is state machine replication (SMR)~\cite{Sch90,Lam98}.
-% In this section we review the state of the art on replicated data stores and describe some reasons why, contrary to common belief, they can be a valid option for supporting a distributed controller architecture.
+\section{Consistent Data Stores}
+\glsresetall
+\label{sec:relatedWork:consistentDataStore}
+%explain 2f+1. 
+%Section data stores do artigo. 
+The key idea of our controller architecture is to make the controller instances coordinate their actions through a dependable data store in which all relevant state of the network and of its control applications is maintained in a consistent way.
+This data store is implemented with a set of servers (replicas) to avoid any single point of failure, without impairing consistency.
+One of the most popular techniques for implementing such replicated data store is state machine replication (SMR)~\cite{Sch90,Lam98}.
+In this section we review the state of the art on replicated data stores and describe some reasons why, contrary to common belief, they can be a valid option for supporting a distributed controller architecture.
 
-% Practical crash fault-tolerant replicated state machines are usually based on the Paxos agreement algorithm for ensuring that all updates to the data store are applied in the same order in all replicas (thus ensuring consistency)~\cite{Lam98}.
-% Since the original Paxos describes only an algorithmic framework for maintaining synchronized replicas with minimal assumptions, we instead describe the Viewstamped Replication (VR) protocol, a similar (but more concrete) state machine replication algorithm introduced at the same time~\cite{reitblatt2012abstractions}.
-% Fig. \ref{fig:paxos} shows the messages exchanged in Paxos/VR for an update operation: the client sends a message to a primary replica (the leader) that disseminates the update to all other replicas. These replicas write the update to their log and send an ACK to the primary.
-% In the final step the leader executes the request and sends the reply to the client.
-% If the primary fails, messages will not be ordered and thus a new primary will be elected to ensure the algorithm makes progress.
-% When read-only operations are invoked, the leader can answer them without contacting the other replicas.
-% Strong consistency is ensured due to the fact that all requests are serialized by the leader.
+Practical crash fault-tolerant replicated state machines are usually based on the Paxos agreement algorithm for ensuring that all updates to the data store are applied in the same order in all replicas (thus ensuring consistency)~\cite{Lam98}.
+Since the original Paxos describes only an algorithmic framework for maintaining synchronized replicas with minimal assumptions, we instead describe the Viewstamped Replication (VR) protocol, a similar (but more concrete) state machine replication algorithm introduced at the same time~\cite{reitblatt2012abstractions}.
+Fig. \ref{fig:paxos} shows the messages exchanged in Paxos/VR for an update operation: the client sends a message to a primary replica (the leader) that disseminates the update to all other replicas. These replicas write the update to their log and send an ACK to the primary.
+In the final step the leader executes the request and sends the reply to the client.
+If the primary fails, messages will not be ordered and thus a new primary will be elected to ensure the algorithm makes progress.
+When read-only operations are invoked, the leader can answer them without contacting the other replicas.
+Strong consistency is ensured due to the fact that all requests are serialized by the leader.
 
-% \begin{figure}[!ht]
-% \centering
-% \includegraphics[width=0.5\textwidth]{pic/related/vr.pdf}
-% \caption[Paxos/VR update protocol]{Paxos/VR update protocol.} 
-% \label{fig:paxos} 
-% \end{figure}
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=0.5\textwidth]{pic/related/vr.pdf}
+\caption[Paxos/VR update protocol]{Paxos/VR update protocol.} 
+\label{fig:paxos} 
+\end{figure}
 
-% The Paxos/VR algorithm has served as the foundation for many recent replicated (consistent and fault-tolerant) data stores, from main-memory databases with the purpose of implementing coordination and configuration management (e.g., Apache'  Zookeeper~\cite{Hun10}), to experimental block-based data stores or virtual discs~\cite{Rao11,Bol11,Bes13}, and even to wide-area replication systems, such as Google Spanner~\cite{Corbett:2012uz}.
-% Besides the synchronization protocol, these systems employ many implementation techniques to efficiently use the network and storage media.
+The Paxos/VR algorithm has served as the foundation for many recent replicated (consistent and fault-tolerant) data stores, from main-memory databases with the purpose of implementing coordination and configuration management (e.g., Apache'  Zookeeper~\cite{Hun10}), to experimental block-based data stores or virtual discs~\cite{Rao11,Bol11,Bes13}, and even to wide-area replication systems, such as Google Spanner~\cite{Corbett:2012uz}.
+Besides the synchronization protocol, these systems employ many implementation techniques to efficiently use the network and storage media.
 
-% Although not as scalable as a weakly consistent data store, these systems grant the advantages of consistency for a large number of applications, namely those with moderate performance and scalability requirements. To give an idea of the performance of these systems, Table \ref{table:smr-results} shows the reported throughput for read and write operations of several state-of-the-art consistent data stores.
+Although not as scalable as a weakly consistent data store, these systems grant the advantages of consistency for a large number of applications, namely those with moderate performance and scalability requirements. To give an idea of the performance of these systems, Table \ref{table:smr-results} shows the reported throughput for read and write operations of several state-of-the-art consistent data stores.
 
-% \begin{table}
-%   \center
-%     \begin{tabular}{ lccc}
-%     \hline
-%     \emph{System} & \emph{Block Size} & \emph{kRead/s} & \emph{kWrite/s} \\ \toprule
-%     Spanner \cite{Corbett:2012uz} & 4kB & 11 & 4 \\ 
-%     Spinnaker \cite{Rao11} & 4kB & 45+ & 4 \\  
-%     SCKV-Store \cite{Bes13} & 4kB & N/R & 4.7 \\ 
-%     Zookeeper \cite{Hun10} & 1kB & 87 & 21 \\ \bottomrule 
-%     \end{tabular}
-%   \caption[Performance of state machine replication systems]{Throughput (in thousands data block reads and writes per second) of consistent and fault-tolerant data stores based on state machine replication (N/R = Not Reported).}
-%   \label{table:smr-results}
-% \end{table}
+\begin{table}
+  \center
+    \begin{tabular}{ lccc}
+    \hline
+    \emph{System} & \emph{Block Size} & \emph{kRead/s} & \emph{kWrite/s} \\ \toprule
+    Spanner \cite{Corbett:2012uz} & 4kB & 11 & 4 \\ 
+    Spinnaker \cite{Rao11} & 4kB & 45+ & 4 \\  
+    SCKV-Store \cite{Bes13} & 4kB & N/R & 4.7 \\ 
+    Zookeeper \cite{Hun10} & 1kB & 87 & 21 \\ \bottomrule 
+    \end{tabular}
+  \caption[Performance of state machine replication systems]{Throughput (in thousands data block reads and writes per second) of consistent and fault-tolerant data stores based on state machine replication (N/R = Not Reported).}
+  \label{table:smr-results}
+\end{table}
 
-% Given the differences in the design and the environments where these measurements were taken, we present these values here only as supporting arguments for the possibility of using consistent data stores for storing the relevant state of SDN control applications.
-% Depending on the specific application this state may include, for instance, a subset of the Network Information Base (NIB).
-% Interestingly, these values are of the same order of magnitude of the reported values for \emph{non-consistent} updates in Onix (33k small updates per second considering 3 nodes~\cite{koponen2010}), and much higher than the reported values for their consistent data store (50 updates/second for transactions with a single update).
-% The Onix paper does not describe how its consistent database is implemented but, as shown by these results, its performance is far from what is being reported in the current literature.
-
-
-% \section{Consistent Data Planes}
-% \glsresetall
-% \label{sec:relatedWork:consistentPlane}
+Given the differences in the design and the environments where these measurements were taken, we present these values here only as supporting arguments for the possibility of using consistent data stores for storing the relevant state of SDN control applications.
+Depending on the specific application this state may include, for instance, a subset of the Network Information Base (NIB).
+Interestingly, these values are of the same order of magnitude of the reported values for \emph{non-consistent} updates in Onix (33k small updates per second considering 3 nodes~\cite{koponen2010}), and much higher than the reported values for their consistent data store (50 updates/second for transactions with a single update).
+The Onix paper does not describe how its consistent database is implemented but, as shown by these results, its performance is far from what is being reported in the current literature.
 
 
-% Recent work on SDN has explored this need for consistency at different
-% levels. Programming languages such as Frenetic~\cite{Foster2011} offer
-% consistency when composing network policies (automatically solving
-% inconsistencies accross network applications' decisions). Other
-% related line of work~\cite{reitblatt2012abstractions} proposes
-% abstractions to guarantee data-plane consistency during network
-% configuration updates. The aim of these systems is to guarantee
-% consistency \textit{after} the policy decision is
-% made. Onix~\cite{Koponen:2010:ODC:1924943.1924968} provides a
-% different type of consistency: one that is important \emph{before} the
-% policy decisions are made. Onix provides network state consistency ---
-% both weak and strong --- between different controller instances. The
-% datastore we propose is similar in that it offers strong consistency
-% for network (and application) state between controllers\footnote{By
-%   strong consistency we mean that all accesses to the datastore are
-%   seen by all controller instances in the same order
-%   (sequentially).}. Our main objective is to improve the ``performance
-% limitation''~\cite{Koponen:2010:ODC:1924943.1924968} of Onix's
-% transactional persistent database. 
+\section{Consistent Data Planes}
+\glsresetall
+\label{sec:relatedWork:consistentPlane}
 
 
-% Other works on SDN consistency include the Frenetic programming language~\cite{Foster2011}, Reitblatt et al. work on abstractions for network update~\cite{reitblatt2012abstractions}, and Software Transactional Networking~\cite{Canini:2013:HotSDN:STN}. 
-% These papers address different consistency issues, however. 
-% In essence, they target consistent flow rule updates on switches, dealing with overlapping policies and using atomic-like flow rule installation in SDN devices.
-% In other words, they take care of data-plane consistency \emph{after} the policy decisions are made by the network applications. 
-% Frenetic offers a high level language and a run-time system that, besides other benefits, ensures that policy rules made by concurrent network applications are not overlapped, thus avoiding network inconsistencies.
-% In~\cite{reitblatt2012abstractions} the authors propose two abstractions --- per-packet and per-flow consistency --- and mechanisms to guarantee that on a network update a packet (or a flow) is processed by exactly one consistent global network configuration. 
-% STN extends these works by proposing a transactional solution to provide consistent rule installation in a distributed setting. 
-% Our work targets consistency at a different level.
-% Our datastore ensures strong control-plane consistency for network
-% and/or applications state, which means policy decisions are always
-% based on a consistent state.
+Recent work on SDN has explored this need for consistency at different
+levels. Programming languages such as Frenetic~\cite{Foster2011} offer
+consistency when composing network policies (automatically solving
+inconsistencies accross network applications' decisions). Other
+related line of work~\cite{reitblatt2012abstractions} proposes
+abstractions to guarantee data-plane consistency during network
+configuration updates. The aim of these systems is to guarantee
+consistency \textit{after} the policy decision is
+made. Onix~\cite{Koponen:2010:ODC:1924943.1924968} provides a
+different type of consistency: one that is important \emph{before} the
+policy decisions are made. Onix provides network state consistency ---
+both weak and strong --- between different controller instances. The
+datastore we propose is similar in that it offers strong consistency
+for network (and application) state between controllers\footnote{By
+  strong consistency we mean that all accesses to the datastore are
+  seen by all controller instances in the same order
+  (sequentially).}. Our main objective is to improve the ``performance
+limitation''~\cite{Koponen:2010:ODC:1924943.1924968} of Onix's
+transactional persistent database. 
+
+
+Other works on SDN consistency include the Frenetic programming language~\cite{Foster2011}, Reitblatt et al. work on abstractions for network update~\cite{reitblatt2012abstractions}, and Software Transactional Networking~\cite{Canini:2013:HotSDN:STN}. 
+These papers address different consistency issues, however. 
+In essence, they target consistent flow rule updates on switches, dealing with overlapping policies and using atomic-like flow rule installation in SDN devices.
+In other words, they take care of data-plane consistency \emph{after} the policy decisions are made by the network applications. 
+Frenetic offers a high level language and a run-time system that, besides other benefits, ensures that policy rules made by concurrent network applications are not overlapped, thus avoiding network inconsistencies.
+In~\cite{reitblatt2012abstractions} the authors propose two abstractions --- per-packet and per-flow consistency --- and mechanisms to guarantee that on a network update a packet (or a flow) is processed by exactly one consistent global network configuration. 
+STN extends these works by proposing a transactional solution to provide consistent rule installation in a distributed setting. 
+Our work targets consistency at a different level.
+Our datastore ensures strong control-plane consistency for network
+and/or applications state, which means policy decisions are always
+based on a consistent state.
 
 
 %%% Local Variables: 

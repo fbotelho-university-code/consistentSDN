@@ -1,3 +1,5 @@
+``With the strong consistency model users are not able to discover that data is replicated. In fact the client of systems that provide this model are not able to distinguish him in any way from a centralized system.'' This is a natural way of thinking. 
+
 ``similar to the examples used to motivate SDN today. The issues of the day included network service provider frustration with the timescales necessary to develop and deploy new net- work services (so-called network ossification), third-party interest in value-added, fine-grained control to dynam- ically meet the needs of particular applications or net- work conditions, and researcher desire for a platform that would support experimentation at scale. Additionally, many early papers on active networking cited the prolif- eration of middleboxes, including firewalls, proxies, and transcoders, each of which had to be deployed separately and entailed a distinct (often vendor-specific) program- ming model. Active networking offered a vision of uni-''
 
 
@@ -17,12 +19,15 @@ Use dijktra not bellman-ford
 
 
 \section{Motivation}
-Despite its success, current IP networks suffer from several problems 
-which have long drawn attention from the network academic community. Two different approaches have been followed in addressing those problems: the first is focused in tailoring the performance of IP based networks and/or providing ad-hoc solutions to new technological requirements, while the second  advocates the clean-slate redesign of the IP architecture. 
+Despite its success, current IP networks suffer from problems 
+which have long drawn attention of the network academic community. Two  approaches have been followed in addressing those problems: the first is focused in tailoring the performance of IP based networks and/or providing ad-hoc solutions to new technological requirements, while the second  advocates the clean-slate redesign of the IP architecture. 
 
 Software Defined Networking (SDN) \cite{ONF:2012ui} is the pragmatic result of several contributions to the clean-slate approach and has the advantage of radically change the way IP networks are managed and developed without requiring changes to the \emph{host-to-host} TCP/IP stack. In essence, SDN shifts the control logic of the network (e.g., route discovery) from the network equipment to commodity servers where network control can  be defined in software, without the functional constraints set by the network infrastructure. Thus, there is a separation of the control plane, where the servers operate, from the the data plane where the network infrastructure resides. 
 
-Distribution of the control plane is argued by many, to be essential for scalability and reliability reasons \cite{Tootoonchian:2010vy, Koponen:2010th,Yeganeh:2012jm,:zr}. However, state of the art  distributed control planes lack transparency and consistency proprieties that are desirable in the development of network control applications. Also we believe that, based on the state of the art replication results available \cite{Rao:2011vz,Lee:1996jm,Bolosky:2011ve,Wang:2012tj} we can contribute to SDN with an efficient distributed control plane. Finally, we also believe that Software Defined Networking will have significant deployment support from the network industry and may eventually take a primary role in the replacement of the current IP architecture. All these factors  encourage us to pursue the work described in this document.
+Distribution of the control plane is argued by many, to be essential for scalability and reliability reasons \cite{Tootoonchian:2010vy, Koponen:2010th,Yeganeh:2012jm,:zr}. However, state of the art  distributed control planes lack transparency and consistency proprieties that are desirable in the development of network control applications. 
+Also we believe that, based on the state of the art replication results available \cite{Rao:2011vz,Lee:1996jm,Bolosky:2011ve,Wang:2012tj} we can contribute to SDN with an efficient distributed control plane.
+Finally, we also believe that Software Defined Networking will have significant deployment support from the network industry and may eventually take a primary role in the replacement of the current IP architecture. 
+All these factors  encourage us to pursue the work described in this document.
 
 
 

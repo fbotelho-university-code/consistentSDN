@@ -1,291 +1,291 @@
 
 
-% \section{Controller}
-% The most interesting thing about this design is that each controller instance can have direct control over the window of inconsistency for every application. 
-% \subsection{Architecture}
+\section{Controller}
+The most interesting thing about this design is that each controller instance can have direct control over the window of inconsistency for every application. 
+\subsection{Architecture}
 
-% \begin{figure}[ht]
-%   \centering
-%   \begin{subfigure}[b]{0.4\textwidth}
-%                 \centering
-%                 \includegraphics[width=\textwidth]{pic/heimdall/global-app}
-%                 \caption{General architecture}
-%         \end{subfigure}%
+\begin{figure}[ht]
+  \centering
+  \begin{subfigure}[b]{0.4\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{pic/heimdall/global-app}
+                \caption{General architecture}
+        \end{subfigure}%
 
-%         \begin{subfigure}[b]{0.7\textwidth}
-%                 \centering
-%                 \includegraphics[width=\textwidth]{pic/heimdall/instance-design}
-%                 \caption{Controller instance architecture}
-%         \end{subfigure}
-% \end{figure}
-
-
-
-% \begin{description}
-% \item[Global Application] A global app can be a monitoring app, a web based interface to update network policies, etc., Those apps do not fit in the event-driven programming  model of the controller.  As such they do not need to be inside each controller but rather on a global location that has access to a controller instance. Each controller instance has a REST API that exposes network and data store state according to the native apps decisions and configurations;
-% \item[Native Application] A native app resides in the controller memory and is an event based application that usually reacts to network changes, flow requests and data store changes. These applications can be replicated across each controller instance. Examples are the Topology Manager, Device Manager, Firewall, Load Balancer and Forwarding applications; 
-% \end{description} 
-
-% \noindent\makebox[\textwidth]{\rule{\paperwidth}{0.4pt}}
-
-% Controller Core : 
-
-% \begin{description}
-%   \item[Pipeline Manager] Manages the dispatching of  events to the applications. Applications are registered in this Manager to handle specific events. Events can be triggered by the data plane or the applications itself. When an event  occurs the dispatcher calls applications in a predefined order;
-%   \item[Pooling Manager] Applications register routine timed operations. Ideally this will support efficient pooling to check changes and/or updates in both the data store and data plane (e.g., counters); 
-%   \item[Data Store Service] Allows the creation and/or location of tables in the data store. Clients use this to create local objects to manipulate data store tables. Also manages the Cache inside the controller; 
-%   \item[Switch Communication] Communication with switches (e.g., install rules, consult flow tables). Applications will not have the possibility to directly contact the data plane. This module abstracts this into a service that can later be expanded to handle more complex tasks such as conflicting policies, safety checking, table space reduction etc.,; 
-%   \item[Network Partition] Handles the controller instance reliability protocol (take over other controllers that have failed);
-% \end{description}
+        \begin{subfigure}[b]{0.7\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{pic/heimdall/instance-design}
+                \caption{Controller instance architecture}
+        \end{subfigure}
+\end{figure}
 
 
 
-% \subsection{Transactional Memory}
+\begin{description}
+\item[Global Application] A global app can be a monitoring app, a web based interface to update network policies, etc., Those apps do not fit in the event-driven programming  model of the controller.  As such they do not need to be inside each controller but rather on a global location that has access to a controller instance. Each controller instance has a REST API that exposes network and data store state according to the native apps decisions and configurations;
+\item[Native Application] A native app resides in the controller memory and is an event based application that usually reacts to network changes, flow requests and data store changes. These applications can be replicated across each controller instance. Examples are the Topology Manager, Device Manager, Firewall, Load Balancer and Forwarding applications; 
+\end{description} 
 
-% This section presents a rude idea to approach the controller pipeline (processing events by different applications) focusing in performance. The problem it tries to solve is the excessive communication with the data store. 
-% It is inspired by the micro components approach (having code in the data store such as stored procedures in SQL data bases), transactions and transactional memory. The basic idea is to avoid the data store at all cost. When communicating with the data store, join requests from different switches and applications to batch them. That is it. It may not work every time, but it is still possible to resort to the typical approach in isolated cases.\\
+\noindent\makebox[\textwidth]{\rule{\paperwidth}{0.4pt}}
 
+Controller Core : 
 
-% The pipeline: 
-% \begin{itemize}
-% \item The controller pipeline is where each application is registered to process the event in order. 
-% \item A pipeline is defined by the event type. For each event there is a  pipeline with different application as stages. 
-% \item Each pipeline will be run by a single thread  defined by the source of the event (usually a switch). This way there is no need for locks and concurrency control since each event source will have a private state (e.g., cache). The pipeline is lock-free. 
-% \end{itemize}
-
-% Figure \ref{fig:pipeline} shows the general behaviour of the pipeline. 
-
-
-% \begin{figure}[ht]
-%   \centering
-%   \includegraphics[width=0.9\textwidth]{./pic/heimdall/pipeline.pdf}
-%   \caption{Processing events in the pipeline. A single thread pre-fetches everything that is not existent in cache to the data store. Then each app processes the event locally with no data store communication. In the end we commit to the data store the collection of modifications done by every application. If sucessfull we can proceed to installing a flow rule if necessary. }
-% \label{fig:pipeline}
-% \end{figure}
+\begin{description}
+  \item[Pipeline Manager] Manages the dispatching of  events to the applications. Applications are registered in this Manager to handle specific events. Events can be triggered by the data plane or the applications itself. When an event  occurs the dispatcher calls applications in a predefined order;
+  \item[Pooling Manager] Applications register routine timed operations. Ideally this will support efficient pooling to check changes and/or updates in both the data store and data plane (e.g., counters); 
+  \item[Data Store Service] Allows the creation and/or location of tables in the data store. Clients use this to create local objects to manipulate data store tables. Also manages the Cache inside the controller; 
+  \item[Switch Communication] Communication with switches (e.g., install rules, consult flow tables). Applications will not have the possibility to directly contact the data plane. This module abstracts this into a service that can later be expanded to handle more complex tasks such as conflicting policies, safety checking, table space reduction etc.,; 
+  \item[Network Partition] Handles the controller instance reliability protocol (take over other controllers that have failed);
+\end{description}
 
 
-% \begin{itemize}
-% \item The first step is to call each application handler that receives the event and  tells which data it needs to fetch to cache . 
-% \item The data is fetched to cache in a single operation that groups all the requests from all applications. 
-% \item Then, we proceed with the event processing by calling each application handler. This time applications do not perform any communication with the data store. Everything is done locally. 
-% \item In the end we attempt to commit every change made by each application in the data store with a single operation. Notice that this commit can fail if the user wishes to only succeed if the data fetched in the cache phase as not been modified in the data store when we are committing. This enables consistency control of stale data (cache based) if desired. 
-% \item Finally we can build the outcome of processing the event (e.g, install rules in the switches). 
-% \end{itemize}
 
-% Notes : 
-% \begin{itemize}
-% \item We may need an excessive amount of micro components to group operations that need to read, process and then read again. Ideally you want two micro components ``per event'' : one to read stuff into cache, and one to write. When the write happens every time you might as well have a single micro component which does everything in the data store; 
-% \item Some data may already be present in the cache. So we can avoid reading from the data store in the pre-fetch phase;
-% \item Some events may not need to write anything to the data store;
-% \item We could consider Pooling for writes (periodically  update the data store). Imagine: you do not care if a device timestamp is updated 10/20 times in a minute. Every 30 seconds is fine.  
-% \end{itemize}
+\subsection{Transactional Memory}
 
-% Figure \ref{fig:pipeline-seq} shows a possible sequence diagram when processing an event in the pipeline. 
-
-% \begin{figure}[ht]
-%   \centering
-%   \includegraphics[width=\textwidth]{./pic/heimdall/pipeline-seq.pdf}
-%   \caption{Processing events in the pipeline. }
-%   \label{fig:pipeline-seq}
-% \end{figure}
+This section presents a rude idea to approach the controller pipeline (processing events by different applications) focusing in performance. The problem it tries to solve is the excessive communication with the data store. 
+It is inspired by the micro components approach (having code in the data store such as stored procedures in SQL data bases), transactions and transactional memory. The basic idea is to avoid the data store at all cost. When communicating with the data store, join requests from different switches and applications to batch them. That is it. It may not work every time, but it is still possible to resort to the typical approach in isolated cases.\\
 
 
-% \subsection{Data Store}
+The pipeline: 
+\begin{itemize}
+\item The controller pipeline is where each application is registered to process the event in order. 
+\item A pipeline is defined by the event type. For each event there is a  pipeline with different application as stages. 
+\item Each pipeline will be run by a single thread  defined by the source of the event (usually a switch). This way there is no need for locks and concurrency control since each event source will have a private state (e.g., cache). The pipeline is lock-free. 
+\end{itemize}
 
-% \subsubsection{Domains}
-% \begin{itemize}
-% \item A data store domain is an instance of the bft-smart system with a given number of replicas;
-% \item With different domains we can increase the throughput and latency of the system ; 
-% \item We can shard tables over domains. For example we could have a global domain for all global tables (accessible by different controllers). Local tables could be available in another domain. At the extreme each controller would have its private domain and a global one. 
-% \end{itemize}
-
-% \subsubsection{Data Store Service}
-
-% \begin{itemize}
-% \item Applications only communicate with each other through the data store. 
-% \item What application is responsible for some data is not relevant
-% \item The applications known through the data store service if some kind of application (and respective tables is available) 
-% \end{itemize}
+Figure \ref{fig:pipeline} shows the general behaviour of the pipeline. 
 
 
-% The data store supports different table types shown in Table~\ref{tab:table-types}. The Global and Global to Application tables must be made available to every controller while the Local and Local to Application can be reachable only to a single controller instance. However in case of failures and controller fail-over one must be certain the backup controllers can reach the failed controller tables. Beyond the types shown each table state can be persistent (kept in disk) or not. The former is of the utmost importance for the controller configuration data (e.g., network policy). Notice however that the state is always kept in memory. If the controller state grows beyond the memory size  of a data store replica then the data can be divided across different domains at the expense of more hardware. 
-
-% \begin{table}[ht]
-%   \centering
-%   \begin{tabular}{ll}
-%     Name & Accessibility \\ \toprule 
-%     Global & Every controller and every application   \\ 
-%     Global to Application & Single application on every controller \\
-%     Local & Every app in a single controller \\
-%     Local to Application &  Single application in a single controller \\ \bottomrule 
-%   \end{tabular}
-%   \caption{Table types}
-%   \label{tab:table-types}
-% \end{table}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.9\textwidth]{./pic/heimdall/pipeline.pdf}
+  \caption{Processing events in the pipeline. A single thread pre-fetches everything that is not existent in cache to the data store. Then each app processes the event locally with no data store communication. In the end we commit to the data store the collection of modifications done by every application. If sucessfull we can proceed to installing a flow rule if necessary. }
+\label{fig:pipeline}
+\end{figure}
 
 
-% \begin{figure}[ht]
-%   \centering
-%   \includegraphics[width=\textwidth]{./pic/heimdall/global-to-local.pdf}  
-%   \caption{Topology tables in the data store. The local topology represents the entire topology seen by a controller. The global topology shows only the minimum spanning tree.}
-%   \label{fig:topologies}
-% \end{figure}
+\begin{itemize}
+\item The first step is to call each application handler that receives the event and  tells which data it needs to fetch to cache . 
+\item The data is fetched to cache in a single operation that groups all the requests from all applications. 
+\item Then, we proceed with the event processing by calling each application handler. This time applications do not perform any communication with the data store. Everything is done locally. 
+\item In the end we attempt to commit every change made by each application in the data store with a single operation. Notice that this commit can fail if the user wishes to only succeed if the data fetched in the cache phase as not been modified in the data store when we are committing. This enables consistency control of stale data (cache based) if desired. 
+\item Finally we can build the outcome of processing the event (e.g, install rules in the switches). 
+\end{itemize}
 
-% Performing aggregation: 
+Notes : 
+\begin{itemize}
+\item We may need an excessive amount of micro components to group operations that need to read, process and then read again. Ideally you want two micro components ``per event'' : one to read stuff into cache, and one to write. When the write happens every time you might as well have a single micro component which does everything in the data store; 
+\item Some data may already be present in the cache. So we can avoid reading from the data store in the pre-fetch phase;
+\item Some events may not need to write anything to the data store;
+\item We could consider Pooling for writes (periodically  update the data store). Imagine: you do not care if a device timestamp is updated 10/20 times in a minute. Every 30 seconds is fine.  
+\end{itemize}
 
-% \begin{itemize}
-% \item Local Tables can have code in the data store; 
-% \item Under each write in the local table the code checks if something needs to be written to the global table; 
-% \item For example Figure~\ref{fig:topologies} shows that the local version of a controller topology table shows every link while the global version (available to every controller) only shows a minimum spanning tree of the local topology.  A controller could even choose to hide the entire topology and just keep all its devices as attached to the border switches (that connect to other controllers data plane domains). 
-% \end{itemize}
+Figure \ref{fig:pipeline-seq} shows a possible sequence diagram when processing an event in the pipeline. 
 
-% The Data Store Service (DSS) as viewed from the user : 
-% \begin{itemize}
-% \item Allows the creation of local objects to communicate with the data store. 
-% \item Manages the creation of the controller cache, and transactional pipeline entities (Cache Manager, Write Manager). 
-% \item Guarantees that each event thread gets an isolated environment (its own cache and data store channel). This is important to make the pipeline lock free and also to improve concurrency (different data store channels). 
-% \item Shields the user from the RPC semantics in the communication with the data store. 
-% \item Provides a static typed interface for the data store. 
-% \item Expanded in the future with some kind of query language, which is essential to applications. This will enable a more expressive communication with the data store that is able to filter the values obtained. 
-% \end{itemize}
-% \
-% \subsection{Pooling}
-% \begin{itemize}
-% \item Typically controllers are reactive. Floodlight applications have a publish/subscribe behaviour to warn other applications of events. An example is the Device Manager which triggers events for devices that have been created, moved or deleted. The Topology Manager does the same thing on every topology change. 
-% \item We do not want this behaviour. This would require sending information to all controllers (which would not make sense to do trough the data store). 
-% \item So each application maintains (if she wishes) a pooling task in the pooling manager. 
-% \item The pooling manager groups tasks by subscriptions and periodicity. 
-% \item Checking changes is done with version numbers by table, table entry and (possibly) columns. The data store should have the possibility of tracking changes to the tables between versions. This is crucial for efficiently fetching the devices, or links that have been added or removed between versions. 
-% \item When changes are made, a pipeline is formed for the applications that subscribed to those changes. 
-% \end{itemize}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=\textwidth]{./pic/heimdall/pipeline-seq.pdf}
+  \caption{Processing events in the pipeline. }
+  \label{fig:pipeline-seq}
+\end{figure}
 
-% \section{Reliability}
-% A simple ``protocol'' to handle switch fail-over. I still need to think of bad things that can happen when two controllers fight over a switch.
-% \subsection{Protocol}
-% \begin{itemize}
-% \item There is an eventual failure detector built with the data store. If the controller does not has access to the data store it should not control anything in the network (Fig.~\ref{fig:proto-heartbeats}). The data store also keeps the switches under each controller ; 
-% \item Controllers can suspect the failure of another and attempt to replace it. First they have to set a flag in the data store stating that they are attempting to take over the presumably failed controller (Fig.~\ref{fig:proto-c2-fails}). With this flag other controllers can known that someone is attempting to control the switches and avoid taking over. This also helpfully for the failed controller which can recover and known that there is an active process to take its place. 
-% \item A controller can then set himself as master of the switch. After this point all switches messages go to the new controller (C1) (Fig.~\ref{fig:proto-c1-as-master}); 
-% \item Finally the controller sets himself as master of the switch in the data store. (Fig.~\ref{fig:proto-c1-finishes}). 
-% \end{itemize}
 
+\subsection{Data Store}
+
+\subsubsection{Domains}
+\begin{itemize}
+\item A data store domain is an instance of the bft-smart system with a given number of replicas;
+\item With different domains we can increase the throughput and latency of the system ; 
+\item We can shard tables over domains. For example we could have a global domain for all global tables (accessible by different controllers). Local tables could be available in another domain. At the extreme each controller would have its private domain and a global one. 
+\end{itemize}
+
+\subsubsection{Data Store Service}
+
+\begin{itemize}
+\item Applications only communicate with each other through the data store. 
+\item What application is responsible for some data is not relevant
+\item The applications known through the data store service if some kind of application (and respective tables is available) 
+\end{itemize}
+
+
+The data store supports different table types shown in Table~\ref{tab:table-types}. The Global and Global to Application tables must be made available to every controller while the Local and Local to Application can be reachable only to a single controller instance. However in case of failures and controller fail-over one must be certain the backup controllers can reach the failed controller tables. Beyond the types shown each table state can be persistent (kept in disk) or not. The former is of the utmost importance for the controller configuration data (e.g., network policy). Notice however that the state is always kept in memory. If the controller state grows beyond the memory size  of a data store replica then the data can be divided across different domains at the expense of more hardware. 
+
+\begin{table}[ht]
+  \centering
+  \begin{tabular}{ll}
+    Name & Accessibility \\ \toprule 
+    Global & Every controller and every application   \\ 
+    Global to Application & Single application on every controller \\
+    Local & Every app in a single controller \\
+    Local to Application &  Single application in a single controller \\ \bottomrule 
+  \end{tabular}
+  \caption{Table types}
+  \label{tab:table-types}
+\end{table}
+
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=\textwidth]{./pic/heimdall/global-to-local.pdf}  
+  \caption{Topology tables in the data store. The local topology represents the entire topology seen by a controller. The global topology shows only the minimum spanning tree.}
+  \label{fig:topologies}
+\end{figure}
+
+Performing aggregation: 
+
+\begin{itemize}
+\item Local Tables can have code in the data store; 
+\item Under each write in the local table the code checks if something needs to be written to the global table; 
+\item For example Figure~\ref{fig:topologies} shows that the local version of a controller topology table shows every link while the global version (available to every controller) only shows a minimum spanning tree of the local topology.  A controller could even choose to hide the entire topology and just keep all its devices as attached to the border switches (that connect to other controllers data plane domains). 
+\end{itemize}
+
+The Data Store Service (DSS) as viewed from the user : 
+\begin{itemize}
+\item Allows the creation of local objects to communicate with the data store. 
+\item Manages the creation of the controller cache, and transactional pipeline entities (Cache Manager, Write Manager). 
+\item Guarantees that each event thread gets an isolated environment (its own cache and data store channel). This is important to make the pipeline lock free and also to improve concurrency (different data store channels). 
+\item Shields the user from the RPC semantics in the communication with the data store. 
+\item Provides a static typed interface for the data store. 
+\item Expanded in the future with some kind of query language, which is essential to applications. This will enable a more expressive communication with the data store that is able to filter the values obtained. 
+\end{itemize}
+\
+\subsection{Pooling}
+\begin{itemize}
+\item Typically controllers are reactive. Floodlight applications have a publish/subscribe behaviour to warn other applications of events. An example is the Device Manager which triggers events for devices that have been created, moved or deleted. The Topology Manager does the same thing on every topology change. 
+\item We do not want this behaviour. This would require sending information to all controllers (which would not make sense to do trough the data store). 
+\item So each application maintains (if she wishes) a pooling task in the pooling manager. 
+\item The pooling manager groups tasks by subscriptions and periodicity. 
+\item Checking changes is done with version numbers by table, table entry and (possibly) columns. The data store should have the possibility of tracking changes to the tables between versions. This is crucial for efficiently fetching the devices, or links that have been added or removed between versions. 
+\item When changes are made, a pipeline is formed for the applications that subscribed to those changes. 
+\end{itemize}
+
+\section{Reliability}
+A simple ``protocol'' to handle switch fail-over. I still need to think of bad things that can happen when two controllers fight over a switch.
+\subsection{Protocol}
+\begin{itemize}
+\item There is an eventual failure detector built with the data store. If the controller does not has access to the data store it should not control anything in the network (Fig.~\ref{fig:proto-heartbeats}). The data store also keeps the switches under each controller ; 
+\item Controllers can suspect the failure of another and attempt to replace it. First they have to set a flag in the data store stating that they are attempting to take over the presumably failed controller (Fig.~\ref{fig:proto-c2-fails}). With this flag other controllers can known that someone is attempting to control the switches and avoid taking over. This also helpfully for the failed controller which can recover and known that there is an active process to take its place. 
+\item A controller can then set himself as master of the switch. After this point all switches messages go to the new controller (C1) (Fig.~\ref{fig:proto-c1-as-master}); 
+\item Finally the controller sets himself as master of the switch in the data store. (Fig.~\ref{fig:proto-c1-finishes}). 
+\end{itemize}
+
+
+\begin{figure}
+  \centering
+  \begin{subfigure}[b]{0.5\textwidth}
+                \centering
+                \includegraphics[scale = 0.4]{./pic/heimdall/proto-1}
+                \caption{Heartbeats sent to the data store. }
+                \label{fig:proto-heartbeats}
+        \end{subfigure}%
+        ~
+        \begin{subfigure}[b]{0.5\textwidth}
+                \centering
+                \includegraphics[scale=0.4]{./pic/heimdall/proto-2}
+                \caption{C1 finds out that C2 has failed.}
+                \label{fig:proto-c2-fails}
+        \end{subfigure}
+
+  \begin{subfigure}[b]{0.5\textwidth}
+                \centering
+                \includegraphics[scale = 0.4]{./pic/heimdall/proto-3}
+                \caption{C1 has to set himself as master in S2. }
+                \label{fig:proto-c1-as-master}
+        \end{subfigure}%
+        ~
+        \begin{subfigure}[b]{0.5\textwidth}
+                \centering
+                \includegraphics[scale=0.4]{./pic/heimdall/proto-4}
+                \caption{Finally tell the data store he controls S2. }
+                \label{fig:proto-c1-finishes}
+        \end{subfigure}
+\end{figure}
+
+Notes
+\begin{itemize}
+\item In the case S1 fails while taking over S2, other controllers (if any) will eventually known about this and take over. 
+\item This process can also be triggered in the case a switch fails. It is worth doing so because a switch can fail due to network failures who affect the connectivity with his master controller but not with others; 
+\item As long as one  controller does not fail and reaches every switch (who also has not failed)  and data store we can handle all kind of network failures.
+\item When C2 recovers he can do the same process to take over his switches again. 
+\item I think that to be safe (I will try to define safety later) the data store should deny state changing messages from controllers who do not own the switch (which caused the state changes). But I have to think better about this.... 
+\end{itemize}
+
+% \linebreak
+
+% \section{Shared Data Store Controller Architecture}
+% \glsresetall
+% \label{sec:heimdall:architecture}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% The proposed distributed control architecture is based on a set of controllers acting as clients of the fault-tolerant replicated key-value data store, reading and updating the required state as the control application demands, maintaining thus only soft state locally.
+% There are two main concerns around this design: (i) how to avoid the storage being a single point of failure and (ii) how to avoid making the storage a bottleneck for the system.
+% In the previous section we showed that state-of-the-art state machine replication can be used to build a data store that solves both these concerns.
+
+
+% Fig. \ref{fig:architecture} shows the architecture of our shared data store distributed controller.
+% The architecture comprises a set of SDN controllers connected to the switches in the network.
+% All decisions of the control plane applications running on the distributed controller are based on OpenFlow events triggered by the switches and the consistent network state the controllers share on the data store.
+% The fact that we have a consistent data store makes the interaction between controllers as simple as reading and writing on the shared data store: there is no need for code that deals with conflict resolution or the complexities due to possible corner cases arising from weak consistency.
+
+% By design, the SMR-based data store is replicated and fault-tolerant (as in all designs discussed in the previous section), being up and running as long as a majority of replicas is alive~\cite{Lam98}.
+% In other words, $2f+1$ replicas are needed to tolerate $f$ simultaneous crashes.
+% Thus, besides offering strong consistency, this architecture leads to a completely fault-tolerant control plane.
+% Furthermore, in this design the controllers keep only soft state locally, which can be easily reconstructed after a crash.
+% The switches tolerate controller crashes using the master-slave configuration introduced in OpenFlow 1.2\,\cite{ONF2011}, which allows each switch to report events to up to $f+1$ controllers (being $f$ an upper bound on the number of faults tolerated), with a single one being master for each particular switch.
+% The master is constantly being monitored by the remaining $f$ controllers, which can takeover its role in case of a crash.
+
+% Interestingly, our architecture could also be used in SDN deployments were a distributed controller is not necessary, to implement fault tolerance for centralized controllers.
+% In this case the fault-tolerant data store can be used to store the pertinent controller state, making it extremely simple to recover from its crash.
+% In this case, the applications deployed on the primary controller manage the network while a set of $f$ backup controllers keep monitoring this primary, just as in the distributed controller design.
+% If the primary fails, one of the backups -- say, the one with the highest IP address -- takes the role of primary and uses the data store to continue controlling the network.
+
+% Our distributed controller architecture covers the two most complex fault domains in an SDN, as introduced in~\cite{kim2012}.
+% It has the potential to tolerate faults in the controller (if the controller itself or associated machinery fails) by having the state stored in the fault-tolerant data store.
+% It can also deal with faults in the control plane (the connection controller-switch) by having each switch connected to several controllers (which is ongoing work).
+% The third SDN fault domain --- the data plane --- is orthogonal to this work since it depends on the topology of the network and how control applications react to faults.
+% This problem is being addressed in other recent efforts~\cite{kim2012,Reitblatt2013}.
 
 % \begin{figure}
-%   \centering
-%   \begin{subfigure}[b]{0.5\textwidth}
-%                 \centering
-%                 \includegraphics[scale = 0.4]{./pic/heimdall/proto-1}
-%                 \caption{Heartbeats sent to the data store. }
-%                 \label{fig:proto-heartbeats}
-%         \end{subfigure}%
-%         ~
-%         \begin{subfigure}[b]{0.5\textwidth}
-%                 \centering
-%                 \includegraphics[scale=0.4]{./pic/heimdall/proto-2}
-%                 \caption{C1 finds out that C2 has failed.}
-%                 \label{fig:proto-c2-fails}
-%         \end{subfigure}
-
-%   \begin{subfigure}[b]{0.5\textwidth}
-%                 \centering
-%                 \includegraphics[scale = 0.4]{./pic/heimdall/proto-3}
-%                 \caption{C1 has to set himself as master in S2. }
-%                 \label{fig:proto-c1-as-master}
-%         \end{subfigure}%
-%         ~
-%         \begin{subfigure}[b]{0.5\textwidth}
-%                 \centering
-%                 \includegraphics[scale=0.4]{./pic/heimdall/proto-4}
-%                 \caption{Finally tell the data store he controls S2. }
-%                 \label{fig:proto-c1-finishes}
-%         \end{subfigure}
+% \centering
+% \includegraphics[scale=0.6]{./pic/heimdall/multicontroller.pdf}
+% %add desired spacing between images, e. g. ~, \quad, \qquad etc.
+% %(or a blank line to force the subfigure onto a new line) 
+% \caption[Heimdall Architecture]{The shared data store controller
+%   architecture with each switch sending OpenFlow messages to two
+%   controllers. The controllers coordinate their actions using a
+%   logically centralized data store, implemented as a set of
+%   synchronized replicas. }
+% \label{fig:architecture} 
 % \end{figure}
 
-% Notes
-% \begin{itemize}
-% \item In the case S1 fails while taking over S2, other controllers (if any) will eventually known about this and take over. 
-% \item This process can also be triggered in the case a switch fails. It is worth doing so because a switch can fail due to network failures who affect the connectivity with his master controller but not with others; 
-% \item As long as one  controller does not fail and reaches every switch (who also has not failed)  and data store we can handle all kind of network failures.
-% \item When C2 recovers he can do the same process to take over his switches again. 
-% \item I think that to be safe (I will try to define safety later) the data store should deny state changing messages from controllers who do not own the switch (which caused the state changes). But I have to think better about this.... 
-% \end{itemize}
+% \section{Floodlight} 
+% \glsresetall
+% \label{sec:heimdall:floodlight}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% % \linebreak
+% \section{Data Store}
+% \glsresetall
+% \label{sec:heimdall:dataStore}
+% %Features  design, etc., 
+% \label{sec:heimdall:datastore:bft-smart}
+% FIXME : Alysson - será que posso justificar que a data store
+% performance nao é importante quando comparada com o middleware? 
 
-% % \section{Shared Data Store Controller Architecture}
-% % \glsresetall
-% % \label{sec:heimdall:architecture}
-% % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \subsection{Smart}
+% we had to change the library used of netty from netty-3.1.1.GA.jar to
+% netty-3.2.6.Final.jar because it conflicted with floodlight. We are in
+% the dark here. Do not known if this will cause problems... 
 
-% % The proposed distributed control architecture is based on a set of controllers acting as clients of the fault-tolerant replicated key-value data store, reading and updating the required state as the control application demands, maintaining thus only soft state locally.
-% % There are two main concerns around this design: (i) how to avoid the storage being a single point of failure and (ii) how to avoid making the storage a bottleneck for the system.
-% % In the previous section we showed that state-of-the-art state machine replication can be used to build a data store that solves both these concerns.
+% \subsection{Implementation}
 
+% \subsubsection{Map interface} 
+% Actually motivated by the LearningSwitch application. The rest interface exposed the learning switch database (hash table ) directly. We implemented a class to Delegate the map interface methods to our KeyValueTable. We don't actually use it inside the applications we modified because we have some preference for static typing (which for arguably legitimate reasons does not appear in the Map interface). Nevertheless we could use it. putAll and containsValue are not implemented. No special reason just lazinesss.  
 
-% % Fig. \ref{fig:architecture} shows the architecture of our shared data store distributed controller.
-% % The architecture comprises a set of SDN controllers connected to the switches in the network.
-% % All decisions of the control plane applications running on the distributed controller are based on OpenFlow events triggered by the switches and the consistent network state the controllers share on the data store.
-% % The fact that we have a consistent data store makes the interaction between controllers as simple as reading and writing on the shared data store: there is no need for code that deals with conflict resolution or the complexities due to possible corner cases arising from weak consistency.
-
-% % By design, the SMR-based data store is replicated and fault-tolerant (as in all designs discussed in the previous section), being up and running as long as a majority of replicas is alive~\cite{Lam98}.
-% % In other words, $2f+1$ replicas are needed to tolerate $f$ simultaneous crashes.
-% % Thus, besides offering strong consistency, this architecture leads to a completely fault-tolerant control plane.
-% % Furthermore, in this design the controllers keep only soft state locally, which can be easily reconstructed after a crash.
-% % The switches tolerate controller crashes using the master-slave configuration introduced in OpenFlow 1.2\,\cite{ONF2011}, which allows each switch to report events to up to $f+1$ controllers (being $f$ an upper bound on the number of faults tolerated), with a single one being master for each particular switch.
-% % The master is constantly being monitored by the remaining $f$ controllers, which can takeover its role in case of a crash.
-
-% % Interestingly, our architecture could also be used in SDN deployments were a distributed controller is not necessary, to implement fault tolerance for centralized controllers.
-% % In this case the fault-tolerant data store can be used to store the pertinent controller state, making it extremely simple to recover from its crash.
-% % In this case, the applications deployed on the primary controller manage the network while a set of $f$ backup controllers keep monitoring this primary, just as in the distributed controller design.
-% % If the primary fails, one of the backups -- say, the one with the highest IP address -- takes the role of primary and uses the data store to continue controlling the network.
-
-% % Our distributed controller architecture covers the two most complex fault domains in an SDN, as introduced in~\cite{kim2012}.
-% % It has the potential to tolerate faults in the controller (if the controller itself or associated machinery fails) by having the state stored in the fault-tolerant data store.
-% % It can also deal with faults in the control plane (the connection controller-switch) by having each switch connected to several controllers (which is ongoing work).
-% % The third SDN fault domain --- the data plane --- is orthogonal to this work since it depends on the topology of the network and how control applications react to faults.
-% % This problem is being addressed in other recent efforts~\cite{kim2012,Reitblatt2013}.
-
-% % \begin{figure}
-% % \centering
-% % \includegraphics[scale=0.6]{./pic/heimdall/multicontroller.pdf}
-% % %add desired spacing between images, e. g. ~, \quad, \qquad etc.
-% % %(or a blank line to force the subfigure onto a new line) 
-% % \caption[Heimdall Architecture]{The shared data store controller
-% %   architecture with each switch sending OpenFlow messages to two
-% %   controllers. The controllers coordinate their actions using a
-% %   logically centralized data store, implemented as a set of
-% %   synchronized replicas. }
-% % \label{fig:architecture} 
-% % \end{figure}
-
-% % \section{Floodlight} 
-% % \glsresetall
-% % \label{sec:heimdall:floodlight}
-% % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% % \section{Data Store}
-% % \glsresetall
-% % \label{sec:heimdall:dataStore}
-% % %Features  design, etc., 
-% % \label{sec:heimdall:datastore:bft-smart}
-% % FIXME : Alysson - será que posso justificar que a data store
-% % performance nao é importante quando comparada com o middleware? 
-
-% % \subsection{Smart}
-% % we had to change the library used of netty from netty-3.1.1.GA.jar to
-% % netty-3.2.6.Final.jar because it conflicted with floodlight. We are in
-% % the dark here. Do not known if this will cause problems... 
-
-% % \subsection{Implementation}
-
-% % \subsubsection{Map interface} 
-% % Actually motivated by the LearningSwitch application. The rest interface exposed the learning switch database (hash table ) directly. We implemented a class to Delegate the map interface methods to our KeyValueTable. We don't actually use it inside the applications we modified because we have some preference for static typing (which for arguably legitimate reasons does not appear in the Map interface). Nevertheless we could use it. putAll and containsValue are not implemented. No special reason just lazinesss.  
-
-% % LinkedHashMap should be used for maintaining consistent ordering
-% % across replicas. 
-% % \pagebreak 
-% % \section{Data store}
-% % \label{sec:heimdall:datastore:functionalities}
+% LinkedHashMap should be used for maintaining consistent ordering
+% across replicas. 
+% \pagebreak 
+% \section{Data store}
+% \label{sec:heimdall:datastore:functionalities}
 
 \subsection{Prototype Implementation}
 \textbf{Isto vai ser uma secção a falar do protótipo de base de dados implementado.} 
@@ -321,7 +321,7 @@ This is not a lesson in design. The interfaces presented are part of a prototype
 A Cross Reference table ($t_{cr}$) contains values that can be used as keys in another table ($t_{d}$). 
 Therefore a data store client can use a key valid in  one table ($t_{cr}$) to retrieve a value at  a different table ($t_{d}$) but with the benefit of using a  single data store operation (the \texttt{getCrossReference} method at \emph{IKeyValueTable}). 
 
-%Commonly, despite the number of unique attributes that can be used to identify a value, we are limited to using a single one when using an hash table. 
+Commonly, despite the number of unique attributes that can be used to identify a value, we are limited to using a single one when using an hash table. 
 Commonly, an hash table is restricted to a single key to identify a value despite the  number of unique attributes  that can be used to identify it. 
 Furthermore, the asymptotical complexity to obtain a value with a particular key is \BigO{1} as opposed to searching for one which, at best, has $\Omega(\log n)$ complexity for $n$ entries (using balanced trees). 
 
@@ -348,7 +348,7 @@ As a result, despite the key that a client uses to obtain a value it can always 
                 \caption{No Versioning.} 
                 \label{fig:heimdall:versioning-0}
 
-        \end{subfigure}%
+        \end{subfigure}
         ~
         \begin{subfigure}[b]{0.5\textwidth}
                 \centering
@@ -392,30 +392,30 @@ Then, the hash table implementation can perform a logical test to assert if the 
 
 While adapting existing applications to our \gls{api} that used the Java concurrent hash table, we have chosen to modify them slightly to use the version number mechanism instead of the existent logical equivalence. We do so for two reasons. First, while equivalence tests work well with objects, the same is not true for the raw bytes that result from the marshalling process (used to transform objects into byte arrays as required by our data store interface). In fact, we found cases where despite the  logical equivalence of two objects (as observed by their Java \texttt{equals} contract) their byte representation was disparate. Later, we have found that different object constructors for a list implementation resulted in different byte representations even when the list contained exactly the same objects. Truly, it can be painfully to the programmer to have control over this type of low level detail. Second, with versions numbers we can  reduce the \gls{rpc} message sizes (that are sent to the data store) significantly (see Section~\ref{sec:feasibility:apps}) since the version number is often much smaller than a value. 
 
-% This mechanism offers some control over concurrent updates to clients of the data store since the replace and remove operations that use an \texttt{expected\_version} argument (see in Fig~\ref{fig:design:class-diagram}). The data store executes those operations if, and only if, the client provided \texttt{expected\_version} matches the version of the data store for the particular key that is also provided in the operation.  
-% This the data store client with concurrent operations (e.g., \texttt{replace, remove}) that are only successful if the \texttt{expected\_version} provided by the client is equal to the version number that the data store has associated with the particular key that is also provided in the operation. 
+This mechanism offers some control over concurrent updates to clients of the data store since the replace and remove operations that use an \texttt{expected\_version} argument (see in Fig~\ref{fig:design:class-diagram}). The data store executes those operations if, and only if, the client provided \texttt{expected\_version} matches the version of the data store for the particular key that is also provided in the operation.  
+This the data store client with concurrent operations (e.g., \texttt{replace, remove}) that are only successful if the \texttt{expected\_version} provided by the client is equal to the version number that the data store has associated with the particular key that is also provided in the operation. 
 
-% Another common functionality is concurrency control based on version numbers that are associated with an entry in a key value table.
-% Every update operation done to an entry causes the data store to increment the version number. 
-% With this mechanism we enable a simple concurrency interface that allows different clients of the data store to manipulate it safely. 
-% This mechanism is commonly used to safely update a value.  
-% For example, imagine that a controller wishes to track for each website the set of adresses \gls{ip} addresses that perform requests to it. 
-% This information can be kept in a table that maps  an \gls{url} an \gls{ip}.  Fig~\ref{} TODO-FIG shows an example where two different controllers concurrently update this value. 
-% In the beginning (at the left) two controllers read the current value concurrently and both obtain the same result (a set containing \texttt{IP1}). Then later both controllers update this set and perform a write in the data store. In this situation the last write wins, which in the example belongs the bottom controller. 
-% As a result the \texttt{IP2} request to the website is not tracked. To avoid this behaviour both controller can use conditional updates based on versioning. 
-% Fig blah shows this example. This time, the response obtained from the data store includes a version number (1 for both clients). Then when they update the value they include the version number. In this case the first write (from the top client) is successful since the version number provided by the client matches the version number in the data store. But when the second client goes to write its  value then the data store does not allow it since the version number does not match the current version of that entry in the data store since it has been updated by the previous write. 
-% Concurrent updates could be avoided if the client provides both the value that he expects to find at the data store as well as the new value (the updated one). However this is not practical for two reasons. First in incurs in an significant overhead to the message sent to the data store (roughly the double of the size in most examples we have found). Second, and arguably more importantly, it is painfully to guarantee that byte array representations of marshalled values are actually equal even whey the values are logically equivalent. We have lost a lot of time tracking bugs caused by this when two different List constructor methods caused an object to have different byte representations even if the both lists contained exactly the same elements, and in the same order. 
+Another common functionality is concurrency control based on version numbers that are associated with an entry in a key value table.
+Every update operation done to an entry causes the data store to increment the version number. 
+With this mechanism we enable a simple concurrency interface that allows different clients of the data store to manipulate it safely. 
+This mechanism is commonly used to safely update a value.  
+For example, imagine that a controller wishes to track for each website the set of adresses \gls{ip} addresses that perform requests to it. 
+This information can be kept in a table that maps  an \gls{url} an \gls{ip}.  Fig~\ref{} TODO-FIG shows an example where two different controllers concurrently update this value. 
+In the beginning (at the left) two controllers read the current value concurrently and both obtain the same result (a set containing \texttt{IP1}). Then later both controllers update this set and perform a write in the data store. In this situation the last write wins, which in the example belongs the bottom controller. 
+As a result the \texttt{IP2} request to the website is not tracked. To avoid this behaviour both controller can use conditional updates based on versioning. 
+Fig blah shows this example. This time, the response obtained from the data store includes a version number (1 for both clients). Then when they update the value they include the version number. In this case the first write (from the top client) is successful since the version number provided by the client matches the version number in the data store. But when the second client goes to write its  value then the data store does not allow it since the version number does not match the current version of that entry in the data store since it has been updated by the previous write. 
+Concurrent updates could be avoided if the client provides both the value that he expects to find at the data store as well as the new value (the updated one). However this is not practical for two reasons. First in incurs in an significant overhead to the message sent to the data store (roughly the double of the size in most examples we have found). Second, and arguably more importantly, it is painfully to guarantee that byte array representations of marshalled values are actually equal even whey the values are logically equivalent. We have lost a lot of time tracking bugs caused by this when two different List constructor methods caused an object to have different byte representations even if the both lists contained exactly the same elements, and in the same order. 
 
- %To avoid loosing values added concurrently to the set, we can use version numbers when re-inserting the set in the data store. This 
-%This mechanism is more commonly used in situations where we read a value, transform it and then update it. In order to not risk loosing the updates done by a concurrent client, we can use the version number of the original value when updating. The data store then can verify if the version is the least of the value or not. If not the update will fail, and we can proceed again.  
+ To avoid loosing values added concurrently to the set, we can use version numbers when re-inserting the set in the data store. This 
+This mechanism is more commonly used in situations where we read a value, transform it and then update it. In order to not risk loosing the updates done by a concurrent client, we can use the version number of the original value when updating. The data store then can verify if the version is the least of the value or not. If not the update will fail, and we can proceed again.  
 
-%We found examples of applications (Load Balancer and Device Manager) that used this simple concurrency control primitives as defined by the Java \emph{ConcurrentMap} interface. However this interface is based on values instead of version numbers. This requires clients to send two values: one that should be equal to the data store version (only then will the operation succeed)  ; and the new one. 
-%In Java the concurrent hash table interfaces requires sending both the expected value and the new value. 
-%However with remote data stores this is not practical for two reasons. 
-%First, it incurs in a significant overhead since we have to send two values instead of one.
-%Second, it can be painfully to make sure that byte array representations of values are actually equal. When marshalling a value (transform an object into a linear byte array representation) the process in place can output different values which are logically equivalent (as specified by their equals contract in the Java case).  This can make a list that contains the same objects to have different representations which is something hard to identify and correct since we have to verify every suspected attribute of a class. 
+We found examples of applications (Load Balancer and Device Manager) that used this simple concurrency control primitives as defined by the Java \emph{ConcurrentMap} interface. However this interface is based on values instead of version numbers. This requires clients to send two values: one that should be equal to the data store version (only then will the operation succeed)  ; and the new one. 
+In Java the concurrent hash table interfaces requires sending both the expected value and the new value. 
+However with remote data stores this is not practical for two reasons. 
+First, it incurs in a significant overhead since we have to send two values instead of one.
+Second, it can be painfully to make sure that byte array representations of values are actually equal. When marshalling a value (transform an object into a linear byte array representation) the process in place can output different values which are logically equivalent (as specified by their equals contract in the Java case).  This can make a list that contains the same objects to have different representations which is something hard to identify and correct since we have to verify every suspected attribute of a class. 
 
-%So all in all the usage of replace based on byte comparison is not advocated. Instead timestamps end up benefiting the user by being more space efficient in the message exchanged (with a possibly insignificant cost for carrying the timestamp value); and by being easier to work with. 
+So all in all the usage of replace based on byte comparison is not advocated. Instead timestamps end up benefiting the user by being more space efficient in the message exchanged (with a possibly insignificant cost for carrying the timestamp value); and by being easier to work with. 
 
 \subsection{Columns}
 \label{sec:heimdall:columns}

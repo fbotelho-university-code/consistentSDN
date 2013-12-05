@@ -51,6 +51,9 @@
 
 
 \usepackage[nomain,acronym,xindy,nonumberlist]{glossaries}
+\usepackage{glossary-mcols}  
+\renewcommand*{\glsmcols}{3}  
+\glossarystyle{mcolindex}
 \include{./tex/acronimos}
 \makeglossary  
 
@@ -71,6 +74,15 @@ url=false, doi=false, eprint=false]{biblatex}
 \lhead{\nouppercase {\leftmark}} %
 \rhead{\nouppercase {\bf \thepage}}
 \renewcommand{\headrulewidth}{0.1pt}
+
+%%%%%%%%%%%
+
+\hyphenation{protocol}
+
+\newcommand{\etal}{et al.}
+
+%%%%%%%%%%%%%%%%%%%%
+
 
 % Comando para inserir pagina em branco (inserida na numeracao, mas sem
 % numero impresso) para quando e' preciso obrigar um capitulo a comecar
@@ -229,6 +241,18 @@ url=false, doi=false, eprint=false]{biblatex}
 \include{./tex/heimdall}
 \LIMPA
 
+
+%%%%%%%%%%%%%%
+REMOVE ME HERE 
+\LIMPA
+
+\chapter{Distributed Controller NEW}
+%\epigraph{Estamos no Mato...  E sem cão!}{Professor de LEI - 3º ano}
+\glsresetall
+\include{./tex/design}
+\LIMPA
+%%%%%%%%%%%%
+
 \chapter{Evaluation}
 %\setlength{\epigraphwidth}{.6\textwidth}
 %\epigraph{Eu já estou por tudo. Por mim reinicio o TomCat.}{MSI - Estudante do 1º ano}
@@ -272,11 +296,17 @@ url=false, doi=false, eprint=false]{biblatex}
 % e voltar a gerar o PDF
 %
 %\include{./tex/acronimos}
-%\renewcommand{\glossaryname}{Glossary}
+\renewcommand{\glossaryname}{Glossary}
 %\setglossary{glodelim={\noexpand}}
 %\setglossary{glsnumformat=ignore}
-\printglossary
+
+
+
 \addcontentsline {toc} {chapter} {Glossary}
+
+\printglossary[type=acronym,title=Glossary]
+\printindex
+
 
 % Bibliografia
 

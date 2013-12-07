@@ -1,53 +1,86 @@
-``With the strong consistency model users are not able to discover that data is replicated. In fact the client of systems that provide this model are not able to distinguish him in any way from a centralized system.'' This is a natural way of thinking. 
+%``With the strong consistency model users are not able to discover that data is replicated. In fact the client of systems that provide this model are not able to distinguish him in any way from a centralized system.'' This is a natural way of thinking. 
 
-``similar to the examples used to motivate SDN today. The issues of the day included network service provider frustration with the timescales necessary to develop and deploy new net- work services (so-called network ossification), third-party interest in value-added, fine-grained control to dynam- ically meet the needs of particular applications or net- work conditions, and researcher desire for a platform that would support experimentation at scale. Additionally, many early papers on active networking cited the prolif- eration of middleboxes, including firewalls, proxies, and transcoders, each of which had to be deployed separately and entailed a distinct (often vendor-specific) program- ming model. Active networking offered a vision of uni-''
-
-
+%``similar to the examples used to motivate SDN today. The issues of the day included network service provider frustration with the timescales necessary to develop and deploy new net- work services (so-called network ossification), third-party interest in value-added, fine-grained control to dynam- ically meet the needs of particular applications or net- work conditions, and researcher desire for a platform that would support experimentation at scale. Additionally, many early papers on active networking cited the prolif- eration of middleboxes, including firewalls, proxies, and transcoders, each of which had to be deployed separately and entailed a distinct (often vendor-specific) program- ming model. Active networking offered a vision of uni-''
 
 %TODO - tens que dizer logically centralized pode ser fisicamente distribuído. 
 
-
 %TODO - decomposed network goals - given an example.  Routing protocols handle dynamic topology changes but have to be configured individually (per device). Furthermore they do not work in concert witht other control functions such as firewalls implement as packet filters statements applied to each interface. As an example suppose that a router $r_i$ has two interfaces $i_1$ and $i_2$ and a packet filter statement denying traffic from a particular network $n$ . Then if the vent that   It is common to found that the latter can not be dynamically adapted to topology changes. 
 
-Distributed state management. Logically centralized route controllers faced challenges involving distributed state management. A logically centralized controller must be replicated to cope with controller failure; how- ever, inconsistencies can arise between the controller replicas. Researchers explored the likely failure scenar- ios and consistency requirements. At least in the case of routing control, the controller replicas did not need a general state management protocol, since each replica would eventually compute the same routes (after learn- ing the same topology and routing information) and tran- sient disruptions during routing-protocol convergence were acceptable even with legacy protocols [12]. This problem would arise again five years later in the con- text of distributed SDN controllers [47, 57]. \emph{Yet, dis- tributed SDN controllers face the far more general prob- lem of supporting arbitrary controller applications, re- quiring more sophisticated solutions for distributed state management.}
-
-DO NOT FORGET TO TALK ABOUT DEALING WITH ROUTING PROBLEMS IS EVENTUALLY CONSISTENT. 
+%Distributed state management. Logically centralized route controllers faced challenges involving distributed state management. A logically centralized controller must be replicated to cope with controller failure; however, inconsistencies can arise between the controller replicas. Researchers explored the likely failure scenarios and consistency requirements. At least in the case of routing control, the controller replicas did not need a general state management protocol, since each replica would eventually compute the same routes (after learning the same topology and routing information) and transient disruptions during routing-protocol convergence were acceptable even with legacy protocols [12]. This problem would arise again five years later in the context of distributed SDN controllers. \emph{Yet, distributed SDN controllers face the far more general problem of supporting arbitrary controller applications, requiring more sophisticated solutions for distributed state management.}
 
 
-Use dijktra not bellman-ford 
-``This centralized paradigm is more flexible, since new functionality can be centrally programmed at the decision element that requireding a new distributed algorithm, but raises the specter of a single point of failure. However adequate resilience can be achieved by appling standard replication techniques to the decision element. The replication techniques are completely decoupled from the network control algorithms, so they do not impede application innovation''. 
+%DO NOT FORGET TO TALK ABOUT DEALING WITH ROUTING PROBLEMS IS EVENTUALLY CONSISTENT. 
+
+%Use dijktra not bellman-ford 
+%``This centralized paradigm is more flexible, since new functionality can be centrally programmed at the decision element that requireding a new distributed algorithm, but raises the specter of a single point of failure. However adequate resilience can be achieved by appling standard replication techniques to the decision element. The replication techniques are completely decoupled from the network control algorithms, so they do not impede application innovation''. 
 
 
-\section{Motivation}
-Despite its success, current IP networks suffer from problems 
-which have long drawn attention of the network academic community. Two  approaches have been followed in addressing those problems: the first is focused in tailoring the performance of IP based networks and/or providing ad-hoc solutions to new technological requirements, while the second  advocates the clean-slate redesign of the IP architecture. 
+\section{Software Defined Network}
+Despite its success, current \gls{ip} networks suffer from problems which have long drawn attention of the network academic community. 
+Researchers tackle those problems by following one of two strategies: the first is focused in tailoring the performance of \gls{ip}  based networks and/or providing ad hoc solutions to new technological requirements, while the second  advocates the clean slate redesign of the \gls{ip} architecture. 
+\gls{sdn} is the pragmatic result of several contributions to the clean slate strategy that has the benefit of radically transforming the management and specification of \gls{ip} networks albeit maintaining intact the existent \emph{host-to-host} protocols (i.e., the TCP/IP stack\footnote{The TCP/IP stack is a common name for the Internet protocol suite comprising a networking model and set of communication protocols used in the Internet.}). 
 
-Software Defined Networking (SDN) \cite{ONF:2012ui} is the pragmatic result of several contributions to the clean-slate approach and has the advantage of radically change the way IP networks are managed and developed without requiring changes to the \emph{host-to-host} TCP/IP stack. In essence, SDN shifts the control logic of the network (e.g., route discovery) from the network equipment to commodity servers where network control can  be defined in software, without the functional constraints set by the network infrastructure. Thus, there is a separation of the control plane, where the servers operate, from the the data plane where the network infrastructure resides. 
+%Two approaches have been followed in addressing those problems: the first is focused in tailoring the performance of \gls{ip}  based networks and/or providing ad hoc solutions to new technological requirements, while the second  advocates the clean slate redesign of the \gls{ip} architecture. 
 
-Distribution of the control plane is argued by many, to be essential for scalability and reliability reasons \cite{Tootoonchian:2010vy, Koponen:2010th,Yeganeh:2012jm,:zr}. However, state of the art  distributed control planes lack transparency and consistency proprieties that are desirable in the development of network control applications. 
-Also we believe that, based on the state of the art replication results available \cite{Rao:2011vz,Lee:1996jm,Bolosky:2011ve,Wang:2012tj} we can contribute to SDN with an efficient distributed control plane.
-Finally, we also believe that Software Defined Networking will have significant deployment support from the network industry and may eventually take a primary role in the replacement of the current IP architecture. 
-All these factors  encourage us to pursue the work described in this document.
+%\gls{sdn} is the pragmatic result of several contributions to the clean slate approach and has the advantage of radically change the way \gls{ip} networks are managed and developed without requiring changes to the \emph{host-to-host} protocols~\cite{ONF:2012ui}. 
+In a nutshell, \gls{sdn} shifts the control logic of the network (e.g., route discovery) from the network equipment to a commodity server where network behavior can be defined in software from a single high-level control program, without the constraints set by the network equipment. Thus, there is a separation of the control plane, where the server operates, from the  data plane where the network infrastructure resides. 
+A fundamental abstraction in \gls{sdn} is the concept of \emph{logical centralization} that specifies that the control plane operates with a logically centralized global view of the network, which can contain (among other things)  the topology, link state, and security policy. 
+This global view enables simplified programming models and facilitates network applications design.
+
+A logically centralized programmatic model does not postulate a centralized system. Arguably, a less-prone-to-ambiguity definition for ``logically centralized'' could be ``transparently distributed'' because \emph{``either you're centralized, or you're distributed''}\,\cite{casado2011}.
+In fact, the need to guarantee adequate levels of performance, scalability, and reliability preclude a fully centralized solution.
+Instead, production-level \gls{sdn} network designs resort to physically distributed control planes\,\cite{Rao:2011vz,Lee:1996jm,Bolosky:2011ve,Wang:2012tj,jain2013b4}.
+Consequently, the designers of such systems have to face the fundamental trade-offs between the different consistency models, the need to guarantee acceptable application performance, and the necessity to have a highly available system.
+
+% Distribution of the control plane is argued by many, to be essential for scalability and reliability reasons \cite{Tootoonchian:2010vy, Koponen:2010th,Yeganeh:2012jm,:zr}. However, state of the art  distributed control planes lack transparency and consistency proprieties that are desirable in the development of network control applications. 
+% Also we believe that, based on the state of the art replication results available \cite{Rao:2011vz,Lee:1996jm,Bolosky:2011ve,Wang:2012tj} we can contribute to SDN with an efficient distributed control plane.
+% Finally, we also believe that Software Defined Networking will have significant deployment support from the network industry and may eventually take a primary role in the replacement of the current IP architecture. 
+% All these factors  encourage us to pursue the work described in this document.
+
+In this document, we propose a novel SDN controller architecture that is distributed, fault-tolerant, and strongly consistent.
+The central element of this architecture is a data store that keeps relevant network and applications state, guaranteeing that SDN applications operate on a consistent network view, ensuring coordinated, correct behavior, and consequently simplifying application design. The drawback of  this approach  is the decrease of performance, which limits responsiveness and hinders scalability. Even assuming these negative consequences, an important conclusion of this study is that it is possible to achieve those goals while maintaining the performance penalty at an acceptable level.
+
+\subsection{Problem of Internet Architecture}
+%network devices are configured indepentenly in a low-level device specific manner can be very buggy and unpredictable. To cope with this 
+%Much easier to coordinate, network operator can write a program that allows the behaviour of network  
+
+%It is hard to evolve because the software is bundle with the hardware. It is much easier to evolve when the software is decoupled from the hardware. 
+
+Classic \gls{ip} networks are complex to manage and control. 
+%This complexity is drived  by different factors.  Namel
+Researchers argue that this complexity descends from the integration of network control functionalities such as routing and access control 
+in the network devices that should (arguably) be solely responsible for forwarding packets. 
+First, network configuration is a human based process done mainly through direct command line interaction or ad-hoc scripts. 
+Additionally, each network device requires a different configuration and current network infrastructures may contain thousands of devices. 
+This process of translating high-level network objectives by humans to low level device-dependent configuration primitives is error prone. Furthermore, configuration errors (that should be insignificant events) can cascade into network errors of a global scale. 
+As an example, in 2008 Pakistan Telecom took Youtube offline almost worldwide by following a censorship order~\cite{McCullagh:2008fk}.
+Another consequence of this complexity is that administrators of large networks (e.g., ISP)  must have significant human resources for the management task.  
+
+Another source of complexity is the bundled responsibility  of network devices that are simultaneously responsible for control logic and packet forwarding. 
+For example, both Ethernet\footnote{A family of computer networking technologies for local area networks.}  switches and \gls{ip} routers are in charge of  data forwarding as well as route computation\footnote{Routes are found by processing routing protocols in the \gls{ip} case and by processing the \gls{stp} protocol in the Ethernet case.}. 
+Control logic is responsible for  tasks that go beyond route computation such as  discovery, tunneling, and  access control. 
+The path computation process itself is so complex that it may require devices to concurrently execute several control processes and/or maintain a global view of the network (in each device!).  
+This is undesirable for multiple reasons: $(i)$ it requires multiple ad-hoc distributed protocols to implement a myriad of control functions; $(ii)$ it occupies precious resources from the network equipment; and $(iiI)$ the end-result is that software for the control function is vertically integrated with hardware in a specialized, vendor-dependent expensive solution;  
 
 
-
-Classic IP networks are complex to manage and control. This complexity is caused by several factors. First, network configuration is a human based process done mainly through direct command line interaction or ad-hoc scripts. Additionally, each network device requires a different configuration and current network infrastructures may contain thousands of devices. This process of translating high-level network objectives by humans to low level device-dependent configuration primitives is error prone. Furthermore, configuration errors (that should be insignificant events) can cascade into network errors of a global scale. As an example, in 2008 Pakistan Telecom took Youtube offline almost worldwide \cite{McCullagh:2008fk} by following a censorship order. Another consequence of this complexity is that administrators of large networks (e.g., ISP)  must have significant human resources for the management task.  
-
-Another source of complexity is the bundled responsibility  of network devices that are simultaneously responsible for control logic and packet forwarding. For example, both Ethernet  switches and IP routers are in charge of  data forwarding as well as route computation\footnote{Routes are found by processing routing protocols in the IP case and by processing the Spanning Tree protocol in the Ethernet case.}. Control logic is responsible for  tasks that go beyond route computation such as  discovery, tunneling, and  access control. The path computation process itself is so complex that it may require devices to concurrently execute several control processes and/or maintain a global view of the network (in each device).  
-%TODO - problematic since? 
+%TODO - problematic since? pe
 
 Finally, control functions are isolated of one another and lack
 abstractions for consulting, modifying and configuring their state at
 run-time. As a practical example consider the case of access control
 in a network. For this purpose we can associate packet filtering
-statements to each router interface and traffic direction whereby we
+statements to each router interface whereby we
 explicitly specify the traffic allowed or forbidden. In this scenario
 if the network topology changes, the packet filtering rules installed
 may violate  the network security policy. As the rules configuration
 can not be made directly dependent of the topology due to the
 isolation of control abstractions, we must manually change them in
 order to satisfy the safety requirements of the security policy.  
-\subsection{Software Defined Networks} 
+
+
+\subsection{Logical Centralization} 
+There are two parts: the data plane: programmable switches. Control plane: controllers, apps. 
+
  Software Defined Networking (SDN) is a novel architecture that emerged from the drawbacks set by closely-coupling the control and data planes. This architecture - presented in  Figure \ref{fig:sdn.2d}(a) - physically decouples these planes. In SDN all network control functionality  such as routing, access control, load balancing, etc. can be defined in software and performed by a logically centralized controller. The controller centralizes all the relevant network state (e.g., network topology, forwarding tables). This state is stored a general \emph{datastore} to which the controller has access to. Throughout the text we refer to this datastore as the Network Information Base (NIB) or \emph{view} as can be seen in the figure. 
 
 In general, the objective of the control plane can be seen as to
@@ -126,12 +159,15 @@ In our work we favor consistency and consequently transparency in the distributi
 % TO BE WRITTEN: MOTIVATED BY CURRENT PERFORMANCE OF STATE MACHINE REPLICATION. 
 
 \section{Objectives}
+\subsection{Fault Tolerance}
+\subsection{Strong Consistency}
 
 %The objective of the experiments covered in this chapter  is to analyze the workloads generated by these applications to thereafter measure the performance of the data store when subject to such realistic demand caused by real applications.
 
 \section{Contributions}
 %REFUTABLE CLAIMS WITH FORWARD REFERENCES 
 \section{Planning}
+
 \section{Thesis Organization}
 
 

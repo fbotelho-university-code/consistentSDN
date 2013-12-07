@@ -2,28 +2,163 @@
 \section{Shared Data Store Controller Architecture} 
 \glsresetall 
 
+
+Before \gls{sdn} control functions such as routing required
+their own distributed protocol that would span over the data plane
+elements (i.e., the switches). 
+After \gls{sdn},  the logically centralized architecture enables
+control functions based on centralized protocols that can leverage
+the logical centralization of the  network state.  
+However, as already covered in the previous chapters, this logical
+centralization does not postulates a centralized system. 
+This is natural confusing since on one hand \gls{sdn} attempts at
+simplifying management through centralization when in practice the
+control plane itself is distributed. However, the subtle difference is
+that a logical centralized control system can rely on standard
+distributed system techniques to manage state distribution and
+inter-controller communication. On the other distributed data plane
+protocols are focused in a single control function and must operate at
+much larger scale (i.e., unarguably the number of control plane
+elements is much smaller that data plane elements). 
+
+The fundamental requirements that we have identified so far to this
+architecture are: 
+
+\begin{itemize}
+\item[] \emph{Transparency} -- the distribution of the system is invisible to the management application until failures occur;
+\item[] \emph{Simplicity}  -- the distribution of the system allows a centralized programming model; 
+\item[] \emph{Generality} -- the system should be as general as
+  possible providing useful distributed constructs for the use of the client;
+%\item[] \emph{Safety} -- the presence of multiple controllers does not compromises the operation of the network; 
+\item[] \emph{Reliability} -- the system should be prepared to handle   failures; 
+\item[] \emph{Scalability} -- the system should anticipate scaling  requirements such as multi-site operation. 
+\end{itemize}
+
+
+The transparency and simplicity requirements protect the developer of network applications from the 
+idiosyncrasies of a distributed system. 
+Distributed systems can be simple with robust mechanisms that behave
+as centralized programming models whereby the user is only able to
+identify the distributed system with exceptions and performance measurements. 
+With this in mind, our next requirement (Generality) attempts at
+setting the need for robust distributed systems tools such as locks,
+barriers and leader election. We believe that this set of tools (and
+others) is indispensable in a distributed context. Our aim  is to
+provide the essential building blocks\footnote{The thorough reader
+  will immediately recognize  consensus as the crucial building block
+  for the identified set of tools.} for the development of those tools under the same \gls{api} that supports the state distribution.
+
+Reliability should be an obvious requirement from the get go in the
+context of distributed control plane. As stated before, faults are the
+norm and not the exception in real-world applications.  Thus, our
+requirement establishes that our system should be equipped to handle
+failures from any of its components. 
+
+Finally, the thorough reader may found curious that we define scalability as one of our requirements given that we already established that when faced with the tradeoff between consistency and scalability we prefer the former. 
+However, this should not preclude the need for scalability; and we do not discard it as will become clear in the following sections. 
+
+
+We note that this set of requirements does not debars network applications from exploiting the state distribution mechanism. Truly, applications can only maximize reliability and performance if they become aware of the distributions mechanisms underlying in the system. 
+
+%In this section we describe a prototype implementation of a distributed controller architecture integrating the Floodlight controller with a data store implemented using a state-of-the-art replication algorithm.  The central element of our architecture is a highly-available, strongly consistent data store. 
+
+
+
 \subsection{General Architecture}
-Given an overview of the general architecture. 
+We propose a novel \gls{sdn} controller architecture that is distributed, fault-tolerant, and strongly consistent.
+The central element of this architecture is a data store that keeps relevant network and applications state, guaranteeing that \gls{sdn} applications operate on a consistent network view, ensuring coordinated, correct behavior, and consequently simplifying application design.
+Our main focus is supporting reliable and transparent  data distribution enabling  most of the properties mentioned in the beginning of this section. 
 
-\begin{itemize}
-\item The control plane is restless 
-\item Cache 
-\end{itemize}
+The architecture is based on a set of controllers acting as clients of the fault-tolerant replicated key-value data store, reading and updating the required state as the control application demands, maintaining thus only soft state locally. 
+This architecture is data-centric. 
+It is through the data store that we support distribution;  and the data store, being strongly consistent,  is versatile enough to satisfy most of the control plane requirements with the exception of scalability (when contrasted with eventual consistent data stores). 
+The data store mimicks the centralized shared memory model existent in concurrent centralized controllers such as Floodlight. 
+Therefore, other controllers can easily be integrated as a component of our architecture  (see chapter~\ref{sec:feasibility:apps}). 
 
-\subsection{Data Store}
-\begin{itemize}
-\item Domains 
-\item 
-\end{itemize}
+Fig.~\ref{fig:architecture} shows the architecture of our shared data store distributed controller.
+The architecture comprises a set of SDN controllers connected to the switches in the network.
+All decisions of the control plane applications running on the distributed controller are based on data plane events triggered by the switches and the consistent network state the controllers share on the data store.
+The fact that we have a consistent data store makes the interaction between controllers as simple as reading and writing on the shared data store: there is no need for code that deals with conflict resolution or the complexities due to possible corner cases arising from weak consistency.
+
+%There are two main concerns around this design: (i) how to avoid the storage being a single point of failure and (ii) how to avoid making the storage a bottleneck for the system.
+
+
+\begin{figure}
+  \centering
+  \begin{subfigure}[b]{0.545\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{pic/heimdall/multicontroller}
+                \caption{Active.}
+                \label{fig:heimdall:active}
+        \end{subfigure}%
+        ~
+        \begin{subfigure}[b]{0.465\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{pic/heimdall/backupController}
+                \caption{Primary Backup.}
+                \label{fig:heimdall:primary-backup}
+        \end{subfigure}
+        \caption[General Architecture.]{General Architecture: The controllers coordinate their actions using a logically centralized data store, implemented as a set of synchronized replicas (see Figure~\ref{fig:paxos}). The architecture comprises two models. In the active model each controller is actively responsible por a subset of the network. In Primary Backup model, a single controller is active, and another is prepared to take its place in case of failure.}
+        \label{fig:architecture} 
+\end{figure}
+
+The control plane is stateless and cares only about processing the data plane events.The only state kept is soft-state\footnote{Soft-state in our context means data that does define the network state (with the exception of cached data, that is already present in the data store). This could mean for example, data that is used for efficiency in algorithms, volatile data, etc.,}, which can easily be reconstructed after a crash. The hard-state is kept in the data store. 
+%The fact that the data store is fault-tolerant and keeps all the hard-state almost enables fault tolerance in the control plane. 
+Thus, once a controller fails, any of the existent controllers can take over its place based on the network state that always survives in the data store. 
+%A controller can be view as a processing element in our architecture. It is all about processing, the state is all kept in the data store. 
+The switches can tolerate controller crashes using the master-slave configuration introduced in OpenFlow 1.2~\cite{ONF2011}, which allows each switch to connect  to  $f+1$ controllers (being $f$ an upper bound on the number of faults tolerated), with a single one being master for each particular switch (see section~\ref{sec:heimdall:fault-tolerance} for details). 
+The master is constantly being monitored by the remaining $f$ controllers, which can takeover its role in case of a crash.
+
+Interestingly, our architecture can be used in two different models.  Fig~\ref{fig:heimdall:active} shows that in the active model the  control plane is distributed and each controller takes over a different subset of the network (coordinating through the data store). In this model each controller can server as master for a subset of a network and as slave for any other subset. Once a controller fails, any controller can take over.  
+Fig.~\ref{fig:heimdall:primary-backup} shows that in the primary-backup model  the control plane is centralized but the fault-tolerant data store can be used to store the pertinent controller state, making it extremely simple to recover from its crash.
+In this case, the applications deployed on the primary controller manage the network while a set of $f$ backup controllers keep monitoring this primary, just as in the distributed controller design.
+If the primary fails, one of the backups -- say, the one with the highest IP address -- takes the role of primary and uses the data store to continue controlling the network.
+
+%Furthermore, in this design the controllers keep only soft state locally, which can be easily reconstructed after a crash.
+
+
+\begin{figure}
+  \centering
+  \begin{subfigure}[b]{0.5\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{pic/heimdall/cache}
+                \caption{Cache. }
+                \label{fig:heimdall:cache}
+        \end{subfigure}%
+        ~
+        \begin{subfigure}[b]{0.5\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{pic/heimdall/domain}
+                \caption{Domains}
+                \label{fig:heimdall:domains}
+        \end{subfigure}
+        \caption[Performance and Scalability.]{Performance and Scalability improvements. The cache is subset of the data store present in the controller that can localize read operations. Domains allow the data store to be  partitioned across different configurations enhancing scalability.}
+        \label{fig:heimdall:cache-domains} 
+\end{figure}
+
+To increase the overall performance of this architecture we consider two fundamental components: cache and domains. Cache offers latency benefits at the expense of consistency and space occupation in the controller; domains offers scalability and latency benefits at the expense of more hardware and (arguably) more complexity in the client code. 
+
+Fig.~\ref{fig:heimdall:cache} shows that each controller can contain as a cache a frequently accessed subset of the data store  data, thus enabling local read operations that do not experience the latency penalty of the data store\footnote{We should mention upfront that our results shown that for the existent applications it is difficult to avoid the data store on flow requests.}.
+In order to be coherent with our design policies it is of the utmost importance that the cache is exposed as a functional component to the applications that reside on the controller. That is to say that the clients should have explicit control  over the values present in cache and whether each operations allows a cached valued or not. For this purpose we propose a time-based cache validity scheme (see section~\ref{sec:heimdall:cache}). 
+
+Fig.~\ref{fig:heimdall:cache-domains} shows that each domain is a single data store instance in isolation. Controllers can connect to multiple domains. Our proposal is a single domain for global information that should be made accessible to every controller. In \gls{sdn} deployments that cross over the \gls{wan}  this data store could use relient protocols optimized for that environment~\cite{mao2008mencius}.  Then, multiple local domains could be positioned closer to  the controllers exploiting the amount of data shared between them.  Off course, that in order for this scheme to be efficient one must account for different configurations that exploit the amount of data shared between controllers.  This scheme can improve the latency of the overall system since frequently accessed data closer to the controllers. And it can improve the throughput since the data store is partitioned across multiple system thus the processing request of the overall system increases. With this configuration controllers can selectively choose how their network state is exposed to others. In the global domain they can expose an aggregated view of the network, while in the local domains they can keep the entire topology for example. 
+
+
+%Overall this architecture expands on the simple architecture of a centralized controller by introducing a resilient, transparent data store that is in charge of state distribution. As noted applications are already acquainted with this programming model.  The benefits of this architecture are simplicity and reliability. 
+
+
 \subsection{Controller}
+Our controller architectures build on the Floodlight controller, which incidentally builds on the common event-driven architecture covered in section~\ref{sec:related:phys-centr-contr}. 
+Fig.~\ref{fig:heimdall:architecture} shows our architecture. We distinguish applications by their type: \emph{Local Applications}  reside in the controller memory and are event-driven; \emph{Global Applications} reside anywhere, and access any controller instance to perform their functions. Global applications are typical proactive, they consult state in the controller and update network configuration or policy. We believe that they should access the data store only through the controller interface but they could access a subset of the data store such as the controller-to-data-plane partition scheme and the location (i.e., addresses) of controllers up and running.  
 
-\begin{itemize}
-\item event driven; Pipeline manager. Our current implementation based on Floodlight... 
-\item Native applications 
-\item Data Store service allows the creation of tables, Clients use this to create local objects. 
-Manages the cache inside the controller. 
-\item Limitations : We need some kind of publish/subscribe mechanism to alert applications. Or instead we may need pooling to interact with other applications. 
-\end{itemize}
+
+The most common use of the controller is to process data plane events. As seen previously, the local applications registered to different types of data plane events for which they are interested in. Then whenever those events arrive at the controller, it dispatches them to applications by forming a pipeline and calling each interested application one by one. Our controller is multi-threaded and partitions the data plane across different threads thus ensuring  that each data plane event from a single switch is processed to completion before moving to the next. 
+Applications when processing events access the data store for read or write data associated with the event. In the case of forwarding requests it is common that an application replies to the event by installing rules on the data plane. This is commonly the job of the last application in the pipeline, which incidentally is usually the Forwarding application.
+
+In order to maintain a simple design we consider that each controller instance only manages flow installation in their own data plane set. 
+This can cause data plane consistency problems since the same event can be processed multiple times in different controllers while crossing the data plane. In each of those times, the controller may see a different view of the network state (in the data store) and thus install conflicting rules that can cause loops (or arguably other problems). This problem can be solved with mechanism orthogonal to our work (see section~\ref{sec:related:consistent-data-plane}). We note however that applications could be modified to install rules in the entire data plane just by communicating with other controllers. This could be done in one of two ways: $(i)$ using the data store; $(ii)$ using the \emph{REST} \gls{api} present in each controller instance to push rules to the switches.  Both techniques incur a performance penalty that may not be justifiable. Ideally one would like to let the packet flow through the network and concurrently push rules installation to the switches under other controllers domain, but, again, this can cause consistency problems. 
+We hypotethize that a careful distribution of controllers across the data plane minimizes the inter-controller-data-plane subsets traffic. 
+
 
 
 \begin{figure}
@@ -33,16 +168,407 @@ Manages the cache inside the controller.
   \label{fig:heimdall:architecture}
 \end{figure}
 
-\subsection{Tolerating Faults}
+
+
+The applications present in the controller can access the data store, through the \emph{Data Store Service}  which manages the access control to the data store. 
+This service can be seen as a factory to create local objects (i.e., local key-value tables) that allow the remote access to the data store. 
+It is important that this access is made through such an abstraction that could manage access control and optimization factors. A simple example would be to leverage the thread model existent in Floodlight (i.e., one thread per switch) to make sure that each thread has its own copies of tables objects that would share the same data store connection. 
+This way we enhance the parallelism in the controller since communication with the data store is blocking (i.e., a request blocks a thread until the data store replies). Similarly if each thread has its own cache, the controller can exploit communication patterns in the data plane  by having the frequently accessed objects separated by switches. 
+
+
+Local Applications are replicated in each controller instance and share data through the data store. For example the topology manager can be aware of every single path in the entire data plane by consulting the data store topology table. Similarly, the Device Manager can consult the location of all the known hosts in the data plane by consulting the data store. As for the Forwarding application it takes decisions based on the information maintained from the other two applications. 
+In this case, there are two possibilities for how the Forwarding application can access the information: it can request the other applications for the required information which requires that applications known the data store schema; or it can go on the data store itself.
+This requires applications to known the data store schema (i.e., how data is structured) which may be inconvenient and breaks encapsulation. 
+
+The data store supports different table types shown in Table~\ref{tab:table-types}. The Global and Global to Application tables must be made available to every controller while the Local and Local to Application can be reachable only to a single controller instance. However in case of failures and controller fail-over one must be certain the backup controllers can reach the failed controller tables. Beyond the types shown each table state can be persistent (kept in disk) or not. The former is of the utmost importance for the controller configuration data (e.g., network policy). Notice however that the state is always kept in memory. If the controller state grows beyond the memory size  of a data store replica then the data can be divided across different domains at the expense of more hardware. 
+
+\begin{table}[ht]
+  \centering
+  \begin{tabular}{ll}
+    Name & Accessibility \\ \toprule 
+    Global & Every controller and every application   \\ 
+    Global to Application & Single application on every controller \\
+    Local & Every app in a single controller \\
+    Local to Application &  Single application in a single controller \\ \bottomrule 
+  \end{tabular}
+  \caption{Table types}
+  \label{tab:table-types}
+\end{table}
+
+We do not envision that clients should use the data store for performing the event-driven pattern whereby applications subscribe for events triggered by other applications (e.g., host authenticated, device add, topology changed, etc.,). We believe it is simpler for each application to perform polling in the data store therefore subscribing and identifying changes. In the future we do intend to expand the data store to facilitate this behaviour (e.g., by allowing clients to receive he aggregated changes in a single table since a particular past version).
+This way the client sets bound of the inconsistency on the window of inconsistency based on the periodicity established. Off course the client could still do pub/sub locally but not remotely. 
+
+\subsection{Data Store Replication}
+\glsreset{smr} 
+Our architecture orbits around a data store that must be fault tolerant to avoid a single point of failure and provide strong consistency to be transparent. 
+As previously covered (in section~\ref{sec:related:cons-data-stor}) the solution to both those requirements is the \gls{smr}  technique. 
+In this section we explain how we can exploit this technique to implement our data store. 
+
+Fig.~\ref{fig:design:smr} shows the composition of our data store. 
+In order to be fault tolerant, the data store is composed by a set of servers (replicas). Each replica contains the same state initially. 
+Then for each client request (e.g., read, write)  the \emph{SMR} component is responsible for running a ordering protocol between the different replicas that ensures that all replicas receive the requests in the same order.
+ An example of such protocol is specified in  section~\ref{sec:related:viewst-repl}. Whenever this protocol finishes, the \emph{SMR} component passes the request to the \emph{Data Store} component responsible for processing the request. 
+When the \emph{Data Store} finishes with the request, it can then reply to the client and process the next request.
+Ordinarily this two components are completely independent.  In this section our interest lies towards the \emph{SMR} component; the \emph{Data Store} component is covered in section~\ref{sec:heimdall:key-value}. 
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\textwidth]{pic/heimdall/total-order-smr}
+  \caption[Data Store Architecture]{Data Store Architecture: each replica is composed by two main components: BFT-SMaRt responsible for the ordering protocol; and the Data Store responsible for structuring data and answer client requests. Each client requests reaches a replica (the leader)  and is pass to  the BFT-SMaRt protocol which guarantees that every Data Store sees requests in the same order thus achieving a coherent state.}
+  \label{fig:design:smr}
+\end{figure}
+
+
+We use the Byzantine Fault-Tolerant State Machine Replication (BFT-SMaRt) --- an open source Java-based library for state machine replication --- to implement the \emph{SMR} component. 
+%BFT-SMaRt is an open source Java-based library for state machine replication. 
+Among other things this library supports a tunable fault model, durability, and reconfiguration. 
+The fault model supports Byzantine faults\footnote{In an Byzantine fault model processes can deviate from the protocol in any way.  Namely, they can lie, omit messages and crash.}   but ours interest falls over the crash-recovery model whereby a process (i.e., replica) is considered faulty if either the process crashes and never recovers or the process keeps infinitely crashing and recovering~\cite{2011itra.book.....C}. 
+The library operates under an eventually synchronous model for ensuring liveness which informally states that at some point in time the system progresses (i.e., computations are finished and messages get delivered ensuring liveness). For durability, a state transfer protocol guarantees that state survives the failure of more than $f$ replicas. 
+Finally, BFT-SMaRt possesses a reconfiguration protocol that allows the system composition to shrink and grow in run-time. 
+
+Our  BFT-SMaRt-based data store  is replicated and fault-tolerant, being up and running as long as a majority of replicas is alive~\cite{Lam98}.
+Under partitions scenarios whereby replicas can be temporarily  (i.e., an arbitrary amount of time!)  isolated from each other either due to network partitions or more obscure conditions that inhibit the replicas from participating in the protocol, then there must at least a majority (half plus one) of the replicas available in order to guarantee progress. 
+Formally, $2f+1$ replicas are needed to tolerate $f$ simultaneous faults. Thus, it is important the network that comprises the data store is extremely reliable in order to guarantee the progress of the data store.
+We consider failures in the controller-to-data store interactions in section~\ref{sec:heimdall:fault-tolerance}. 
+
+\subsection{Fault Tolerance}
+\label{sec:heimdall:fault-tolerance}
+
+There are three fault domains. Explain what domains are those and how our design fits in all this. Consider question from ewsdn. 
+
+We built upon the distributed election algorithm (see Section 4.1.2 in
+\cite{4d}) whereby only an elected leader should send instructions to
+each data plane element. 
+As such the switches do not receive incoherent and conflicting
+decisions from the control plane. 
+Even if distributed election is a complex operation our data store
+shields the controller from this complexity. It can be as simple as an
+read-modify operation and pooling. 
+
+
+Master slave
+Our ``protocol''
+
+Our distributed controller architecture covers the two most complex fault domains in an SDN, as introduced in~\cite{kim2012}.
+It has the potential to tolerate faults in the controller (if the controller itself or associated machinery fails) by having the state stored in the fault-tolerant data store.
+It can also deal with faults in the control plane (the connection controller-switch) by having each switch connected to several controllers (which is ongoing work).
+The third SDN fault domain --- the data plane --- is orthogonal to this work since it depends on the topology of the network and how control applications react to faults.
+This problem is being addressed in other recent
+efforts~\cite{kim2012,Reitblatt2013}.
+
+
+A simple ``protocol'' to handle switch fail-over. I still need to think of bad things that can happen when two controllers fight over a switch.
+\subsection{Protocol}
+\begin{itemize}
+\item There is an eventual failure detector built with the data store. If the controller does not has access to the data store it should not control anything in the network (Fig.~\ref{fig:proto-heartbeats}). The data store also keeps the switches under each controller ; 
+\item Controllers can suspect the failure of another and attempt to replace it. First they have to set a flag in the data store stating that they are attempting to take over the presumably failed controller (Fig.~\ref{fig:proto-c2-fails}). With this flag other controllers can known that someone is attempting to control the switches and avoid taking over. This also helpfully for the failed controller which can recover and known that there is an active process to take its place. 
+\item A controller can then set himself as master of the switch. After this point all switches messages go to the new controller (C1) (Fig.~\ref{fig:proto-c1-as-master}); 
+\item Finally the controller sets himself as master of the switch in the data store. (Fig.~\ref{fig:proto-c1-finishes}). 
+\end{itemize}
+
+
+\begin{figure}
+  \centering
+  \begin{subfigure}[b]{0.5\textwidth}
+                \centering
+                \includegraphics[scale = 0.4]{./pic/heimdall/proto-1}
+                \caption{Heartbeats sent to the data store. }
+                \label{fig:proto-heartbeats}
+        \end{subfigure}%
+        ~
+        \begin{subfigure}[b]{0.5\textwidth}
+                \centering
+                \includegraphics[scale=0.4]{./pic/heimdall/proto-2}
+                \caption{C1 finds out that C2 has failed.}
+                \label{fig:proto-c2-fails}
+        \end{subfigure}
+
+  \begin{subfigure}[b]{0.5\textwidth}
+                \centering
+                \includegraphics[scale = 0.4]{./pic/heimdall/proto-3}
+                \caption{C1 has to set himself as master in S2. }
+                \label{fig:proto-c1-as-master}
+        \end{subfigure}%
+        ~
+        \begin{subfigure}[b]{0.5\textwidth}
+                \centering
+                \includegraphics[scale=0.4]{./pic/heimdall/proto-4}
+                \caption{Finally tell the data store he controls S2. }
+                \label{fig:proto-c1-finishes}
+        \end{subfigure}
+\end{figure}
+
+Notes
+\begin{itemize}
+\item In the case S1 fails while taking over S2, other controllers (if any) will eventually known about this and take over. 
+\item This process can also be triggered in the case a switch fails. It is worth doing so because a switch can fail due to network failures who affect the connectivity with his master controller but not with others; 
+\item As long as one  controller does not fail and reaches every switch (who also has not failed)  and data store we can handle all kind of network failures.
+\item When C2 recovers he can do the same process to take over his switches again. 
+\item I think that to be safe (I will try to define safety later) the data store should deny state changing messages from controllers who do not own the switch (which caused the state changes). But I have to think better about this.... 
+\end{itemize}
+
+
 
 \section{Data Store Prototype}
 \glsresetall 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Our data store offers a platform independent interface (i.e., it can be used in different controllers) for general state keeping functionality. In fact it can be used by anyone. 
+\textbf{Isto vai ser uma secção a falar do protótipo de base de dados implementado.} 
+\begin{figure}[ht]
+  \centering
+  \includegraphics[scale=0.6]{./pic/heimdall/client-tables-classes.pdf}
+  \caption{Class diagram of the client interface to the data store tables.}
+\label{fig:design:class-diagram}
+\end{figure}
 
-\subsection{Cross References}
-\subsection{Versioning}
+Missing things to talk about: 
+\begin{itemize}
+\item An hash table and a Key Value table is the same, we use both terms. 
+\item Define \gls{rpc} messages as the messages that are sent to the data store to perform an operation. 
+\item Define marshalling/unmarshalling as the process to convert an object into a byte representation and vice-versa. 
+\end{itemize}
+
+We implemented a  data store prototype that has been iteratively refined to incorporate data store functions required to increase the performance of real world applications (discussed in Chapter~\ref{sec:feasibility:apps}).  
+Fig~\ref{fig:design:class-diagram} shows the class diagram for the client side interfaces that allow him to communicate with the  data store.  
+\begin{itemize}
+\item \emph{ITable} interface introduces the general functionality of a key value table.
+\item \emph{IKeyValueTable}  is a normal hash table. You can manipulate the key to value association in different ways. It extends a \emph{ITable}
+\item \emph{IColumnTable} is the extension of a \emph{IKeyValueTable} into a bi-dimensional table where two keys access an individual value. 
+\item \emph{ICachedKeyValueTable} allows explicit control over the window of inconsistency accepted in cached values for an \emph{IKeyValueTable} 
+\item \emph{ICachedColumnTable} does the same for an \emph{IColumnTable} 
+\end{itemize}
+
+This is not a lesson in design. The interfaces presented are part of a prototype that we leveraged to capture the behaviour of applications, and perform a requirement study for the data store. Off course that in production code we can use any of the existent off the shelves data stores (either SQL or NoSql) given that they offer the same functionalities that we present in this section. 
+\label{sec:heimdall:key-value}
+
+\subsection{Cross References} 
+\label{sec:heimdall:cross-references}
+A Cross Reference table ($t_{cr}$) contains values that can be used as keys in another table ($t_{d}$). 
+Therefore a data store client can use a key valid in  one table ($t_{cr}$) to retrieve a value at  a different table ($t_{d}$) but with the benefit of using a  single data store operation (the \texttt{getCrossReference} method at \emph{IKeyValueTable}). 
+
+Commonly, despite the number of unique attributes that can be used to identify a value, we are limited to using a single one when using an hash table. 
+Commonly, an hash table is restricted to a single key to identify a value despite the  number of unique attributes  that can be used to identify it. 
+Furthermore, the asymptotical complexity to obtain a value with a particular key is \BigO{1} as opposed to searching for one which, at best, has $\Omega(\log n)$ complexity for $n$ entries (using balanced trees). 
+
+To circumvent those limitations, one can use an additional table that relates a ``secondary'' key of a value to its ``main'' one. 
+To clarify, imagine that for the purpose of tracking hosts in a network we consider that a device is uniquely identified by an \gls{ip} or \gls{mac} address. 
+Therefore, we could use two tables: one relating \glsplural{ip} to  \glsplural{mac}, and another relating \glsplural{mac} with devices.
+
+This is a reasonable scheme in a local environment (in memory hash table) given that the asymptotical cost to obtain a device with 
+a \gls{mac} address or its \gls{ip}  are equal (\BigO{1}). 
+However, in a distributed environment, this scheme requires two round trips to the data store just to obtain a single device with a \gls{ip} address (one to fetch the \gls{mac}, and another to fetch the device). 
+
+Seing that this was a common behaviour in the existent Floodlight applications that we modified to use our data store, we developed the Cross Reference functionality which, as shown in chapter~\ref{sec:feasibility:apps}, results in a significant performance improvement. 
+With it, the clients are able to create multiple Cross References tables to track values using different uniques attributes. 
+As a result, despite the key that a client uses to obtain a value it can always do it with a single operation. 
+
+\subsection {Versioning}
+\label{sec:heimdall:versioning}
+\begin{figure}[ht]
+  \centering
+  \begin{subfigure}[b]{0.5\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{./pic/heimdall/versioning-0}
+                \caption{No Versioning.} 
+                \label{fig:heimdall:versioning-0}
+
+        \end{subfigure}
+        ~
+        \begin{subfigure}[b]{0.5\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{./pic/heimdall/versioning-1}
+                \caption{Versioning.}
+                \label{fig:heimdall:versioning-1}
+        \end{subfigure}
+  \caption[Concurrent updates]{The concurrent update to the \texttt{visitors} set for a particular site can result in loss of data. In  Fig.~\ref{fig:heimdall:versioning-0} the update from client 1 is forgotten  when replaced by the update from client 3 (last-write-wins).  Conversely in Fig~\ref{fig:heimdall:versioning-1} the use of versioning in the data store prevents client 2 from overwriting the last update.}
+\label{fig:heimdall:versioning}
+\end{figure}
+
+With Versioning we associate each table entry (i.e., key value pair)  with a monotonically increasing counter --- the version number ---   that is incremented in every mutation operation. 
+Doing so, we empower the data store with the capability to detect and prevent conflicting updates that otherwise could result in the loss of data. 
+
+To clarify, imagine an \gls{http}\footnote{The application protocol for distributed, collaborative, hypermedia information systems.} network logger running in a controller that maintains  a Key-Value table  (in the data store) to map each \gls{url}\footnote{A uniform resource locator, also known as web address,  that constitutes a reference to a resource such as a web page or email.} seen to the set of \gls{ip} addresses that have visited it. 
+Whenever a hosts visits a site, the controller adds the \gls{ip} address of that host to the site visitors set. 
+However, being that  for the data store a set is merely an opaque binary object, the controllers are forced to fetch the set, add an element locally and finally write the new set in the data store. If two controllers do this concurrently, then it is possible to loose values added to the set. 
+
+Fig.~\ref{fig:heimdall:versioning-0} shows how this update algorithm can result in data loss in the context of concurrent updates. 
+First, controllers 1 and 2 fetch the same \texttt{visitors} set for a particular site (uniquely identified by the \gls{url}), then they replace it by a new set that includes IP2 and IP3 respectively. 
+In this case the lack of concurrency control  results in the loss of the write operation that includes the IP1 visit to the site (visitors={IP2,IP3})  since the  last write (visitors = {IP1, IP3}) overwrites the previous. 
+
+Fig~\ref{fig:heimdall:versioning-1} shows that with Versioning, the write from controller 1 results in an increase of the version number of the visitors set at the data store (to 2) which prevents any update done by controllers unaware of the most recent version of the set. 
+Therefore, by the time the second write request (from controller 2) arrives at the data store it can be aborted since  the version number included in the operation is not consistent with the data store. 
+
+
+Whenever the data store denies a request (as in the example above) the client can only repeat the entire process since that in order to complete its write, it must obtain the current version number which is obtained from reading the value from the data store. 
+To be true, it is often the case that the correct behaviour requires reading the value again, since the client write is built over the existent value in the data store. 
+Otherwise, the client would have used a ``free'' write operation not subjected to the data store version verdict. 
+
+
+It is important to realize that the data store has no mechanism to guarantee that a stubborn client will eventually succeed.
+Indeed, it is possible that one client  loops indefinitely if another client constantly out-wins him in every write attempt. 
+Clients are solely accountable for  guaranteeing  the progress (liveness) of their updates. 
+This process is commonly termed of \emph{Optimistic Concurrency Control}. Clients are optimistic in the sense that they hope that no one else updates the value while they perform the entire process (read, modify and write). 
+
+The Java common library provides a concurrent hash table (\emph{ConcurrentHashMap}) with concurrent control primitives  equivalent to the ones we include in our data store \gls{api}. 
+However, the control is based on the logical equivalence of values instead of version numbers. 
+That is to say, that instead of providing the version number in a conditional write, the client must provide the value that it expects to find in the hash table. 
+Then, the hash table implementation can perform a logical test to assert if the client provided value is logically equivalent to the one that it holds. If so, the write is allowed, otherwise it is ``aborted''.  
+
+While adapting existing applications to our \gls{api} that used the Java concurrent hash table, we have chosen to modify them slightly to use the version number mechanism instead of the existent logical equivalence. We do so for two reasons. First, while equivalence tests work well with objects, the same is not true for the raw bytes that result from the marshalling process (used to transform objects into byte arrays as required by our data store interface). In fact, we found cases where despite the  logical equivalence of two objects (as observed by their Java \texttt{equals} contract) their byte representation was disparate. Later, we have found that different object constructors for a list implementation resulted in different byte representations even when the list contained exactly the same objects. Truly, it can be painfully to the programmer to have control over this type of low level detail. Second, with versions numbers we can  reduce the \gls{rpc} message sizes (that are sent to the data store) significantly (see Section~\ref{sec:feasibility:apps}) since the version number is often much smaller than a value. 
+
+This mechanism offers some control over concurrent updates to clients of the data store since the replace and remove operations that use an \texttt{expected\_version} argument (see in Fig~\ref{fig:design:class-diagram}). The data store executes those operations if, and only if, the client provided \texttt{expected\_version} matches the version of the data store for the particular key that is also provided in the operation.  
+This the data store client with concurrent operations (e.g., \texttt{replace, remove}) that are only successful if the \texttt{expected\_version} provided by the client is equal to the version number that the data store has associated with the particular key that is also provided in the operation. 
+
+Another common functionality is concurrency control based on version numbers that are associated with an entry in a key value table.
+Every update operation done to an entry causes the data store to increment the version number. 
+With this mechanism we enable a simple concurrency interface that allows different clients of the data store to manipulate it safely. 
+This mechanism is commonly used to safely update a value.  
+For example, imagine that a controller wishes to track for each website the set of adresses \gls{ip} addresses that perform requests to it. 
+This information can be kept in a table that maps  an \gls{url} an \gls{ip}.  Fig~\ref{} TODO-FIG shows an example where two different controllers concurrently update this value. 
+In the beginning (at the left) two controllers read the current value concurrently and both obtain the same result (a set containing \texttt{IP1}). Then later both controllers update this set and perform a write in the data store. In this situation the last write wins, which in the example belongs the bottom controller. 
+As a result the \texttt{IP2} request to the website is not tracked. To avoid this behaviour both controller can use conditional updates based on versioning. 
+Fig blah shows this example. This time, the response obtained from the data store includes a version number (1 for both clients). Then when they update the value they include the version number. In this case the first write (from the top client) is successful since the version number provided by the client matches the version number in the data store. But when the second client goes to write its  value then the data store does not allow it since the version number does not match the current version of that entry in the data store since it has been updated by the previous write. 
+Concurrent updates could be avoided if the client provides both the value that he expects to find at the data store as well as the new value (the updated one). However this is not practical for two reasons. First in incurs in an significant overhead to the message sent to the data store (roughly the double of the size in most examples we have found). Second, and arguably more importantly, it is painfully to guarantee that byte array representations of marshalled values are actually equal even whey the values are logically equivalent. We have lost a lot of time tracking bugs caused by this when two different List constructor methods caused an object to have different byte representations even if the both lists contained exactly the same elements, and in the same order. 
+
+ To avoid loosing values added concurrently to the set, we can use version numbers when re-inserting the set in the data store. This 
+This mechanism is more commonly used in situations where we read a value, transform it and then update it. In order to not risk loosing the updates done by a concurrent client, we can use the version number of the original value when updating. The data store then can verify if the version is the least of the value or not. If not the update will fail, and we can proceed again.  
+
+We found examples of applications (Load Balancer and Device Manager) that used this simple concurrency control primitives as defined by the Java \emph{ConcurrentMap} interface. However this interface is based on values instead of version numbers. This requires clients to send two values: one that should be equal to the data store version (only then will the operation succeed)  ; and the new one. 
+In Java the concurrent hash table interfaces requires sending both the expected value and the new value. 
+However with remote data stores this is not practical for two reasons. 
+First, it incurs in a significant overhead since we have to send two values instead of one.
+Second, it can be painfully to make sure that byte array representations of values are actually equal. When marshalling a value (transform an object into a linear byte array representation) the process in place can output different values which are logically equivalent (as specified by their equals contract in the Java case).  This can make a list that contains the same objects to have different representations which is something hard to identify and correct since we have to verify every suspected attribute of a class. 
+
+So all in all the usage of replace based on byte comparison is not advocated. Instead timestamps end up benefiting the user by being more space efficient in the message exchanged (with a possibly insignificant cost for carrying the timestamp value); and by being easier to work with. 
+
 \subsection{Columns}
+\label{sec:heimdall:columns}
+\begin{figure}[ht]
+  \centering
+  \begin{subfigure}[b]{0.5\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{./pic/heimdall/key-value}
+                \caption{Key Value store.} 
+                \label{fig:heimdall:columns-0}
+
+        \end{subfigure}%
+        ~
+        \begin{subfigure}[b]{0.5\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{./pic/heimdall/column-store}
+                \caption{Column store.}
+                \label{fig:heimdall:columns-1}
+        \end{subfigure}
+  \caption{From a Key Value store to a Column store. }
+  \label{fig:heimdall:columns} 
+\end{figure}
+
+With Columns we enhance the uni-dimensional model of a Key Value table  to a bi-dimensional one whereby two keys (as opposed to one) can access an individual attribute of a value inside a table.  
+
+%Fig~\ref{fig:heimdall:columns} clarifies this transformation. 
+With a Key Value data model (Fig.~\ref{fig:heimdall:columns-0}) clients are able to map an unique an unique key to any arbitrary value with no syntactical meaning for the data store (it is just raw data). 
+This is a quite limited data model for the reason that values are often composed of multiple attributes. 
+% with no syntactically meaning for the data store (it is just raw data). 
+Ergo, we expanded the Key Value table (Fig~\ref{fig:heimdall:columns-0}) to allow clients to access the individual components of a value with an additional key (i.e., the column name). 
+
+
+Despite the fact that a Column table decomposes a value into columns, the client is still able to manipulate the entire value.
+In fact, the class diagram introduced before (Fig~\ref{fig:design:class-diagram}) shows that the client \gls{api} for a a \texttt{IColumnTable} inherits all the \texttt{IKeyValueTable} methods. 
+Namely, the client is still able to retrieve or update a value  ``entirely'' (i.e., a Java object) even if he is not aware of  the column names that compose a value. 
+
+Furthermore, the columns names are not static, not even in the context of  a table. Each key-value entry may have different columns as defined by the clients that can add and delete columns from a value as they see fit. 
+Off course in the context of distributed access, clients should be made aware of the columns that compose a value. 
+This can be done in several ways. 
+
+In our own experience with the data store, we use Java Annotations to mark the objects attributes that should be kept in the table  as well as their names (i.e., columns). 
+Then, with the help of Java Reflection\footnote{Java Reflection enables, among other things, dynamic (run time) method invocations in objects.} we were able to, dynamically and deterministically marshall and un-marshall an object to/from a column-value map.  
+
+
+A column based table model is beneficial because reading an entire value introduces considerable overhead in the message returned by the data store (since the message is size is considerable big).
+Even though the request size of the client-to-datastore \gls{rpc} message has a bigger performance impact in our data store (due the overhead introduced by the consensus algorithm performed by the BFT-SMaRt middleware) than the return message, we believed that some cases justified the use of columns since they allowed to decrease the message size. 
+And indeed, we did, but this turn out to have no effect in our performance evaluation.
+ 
+Nevertheless we were still able to leverage on the Column table to improve the request size of messages through the \texttt{replaceColumn} method  that replaces a column inside a value using the Versioning technique described previously. 
+However, in practice there is room to improvement, since we only have one version number associated with each key-value entry despite the fact that values are decomposed in columns. 
+Consequently, in the context of concurrent updates to different columns, clients will see their update aborted by the data store, when in fact, their update could be applied. 
+To solve this, we just need to use, a different version number to each column. 
+
+However, once again,  as discussed in Section~\ref{sec:feasibility:apps} ours results did not show any significant improvement, so the use of Column Store turn out to be a waste. It did not improve  the code simplicity nor the performance of the controllers applications. 
+Furthermore, it adds significant complexity to the client when we consider caching (that will be introduced in the following sections) since the clients, can read partial values from the local cache. 
+
+%Values can be composed of different attributes causing their space usage to be huge. In simple tests that we have performed we saw devices instances that would go up to 2kB. It may not seem much but remember that our middleware could support 20kOps/s with 1Kb and only 4.7kOps/s with 4kOps/s. 
+
+%So it pays offs to be economical in sizes. With column enabled data stores we do this by selectively reading one or more object attributes. 
+%The columns that compose an object are not static, but defined by clients. Clients can add and delete columns from a single data store value  at any time (in one table, different values may have different columns). There are no empty columns.  
+
+%The basic idea is to minimize the size of messages by being able to selectiveley access the sub elements of data store values that are constantly accessed on a per flow basis. 
+%As an example (elaborated on the Evaluation section) Load Balancer requires reading an \gls{ip} address for every \gls{of} addressed at a balanced resource. By using an columnar approach we were able to improve from 224 bytes to 4 . So with columns we can reduce communication  with the data store to the very minimal. 
+
+
 \subsection{Micro Components}
+\label{sec:heimdall:micro-components}
+Micro Components are equivalent to the stored procedures functionality existent in \gls{sql} databases. 
+In essence a micro component is an arbitrary long  method that is executed in the data store and triggered by the client. 
+
+This method, has semantic knowledge of the data that is contained in the data store. 
+That is to say that it knows what to do with the data kept in the data store, which implies that it is knowns the marshalling and un-marshalling process used for the tables that it manipulates.
+
+The most significant advantage of a micro component is performance since they allow the data store client to merge consecutive data store interactions in a single method.
+This dimishes the latency impact that the data store has in the client goal whenever this is composed of more than one data store requests. 
+In fact, as we show later, along side with the Cross Reference functionality (which also reduces the number of messages in a client-to-data store interaction), micro components  introduced the most significant performance improvements in the evaluation of our data store. 
+
+In out prototype, we  developed micro components by statically (i.e., prior to compilation) incorporating the code in the data store along with the required Classes that the method required to operate. 
+This is undesirable, mainly because it forces the re-deployment of the data store code in order to add new functionalities for the clients. 
+
+However, the implementation of an dynamic micro components framework is far from unfeasible.
+For this we only require to have an adaptive \gls{rpc} implementation in the data store, as well as the capability to load new Classes in runtime to the data store. 
+This are reasonable requirements, but lacking the time to do so, we use the statical micro components to evaluate the impact of this functionality. 
+In the future, we plan to address this issue. 
+
 \subsection{Cache}
+\label{sec:heimdall:cache}
+With a Cache table, the client enables caching for a particular data store table. 
+Consequently each value that is read or written from and to the data store is added to the local cache. 
+The client can then leverage on the cache to avoid the latency penalty of interacting with  the data store. 
+Even though this may seem inconsistent (no pun intended!)  with our design philosophy, it is still a much stronger consistency model that of an eventually consistent data store for the subtle  difference that the client has control over the level of consistency that he is willing to accept in each data store operation. 
+
+To clarify, our cache is not an implementation detail hidden beneath the data store interface. 
+On the contrary, we explicitly provide the Cache interface (\emph{ICachedKeyValueTable} and \emph{ICachedColumnTable}) as a functional element of our design for which the client has absolute control. 
+Namely, the client is able to define if he accepts a cached value as well as the bound on the  window of inconsistency that he is willing to tolerate. 
+Off course, this relies on the principle that the client operates in an synchronous computation model. 
+Otherwise clock errors, and undefined bounds on computations can result in a client obtaining a value outside the specified bound. 
+
+In order to define the inconsistency bound, the client can, whenever fetching a value from table, use the \texttt{get} method in a \emph{ICachedKeyValueTable} that accepts an argument (\texttt{accepted\_staleness}) defining the upper time bound for accepting the value present in the cache. 
+Then, for each client request, the cache returns the a local value if it has been added to the cache within the time specified by the client (i.e., the time passed between adding the value to the cache and the current time is lower than the bound). 
+Otherwise, the cache retrieves the  value from the data store. 
+It is worth pointing out than if the bound specified by the client is 0, then the cache must forcibly fetch the value from the data store (hence providing consistency). 
+
+To be clear, caching values breaks the consistency semantics of our design. 
+This is true, since the values present at the local cache may be outdated when compared to the data store versions. 
+Even so, with caching we have a much stronger consistency design when compared to using an eventually consistent data store. 
+
+First, clients have the freedom to choose whether they are willing to accept a, possibly stale value present in cache or a consistent value retrieved from the data store. 
+Furthermore they have explicit control over the window of inconsistency that they are willing to accept. 
+Second, clients still have a strong consistency data store on which they can rely upon to evaluate the consistency of their cached values. 
+Third, as long as writes are performed consistently there is no risk of conflicting values. 
+The same is not true for eventually consistent data stores. 
+
+%First, clients are limited to the window of inconsistency present in the data store which is outside their control. 
+%Second, clients can not use the data store to evaluate the consistency of their data since the data store does not has a strong consistency model. 
+%Third, with eventual consistent data stores concurrent writes can result in conflicting values for which the dat
+
+% First, the client is forced to 
+% Indeed the local cache present at an host is a partial complete data store replica that is eventually consistent (as long as the client ends up fetching the data from the data store) and updated whenever the client fetches 
+%  However, in contrast to using an eventually consistent 
+% With a cache we can have a fine graine control over the staleness of data. 
+% This means that we can choose if we want consistency or not.
+% And if we choose the latter, we can define the window of inconsistency that we are willing to tolerate. 
+
+% The cache implementation is simple. 
+% Every time a value is saved to  cache (either by fetching it from the data store or by updating it in the data store) we associate the local time with that value. 
+% Then the data store client can fetch a value in cache by specifying the accepted staleness of that value (e.g., 200 ms, 10 ms, etc., ). 
+% Cross References values are also kept in cache as well as column values. But with column values we  keep partially completed objects in cache. For example a client of the data store that requests the device \gls{mac} address columns get a Device in return.  That Device only has the \gls{mac} attribute set. 
+
 
 %%% Local Variables: 
 %%% mode: latex

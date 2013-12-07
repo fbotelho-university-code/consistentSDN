@@ -54,7 +54,7 @@ Our workload analysis is performed in two distinct phases.
 First we generated data plane traffic and recorded the respective workloads.  
 Second, we use the workloads to measure the performance of our data store. The following sections described each of those phases. 
 
-\subsection{Phase 1 - Workload Generation}
+\subsection{Workload Generation}
 For the first phase of our study we emulated a network environment in Mininet~\cite{Handigol:2012tg}. 
 In a nutshell, Mininet is a network emulation platform that enables a virtual network (a real kernel, switch and application code) on a single machine, and we use it to emulate the data plane network devices (switches and hosts). 
 As far as our study is concerned, we use it to trigger the appropriate \gls{of} data plane events messages sent from the switch to the controller (see Fig.~\ref{fig:feasibility:workloads})\footnote{We could have used an \gls{of} library to trigger the data plane events, but we choose Mininet given its simplicity as well as our familiarity with it.} 
@@ -66,7 +66,7 @@ The goal was to create \gls{of}  traffic (\texttt{packet-in} messages) from the 
 Then, for each \gls{of} request, the controller performs a variable, application-dependent number of read and write operations, of different sizes, in the data store (i.e., the \textit{workload}). 
 In the controller (the data store client),  each data store interaction is recorded entirely (i.e., request and reply size, type of operation, etc.,) and associated with the data plane event that has caused it. 
 
-\subsection{Phase 2 - Data Store Performance Analysis}
+\subsection{ Data Store Performance}
 In this phase, the previously collected workload traces were used to measure the performance of the BFT-SMaRt middleware. 
 For this, as shown in Fig.~\ref{fig:feasibility:simulation}, we set up an environment in our cluster composed of four machines, one for the data store client (responsible for simulating the workload), and three for the ``data store'' (to tolerate one crash ($f=1$) three replicas are needed, as explained in Section~\ref{sec:relatedWork:consistentDataStore}). 
 

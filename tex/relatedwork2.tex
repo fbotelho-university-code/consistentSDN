@@ -1,10 +1,28 @@
 \glsresetall
 
 \section{Software Defined Networks History}
-\gls{rcp} decoupled the control plane from the data plane just to solve routing problems. Then the 4D architecture formalizes a general architecture whereby all the control functionality resides outside the data plane.  This architecture was later adopted by the Ethane system. Finally the standardization of a data plane protocol and the introduction of a general, developer friendly, Network Operating System allowed \gls{sdn} to pull up the ladder. 
+Traditionally, networking  relied and evolved over a non-transparent distributed model for the deployment of protocols and configuration of devices that resulted in: complex protocols and intrinsically difficult configuration of network devices. 
+\gls{sdn} presents a new way of thinking in networking, shifting the complexity of protocols and management functions from  the  networks devices to a general purpose logically centralized service. 
+The motivation behind this decoupling is the following: if the distributed network state can be collected and presented to a logically centralized service then it is simpler  both to specify network level objectives as well as to translate these objectives into the appropriate configuration of network devices. 
+These planes, when loosely coupled, can simplify the development of protocols and the management of network infrastructures. 
+%\gls{sdn} breaks this complex model through the physical detachment of the control and data planes.  
+
+This section outlines the major contributions in the \gls{sdn} research field.   
+In order to understand how \gls{sdn} works today it is fundamental to understand how they came to be. 
+Understanding the biggest contributions in the \gls{sdn} research field allows us to draw a better picture of its skeleton, benefits and drawbacks. 
+To do so, our  historical perspective hand-picks works that have structured the current \gls{sdn} architecture. 
+%Our historical perspective hand-picks works that either have distributed control planes (thus being relevant for our work) or contribute with fundamental concepts to the current \gls{sdn} architecture. 
+\gls{sdn} contributions can be decomposed  in three phases: the introduction of programmable network hardware; the control and data plane separation; and, finally the de facto standardization of the data plane interface~\cite{feamster2013road}. 
+We only cover the last two since they are the ones that have a bigger impact in our work. 
+For an overview of all the existing work we redirect the reader to the survey by Feamster~\etal~\cite{feamster2013road}. 
+
+
+% In \gls{rcp} decoupled the control plane from the data plane just to solve routing problems. Then the 4D architecture formalizes a general architecture whereby all the control functionality resides outside the data plane.  This architecture was later adopted by the Ethane system. Finally the standardization of a data plane protocol and the introduction of a general, developer friendly, Network Operating System allowed \gls{sdn} to pull up the ladder. 
+
 
 \subsection{RCP}
 \glsreset{rcp}
+
 In 2004 Feamster~\etal\ proposed the \gls{rcp} architecture to solve scalability and/or correctness problems in the \gls{ibgp} protocol --- 
 a crucial component of the Internet operation used between routers inside an \gls{as}\footnote{A collection of \gls{ip} routing devices under the control of one or more network operators.} to distribute external routing information~\cite{Feamster:2004tg}. 
 %Thus, it is an crucial component for the Internet operation.
@@ -21,31 +39,30 @@ As so, this server is able to maintain the global routing state in spite of oper
 This architecture is able to scale better than the previous due to the lower number of connections, and it is correct given that the server has a complete view of the routing information.  
 
 We note that the \gls{rcp} architecture is an \gls{sdn} whereby the routing state and logic are decoupled from routers (the data plane) and shifted to a server (the control plane). 
-The authors were able to do this owing to the fact that routers expose a well-defined interface for the dynamic configuration of the routing tables (the \gls{ibgp} protocol itself). 
+This was only possible owning to the fact that routers expose a well-defined interface for the dynamic configuration of the routing tables (the \gls{ibgp} protocol itself). 
 As a result, the data plane configuration is defined in software by a decoupled server that has access to the global network view (the routing state). 
 This is the definition of \gls{sdn}!
 
 Caesar and colleagues advocate the distribution of the \gls{rcp} architecture in order to avoid a single point a failure and to amplify  the scaling ability. 
 In this composition, each router connects to more than one \gls{rcp} server that can assign routes to any router under their command.
-Interestingly, and in opposition to natural reasoning, the paper shows that \gls{rcp} does not requires a strong consistency protocol between servers in order to guarantee that the routes assigned by two different servers do not conflict (e.g., cause a loop). 
+Interestingly, and in opposition to natural reasoning, the paper shows that \gls{rcp} does not requires a strong consistency protocol between servers in order to guarantee that the routes assigned by two different servers do not conflict (e.g., cause a loop) but, as laid out by the authors, this  observation relies on weak assumptions. 
 %Interestingly, and in opposition to natural reasoning, the paper shows that it is not possible for two \gls{rcp} server to install conflicting rules in the same router even without the use of a consistent and/or coordination protocol between the servers (e.g., the consensus protocol described in section~\ref{sec:related:cons-data-stor}). 
-But, as laid out by the authors, this  observation relies on weak assumptions. 
 First, it assumes a stable time period of the routing protocols whereby each server has a complete view of the routing state. 
 Therefore, under transient periods of the routing updates the \gls{rcp} replicas might install conflicting rules in the routers. 
-This assumption also assures that all replicas see the same state (a property of strong consistency replicated systems). 
+We add that the assumption also assures that all replicas see the same state (a property of strong consistency replicated systems). 
 Second, the lack of a consistency protocol affects the liveness of the system because the servers might not assign routes to routers in order to avoid conflicts. 
 
 \subsection{4D}
-In 2005 Greenberg~\etal\ published a seminal paper proposing a clean slate network architecture, named 4D,  to address the (arguably) root problem of existent networks --- the complexity that derives from twisting the control and data plane on the network elements. 
+In 2005 Greenberg~\etal\ published a seminal paper proposing a clean slate network architecture, named 4D,  to address the (arguably) root problem of existent networks: the complexity that derives from twisting the control and data plane on the network elements. 
 In this work the authors' argue that under this condition the management of networks is achievable only through ad-hoc manual intervention (which is error-prone); the specification of network level goals is difficult since the control functions do not work in concert; and the development of control functionalities is complex due to the distributed nature and scale of the data plane. 
 
 The 4D architecture builds on 3 principles: specification of global network level goals (e.g., routing, security policy),  centralization of the network state \mbox{(e.g.,\ topology, link state),} and run-time configuration  of the network elements. 
-With those principles one should be able to: shield configuration from the hazard of low level protocol-specific commands distributed across devices, develop dynamic algorithms based on centralized network state\footnote{The reader familiar with networks protocols will  understand that this allows to use Dijktra instead of Bellman-Ford.}, and  to configure, in run-time, the network devices.  
-To achieve this goals the authors' propose a network architecture structured in 4 layers (hence the name): the \textbf{data} plane to forward packets; the \textbf{discovery} plane information from the data plane; the \textbf{dissemination}  plane to configure the data plane; and the \textbf{decision} plane to translate network goals and state into the configuration of the data plane. 
+With those principles one should be able to: shield configuration from the hazard of low level and protocol-specific commands distributed across devices, develop dynamic algorithms based on centralized network state\footnote{The reader familiar with networks protocols will  understand that this allows to use Dijktra instead of Bellman-Ford.}, and  to configure, in run-time, the network devices.  
+To achieve this goals the authors' propose a network architecture structured in 4 layers (hence the name): the \textbf{data} plane to forward packets; the \textbf{discovery} plane to collect information from the data plane; the \textbf{dissemination}  plane to configure the data plane; and the \textbf{decision} plane to translate network goals and state into the configuration of the data plane. 
 %However, 4D isolates functions in the dissemination and discovery plane that mingled together in current \glsplural{sdn} architectures. 
 
-When compared to the \gls{rcp} architecture, 4D shares the same principles of decoupled planes, centralized network state, and so on and so forth. 
-However, while \gls{rcp} only separates routing from routers, the 4D architecture envisions an extreme design whereby all control functionality is separated from the network devices. From the 4D perspective, devices should only be responsible for forwarding packets. That is it. Moreover, the authors' argue that it should be possible to leverage the existent forwarding mechanisms (e.g., forwarding tables, packet filters and packet scheduling) as a unified resource at the service of high-level network goals  (e.g., ``keep all links below 70\% utilization, even under single-link failures'').
+When compared to the \gls{rcp} architecture, 4D exposes the same patterns of decoupled planes, centralized network state, programmable devices, and so on and so forth... 
+However, while \gls{rcp} only separates routing from routers, the 4D architecture envisions an extreme design whereby all control functionality is separated from the network devices. From the 4D perspective, devices should only be responsible for forwarding packets (that is it). Moreover, the authors' argue that it should be possible to leverage the existent forwarding mechanisms (e.g., forwarding tables, packet filters and packet scheduling) as a unified resource at the service of high-level network goals  (e.g., ``keep all links below 70\% utilization, even under single-link failures'').
 Even if at the time this work ``generated both broad consensus and wide disagreement from the reviewers'', the current \gls{sdn} hype and existent work has been able to confirm much of the previsions and reasoning of their authors. 
 In fact, the current \gls{sdn} architecture is very similar to 4D albeit the practical mingle of the discovery and dissemination plane in a single protocol (see section~\ref{sec:realted:softw-defin-netw}). Being so, \gls{sdn} owes much to this work, which has set a groundbreaking discussion and conceptual design that led to the development of real-world systems such as the one we present in the following section.  
 
@@ -57,8 +74,8 @@ To address those issues they introduce the controller as a logically centralized
 By maintaining a global network view that includes topology and  bindings between users, host machines and addresses, the controller is able to play the interposition role between any communication occurring in the network. As such, it can ensure that a network policy is correctly respected. 
 
 
-In Ethane the network devices (switches) do not perform regular operations (e.g., learn address, packet filtering, routing protocols, etc.,).
-Instead, they are limited  to flow-based forwarding with the help of a local flow table that is maintained by the controller. A flow roughly corresponds to a single host-to-host network interaction (e.g., all the \gls{ip} traffic destined to a host or  all the \gls{http} between two particular hosts). 
+In Ethane network devices (switches) do not perform regular operations (e.g., learn address, packet filtering, routing protocols, etc.,).
+Instead, they are limited  to flow-based forwarding with the help of a local flow table that is maintained by the controller. A flow broadly equivalent to a single host-to-host network interaction (e.g., all the \gls{ip} traffic destined to a host or  all the \gls{http} between two particular hosts). 
 Every packet that fails to match with any of the rules available in the flow table is redirected to the controller. Then the controller takes the packet information, current network state and security policy and decides on a forwarding policy. Commonly the controller will either drop the packet or decide on a path and install rules in the switches such that  not only the packet but also packets that will follow it (i.e., a flow) find a match in the flow table thus avoiding being redirected to the controller. 
 
 
@@ -409,14 +426,16 @@ It is similar to Beacon in this regard, however the module/service functionality
 Floodlight is also multi-threaded. 
 It accomplishes this through an asynchronous event based multithreaded library named Netty \cite{netty} that manages Input/Ouput communication with the managed switches. 
 
-\subsection{Controller Choice}
-\label{sec:related:controller-choice}
-% \begin{table}
-%   \centering
-% \small
-% \begin{tabular}{cccc}
-% Controller & Applications & OpenFlow version  & COOL Features \\\toprule 
-% Maestro & \begin{tabular}{c}Topology Manager \\ Learning Switch \\ Routing\end{tabular}  & Unknown & State Dependency Control\\ \midrule 
+\todo{Talk why we choice Floodlight}
+% \subsection{Controller Choice}
+% \label{sec:related:controller-choice}
+% % \begin{table}
+% %   \centering
+% % \small
+% % \begin{tabular}{cccc}
+% % Controller & Applications & OpenFlow version  & COOL Features \\\toprule 
+% % Maestro & \begin{tabular}{c}Topology Manager \\ Learning Switch \\ Routing\end{tabular}  & 
+%Unknown & State Dependency Control\\ \midrule 
 % Beacon & \begin{tabular}{c}Learning Switch \\ Hub \\ Device Manager \\ Topology Manager \\ Layer 2 shortest Path Routing \\ ARP and DHCP Proxy\end{tabular} & 1.0 (No plans for others) & Dynamic Components (OSGI) \\ \midrule
 % Beacon & \begin{tabular}{c}Topology Manager \\ Forwarding \\ Device Manager \\ Storage \\ Firewall \\ Static Flow Pusher \\ Learning Switch\end{tabular} & 1.0 (1.3 by March 2013) & Active development \\ \bottomrule 
 %   \end{tabular}

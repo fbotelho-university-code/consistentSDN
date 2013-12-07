@@ -112,8 +112,7 @@ url=false, doi=false, eprint=false]{biblatex}
 %
 % ALTERAR AQUI AS INFORMACOES RELATIVAS AO PROJECTO
 %
-\newcommand{\PEITITULO}{A Consistent and Fault-Tolerant Network
-  Information Base for Scalable Software Defined Networks}
+\newcommand{\PEITITULO}{A Consistent and Fault-Tolerant Data Store for Software Defined Networks}
 \newcommand{\PEIAutor}{Fábio Andrade Botelho}
 \newcommand{\PEIAutorNumAluno}{41625}
 
@@ -209,9 +208,15 @@ url=false, doi=false, eprint=false]{biblatex}
 \setcounter{page}{1}
 \pagenumbering{arabic}
 
+%Footnotes penalty for not spliting across pages. 
+\interfootnotelinepenalty=10000
+
 
 \chapter{Introduction}
-%\epigraph{Um dia quando voçês forem programadores --- dois ou três de voçês vão ser programadores. O resto vai trabalhar com Java --- ... }{Professor de LEI - 1º ano}
+\epigraph{Isto vai acontecer porque a Google quer. }{}
+\vspace{300pt}
+\epigraph{Um dia quando voçês forem programadores --- dois ou três de  voçês vão ser programadores o resto... O resto vai trabalhar com Java. }{Professor de LEI - 1º ano}
+
 \glsresetall
 % contexto do trabalho
 % se resume o trabalho desenvolvido
@@ -225,37 +230,34 @@ url=false, doi=false, eprint=false]{biblatex}
 % metodologia  utilizado no desenvolvimento como o planeamento efectuado para o concretizar 
 % Apresentar uma confrontacao com o plano de trabalho inicial  analisando as razoes de eventuais desvios occorridos
 
-
 \include{./tex/intro}
 \LIMPA
 
 \chapter{Related Work}
-%\epigraph{Uma pessoa chega a qualquer algoritmo que encontra por aí. Pega, corta, abre, olha, vê.... É um hilo! Tudo é um hilomorfismo}{Professor de LEI - 2º ano}
+\epigraph{If the only tool you have is a hammer, you treat everything like a nail.}{Abraham Maslow}
+\vspace{300pt}
+
+\epigraph{Uma pessoa chega a qualquer algoritmo que encontra por aí. Pega, corta, abre, olha, vê.... É um Hilo! Tudo é um Hilomorfismo!}{Professor de LEI - 2º ano}
 \glsresetall
 \include{./tex/relatedwork2}
 
 \LIMPA
-\chapter{Distributed Controller}
-%\epigraph{Estamos no Mato...  E sem cão!}{Professor de LEI - 3º ano}
-\glsresetall
-\include{./tex/heimdall}
-\LIMPA
+\chapter{Architecture and Implementation}
+\epigraph{All problems in computer science can be solved by another level of indirection... ..except for the problem of too many layers of indirection.}{Kevlin Henney's}
 
-
-%%%%%%%%%%%%%%
-REMOVE ME HERE 
-\LIMPA
-
-\chapter{Distributed Controller NEW}
-%\epigraph{Estamos no Mato...  E sem cão!}{Professor de LEI - 3º ano}
+\vspace{300pt}
+\epigraph{Estamos no Mato...  E sem cão!}{Professor de LEI - 3º ano}
 \glsresetall
 \include{./tex/design}
 \LIMPA
-%%%%%%%%%%%%
+
+
 
 \chapter{Evaluation}
+\epigraph{There are only two hard things in Computer Science: cache invalidation, naming things and off-by-one errors.}{Variation of Phil Karlton quote.}
+\vspace{300pt}
 %\setlength{\epigraphwidth}{.6\textwidth}
-%\epigraph{Eu já estou por tudo. Por mim reinicio o TomCat.}{MSI - Estudante do 1º ano}
+\epigraph{Eu já estou por tudo. Por mim reinicio o TomCat.}{MSI - Estudante do 1º ano}
 %\epigraph{}{}
 %%%% quote 
 
@@ -266,13 +268,15 @@ REMOVE ME HERE
 \LIMPA
 
 \chapter{Conclusions}
-%\epigraph{São tradeoffs Professor, são tradeoffs...}{MSI - José Sá Lopes}
+\epigraph{The Free Lunch Is Over.}{Herb Sutter.}
+\vspace{300pt}
+\epigraph{São trade-offs Professor, são trade-offs...}{MSI - José Sá Lopes}
 \glsresetall
 % sumario de trabalho realizado
 
 % comentario critico
 % possibility of future work 
-§
+
 \include{./tex/conclusion}
 \LIMPA
 

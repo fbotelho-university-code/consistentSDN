@@ -75,7 +75,8 @@ By maintaining a global network view that includes topology and  bindings betwee
 
 
 In Ethane network devices (switches) do not perform regular operations (e.g., learn address, packet filtering, routing protocols, etc.,).
-Instead, they are limited  to flow-based forwarding with the help of a local flow table that is maintained by the controller. A flow broadly equivalent to a single host-to-host network interaction (e.g., all the \gls{ip} traffic destined to a host or  all the \gls{http} between two particular hosts). 
+Instead, they are limited  to flow-based forwarding with the help of a local flow table that is maintained by the controller.
+% A flow broadly equivalent to a single host-to-host network interaction (e.g., all the \gls{ip} traffic destined to a host or  all the \gls{http} between two particular hosts). 
 Every packet that fails to match with any of the rules available in the flow table is redirected to the controller. Then the controller takes the packet information, current network state and security policy and decides on a forwarding policy. Commonly the controller will either drop the packet or decide on a path and install rules in the switches such that  not only the packet but also packets that will follow it (i.e., a flow) find a match in the flow table thus avoiding being redirected to the controller. 
 
 
@@ -924,11 +925,49 @@ The Onix paper does not describe how its consistent database is implemented but,
 \section{Consistent Data Planes}
 \label{sec:related:consistent-data-plane}
 
+In order to avoid confusion to the reader familiar with \gls{sdn} it is fundamental that we distinguish our work from recent work on SDN which has explored the need for consistency at different levels. 
+Namely, Reitblatt et al. work on abstractions for network updates~\cite{reitblatt2012abstractions}, and Software Transactional Networking~\cite{Canini:2013:HotSDN:STN}. 
 
-\subsection{Consistent Updates}
-The authors' recognize that networks are in constant change. 
-Routing policy, access control for severals reasons. 
-Updates can disrupt the network. 
+In essence, they target consistent flow rule updates on switches, dealing with overlapping policies and using atomic-like flow rule installation in SDN devices.
+The aim of both these systems is to guarantee consistency \textit{after} the policy decision is made. 
+Our work provides a different type of consistency: one that is important \emph{before} the policy decisions are made. 
+
+
+\subsection{Abstractions for Network Updates}
+Reitblatt et al. introduces abstractions capable of preserving well-defined behaviors while transitioning through configuration in network~\cite{reitblatt2012abstractions}. This work idenfities  that while transitioning the data plane forwarding rules from one state to the other it is common and possible to violate policies and disturb the network accessible  services. 
+
+To avoid such pitfalls, the update of the data plane configuration should be done  step-by-step (rule by rule)  in each switch until completion while making sure that any intermediary state of the  network configuration is valid. 
+Being that this is such a complex operation Reitblatt and colleagues developed a verifiable abstraction that is capable of transitioning the network from one state to the other while maintaining the following property: \textbf{per-packet consistency} ---- ``every packet traversing the network is processed by exactly one consistent global network configuration''.  This is important since it guarantees that packets are processed either by the initial policy, or the final policy but not any intermediary step. 
+
+As seen, this work is not to be confused with the consistency of replicated data. 
+However, in the context of a distributed control plane such as ours, the per-packet consistency abstraction must rely on reliable coordination between different controllers. This kind of coordination is the base for ``our'' consistency. 
+
+\subsection{Software Transactional Network}
+Software Transactional Networking focuses in consistency policy composition in the context of a concurrent (i.e., distributed) control plane~\cite{Canini:2013:HotSDN:STN}. 
+
+Consistency policy composition deals with overlapping policy updates. 
+To exemplify imagine two control applications that deal with forwarding and traffic monitoring. 
+The forwarding applications establishes that all packets addresses to a particular address such as 10.0/16  should follow a specific path along the data plane (i.e., a composition of different switches and ports), and the monitor application establishes that all \gls{http} packets should be counted. 
+Being that the monitor application policy applies to a subset of the forwarding application policy they must be composed. 
+The only \emph{consistent} solution to this  composition is that all the  \gls{http} traffic destined to 10.0/16  should be counted and follow the forwarding application specified path. 
+The nitty-gritty of this composition is that: in the switches, the rules installed by both applications must have the correct priorities in order to avoid, for example, the case where the  \gls{http} traffic rule has a higher priority than the forwarding rule. 
+The end result would be that http traffic to 10.0/6 would be counted but not forwarded. 
+
+In essence, this problem was already solved by Frenetic~\cite{Foster:2010wp} in the context of a centralized controller (leveraging the central point to resolve policy conflicts and order policy updates). 
+However, in STN they take this notion of consistent composition and confront it with concurrent policy updates whereby different controllers that execute  the same set of control applications can update  and compose the network policy  in different points in time, and with different ordering. 
+The authors proof that : \emph{``without synchronization it is impossible at any single point in time for a particular controller instance to ensure that its policy specification does not conflict with that of any others''}. 
+ Indeed, given the asynchronous nature of the policy updates in each controller, implies that controllers can apply policies to the data plane following different ordering of sub-policies (specified by different control modules), and end up with different final policies (possibly conflicting). 
+
+The authors  distinguish between \emph{weak-composition} where policies updates  can be composed arbitrarily but eventually reach the same final composition for every controller, and \emph{strong-composition} where policies updates are composed in the same global order by independent controllers.  
+Furthermore, they propose a transactional interface implementation, for the \emph{weak-composition} case, whereby policy updates either commit or are aborted, and single packets are processed by a single configuration of the network (either the configuration before the update, or after the update, but not an intermediary configuration) 
+In essence, this proposal is an atomic update of the network configuration that is susceptible to global conflicting policies caused by the \emph{weak-composition} pitfall ---- different controllers can consider different policies at a single point in time. 
+However, it does guarantee that eventually the network reaches the coherent, consistent, and correct state. 
+
+This work is fundamental to understand the pitfalls of distributed updates to the data plane.  
+As observed by the authors, the strong-composition semantics of concurrent updates can be implemented by resorting to the state-machine-replication technique (as used by our data store) that could be used to impose a global order in the policy update. 
+However, this will certainly be limiting the number of different policies and rate of policy update supported. 
+We are not certain that this would be a serious problem  since we do not have any evidence of specific requirements in real-world deployments (we plan to address this issue in the future). 
+Finally, we note that the \emph{weak-composition} technique proposed in the paper is ortoghonal to our distributed controller design. 
 
 %%% Local Variables: 
 %%% mode: latex

@@ -22,13 +22,30 @@
 \usepackage[table,hyperref,x11names]{xcolor}
 \usepackage{array,booktabs}
 \usepackage{multirow}
-
+\usepackage{mathrsfs}
 \usepackage{dialogue}
 %To get figures and tables side by side
 \usepackage{floatrow}
 \newfloatcommand{capbtabbox}{table}[][\FBwidth]
 % end figures and tables side by side
 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%
+%title 
+\makeatletter
+\renewcommand{\@makechapterhead}[1]{%
+\vspace*{50 pt}%
+{\setlength{\parindent}{0pt} \raggedright \normalfont
+\bfseries\Huge
+\ifnum \value{secnumdepth}>1 
+   \if@mainmatter Chapter \thechapter\ --\ \fi%
+\fi
+#1\par\nobreak\vspace{40 pt}}}
+\makeatother
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
 %footnote in tables 
 \usepackage{threeparttable}
 %end footnote in tables
@@ -45,6 +62,7 @@
 \usepackage{epigraph}
 \usepackage{attrib}
 \usepackage{titlesec}
+\usepackage{ amssymb }
 
 %\titlespacing{\subsubsection}{0pt}{0pt}{0pt}
 %\titleformat{\subsubsection}[runin]{\normalfont\bfseries}{\thesubsection.}{3pt}{}
@@ -102,7 +120,7 @@ url=false, doi=false, eprint=false]{biblatex}
 
 
 %%%%%%% PERSONAL COMMANDS %%%%%%%%%%%
-\newcommand{\distcontrollers}{\cite{:vn, Tootoonchian:2010vy,Koponen:2010th,Yeganeh:2012jm}}
+\newcommand{\distcontrollers}{\cite{:vn, Tootoonchian:2010vy,Koponen:2010th,Yeganeh:2012jm,jain2013b4}}
 \newcommand{\distcontrollerspaper}{\cite{Tootoonchian:2010vy, Koponen:2010th,Yeganeh:2012jm}}
 %END 
 
@@ -213,10 +231,10 @@ url=false, doi=false, eprint=false]{biblatex}
 
 
 \chapter{Introduction}
-\epigraph{Isto vai acontecer porque a Google quer. }{}
-\vspace{300pt}
-\epigraph{Um dia quando voçês forem programadores --- dois ou três de  voçês vão ser programadores o resto... O resto vai trabalhar com Java. }{Professor de LEI - 1º ano}
-
+\begingroup
+\renewcommand{\cleardoublepage}{}
+\renewcommand{\clearpage}{}
+\label{chapter:1}
 \glsresetall
 % contexto do trabalho
 % se resume o trabalho desenvolvido
@@ -231,33 +249,42 @@ url=false, doi=false, eprint=false]{biblatex}
 % Apresentar uma confrontacao com o plano de trabalho inicial  analisando as razoes de eventuais desvios occorridos
 
 \include{./tex/intro}
+\endgroup
 \LIMPA
 
-\chapter{Related Work}
-\epigraph{If the only tool you have is a hammer, you treat everything like a nail.}{Abraham Maslow}
-\vspace{300pt}
+%\renewcommand{\cleardoublepage}{}
+%\renewcommand{\clearpage}{}
 
-\epigraph{Uma pessoa chega a qualquer algoritmo que encontra por aí. Pega, corta, abre, olha, vê.... É um Hilo! Tudo é um Hilomorfismo!}{Professor de LEI - 2º ano}
+\chapter{Related Work}\label{chapter:2}
+\begingroup
+\renewcommand{\cleardoublepage}{}
+\renewcommand{\clearpage}{}
+
+\epigraph{If the only tool you have is a hammer, you treat everything like a nail.}{Abraham Maslow}
+%\epigraph{Uma pessoa chega a qualquer algoritmo que encontra por aí. Pega, corta, abre, olha, vê.... É um Hilo! Tudo é um Hilomorfismo!}{Professor de LEI - 2º ano}
 \glsresetall
 \include{./tex/relatedwork2}
-
+\endgroup
 \LIMPA
-\chapter{Architecture and Implementation}
+\chapter{Architecture and Implementation}\label{chapter:3}
 \epigraph{All problems in computer science can be solved by another level of indirection... ..except for the problem of too many layers of indirection.}{Kevlin Henney's}
-
-\vspace{300pt}
-\epigraph{Estamos no Mato...  E sem cão!}{Professor de LEI - 3º ano}
+\begingroup
+\renewcommand{\cleardoublepage}{}
+\renewcommand{\clearpage}{}
+%\epigraph{Estamos no Mato...  E sem cão!}{Professor de LEI - 3º ano}
 \glsresetall
 \include{./tex/design}
+\endgroup
 \LIMPA
 
+\chapter{Evaluation}\label{chapter:4}
+\begingroup
+\renewcommand{\cleardoublepage}{}
+\renewcommand{\clearpage}{}
+\epigraph{\emph{There are only two hard things in Computer Science: cache invalidation, naming things and off-by-one errors.}}{``Phil Karlton''}
 
-
-\chapter{Evaluation}
-\epigraph{There are only two hard things in Computer Science: cache invalidation, naming things and off-by-one errors.}{Variation of Phil Karlton quote.}
-\vspace{300pt}
 %\setlength{\epigraphwidth}{.6\textwidth}
-\epigraph{Eu já estou por tudo. Por mim reinicio o TomCat.}{MSI - Estudante do 1º ano}
+%\epigraph{Eu já estou por tudo. Por mim reinicio o TomCat.}{MSI - Estudante do 1º ano}
 %\epigraph{}{}
 %%%% quote 
 
@@ -265,12 +292,16 @@ url=false, doi=false, eprint=false]{biblatex}
 
 \glsresetall
 \include{./tex/feasibility} 
+\endgroup
 \LIMPA
 
-\chapter{Conclusions}
+\chapter{Conclusions}\label{chapter:5}
+\begingroup
+\renewcommand{\cleardoublepage}{}
+\renewcommand{\clearpage}{}
 \epigraph{The Free Lunch Is Over.}{Herb Sutter.}
-\vspace{300pt}
-\epigraph{São trade-offs Professor, são trade-offs...}{MSI - José Sá Lopes}
+
+%\epigraph{São trade-offs Professor, são trade-offs...}{MSI - José Sá Lopes}
 \glsresetall
 % sumario de trabalho realizado
 
@@ -278,6 +309,7 @@ url=false, doi=false, eprint=false]{biblatex}
 % possibility of future work 
 
 \include{./tex/conclusion}
+\endgroup
 \LIMPA
 
 % Inicio apendices

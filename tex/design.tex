@@ -2,7 +2,6 @@
 \section{Shared Data Store Controller Architecture} 
 \glsresetall 
 
-
 Before \gls{sdn} control functions such as routing required
 their own distributed protocol that would span over the data plane
 elements (i.e., the switches). 
@@ -11,18 +10,13 @@ control functions based on centralized protocols that can leverage
 the logical centralization of the  network state.  
 However, as already covered in the previous chapters, this logical
 centralization does not postulates a centralized system. 
-This is natural confusing since on one hand \gls{sdn} attempts at
-simplifying management through centralization when in practice the
-control plane itself is distributed. However, the subtle difference is
-that a logical centralized control system can rely on standard
-distributed system techniques to manage state distribution and
-inter-controller communication. On the other distributed data plane
-protocols are focused in a single control function and must operate at
-much larger scale (i.e., unarguably the number of control plane
-elements is much smaller that data plane elements). 
+Naturally, this can be  confusing since \gls{sdn} aims to  
+simplify networking through logical centralization of the network state when in practice the control is itself distributed.  
+However, the crucial different is that a logically centralized system can rely on standard distributed techniques to manage state distribution and inter-controller communication. 
+%Moreover, distributed data plane protocols perform a single control function and must operate at a larger scale than distributed control planes. 
+This chapter will present a distributed control architecture that preserves the primordial logical centralization characteristic of \gls{sdn}. \\
 
-The fundamental requirements that we have identified so far to this
-architecture are: 
+The fundamental requirements that we have identified for this architecture are: 
 
 \begin{itemize}
 \item[] \emph{Transparency} -- the distribution of the system is invisible to the management application until failures occur;
@@ -30,39 +24,31 @@ architecture are:
 \item[] \emph{Generality} -- the system should be as general as
   possible providing useful distributed constructs for the use of the client;
 %\item[] \emph{Safety} -- the presence of multiple controllers does not compromises the operation of the network; 
-\item[] \emph{Reliability} -- the system should be prepared to handle   failures; 
+\item[] \emph{Reliability} -- the system should be prepared to handle failures; 
 \item[] \emph{Scalability} -- the system should anticipate scaling  requirements such as multi-site operation. 
 \end{itemize}
 
 
 The transparency and simplicity requirements protect the developer of network applications from the 
 idiosyncrasies of a distributed system. 
-Distributed systems can be simple with robust mechanisms that behave
-as centralized programming models whereby the user is only able to
-identify the distributed system with exceptions and performance measurements. 
-With this in mind, our next requirement (Generality) attempts at
-setting the need for robust distributed systems tools such as locks,
-barriers and leader election. We believe that this set of tools (and
-others) is indispensable in a distributed context. Our aim  is to
-provide the essential building blocks\footnote{The thorough reader
-  will immediately recognize  consensus as the crucial building block
-  for the identified set of tools.} for the development of those tools under the same \gls{api} that supports the state distribution.
+Distributed systems can be transparent with robust mechanisms that behave
+as centralized programming models whereby the user is only faced with the distribution 
+in the event of network exceptions. 
+The next requirement (generality) establishes the need of robust distributed systems tools such as locks,
+barriers, and leader election that are indispensable in a distributed context.  
+We aim to provide the essential building blocks to develop this tools under the same \gls{api} used for state distribution.
 
-Reliability should be an obvious requirement from the get go in the
-context of distributed control plane. As stated before, faults are the
-norm and not the exception in real-world applications.  Thus, our
-requirement establishes that our system should be equipped to handle
-failures from any of its components. 
+Reliability for a distributed control plane is an obvious requirement from the get go. 
+As stated before, faults are the norm and not the exception in real-world applications.  
+Thus, our requirement establishes that our system should be equipped to handle failures from any of its composing components. 
 
-Finally, the thorough reader may found curious that we define scalability as one of our requirements given that we already established that when faced with the tradeoff between consistency and scalability we prefer the former. 
-However, this should not preclude the need for scalability; and we do not discard it as will become clear in the following sections. 
+The thorough reader may found curious that we set scalability as one of our requirements given that we already established that when faced with the tradeoff between consistency and scalability we prefer the former. 
+However, this should not preclude the need for scalability; and indeed we do not discard it, as will become clear in the following sections. 
 
-
-We note that this set of requirements does not debars network applications from exploiting the state distribution mechanism. Truly, applications can only maximize reliability and performance if they become aware of the distributions mechanisms underlying in the system. 
+We note that this set of requirements does not debars network applications from exploiting the state distribution mechanism. 
+Truly, applications can only maximize reliability and performance if they become aware of the distributions mechanisms underlying in the system. 
 
 %In this section we describe a prototype implementation of a distributed controller architecture integrating the Floodlight controller with a data store implemented using a state-of-the-art replication algorithm.  The central element of our architecture is a highly-available, strongly consistent data store. 
-
-
 
 \subsection{General Architecture}
 We propose a novel \gls{sdn} controller architecture that is distributed, fault-tolerant, and strongly consistent.
@@ -81,7 +67,6 @@ All decisions of the control plane applications running on the distributed contr
 The fact that we have a consistent data store makes the interaction between controllers as simple as reading and writing on the shared data store: there is no need for code that deals with conflict resolution or the complexities due to possible corner cases arising from weak consistency.
 
 %There are two main concerns around this design: (i) how to avoid the storage being a single point of failure and (ii) how to avoid making the storage a bottleneck for the system.
-
 
 \begin{figure}
   \centering
@@ -115,7 +100,6 @@ In this case, the applications deployed on the primary controller manage the net
 If the primary fails, one of the backups -- say, the one with the highest IP address -- takes the role of primary and uses the data store to continue controlling the network.
 
 %Furthermore, in this design the controllers keep only soft state locally, which can be easily reconstructed after a crash.
-
 
 \begin{figure}
   \centering
@@ -160,14 +144,12 @@ This can cause data plane consistency problems since the same event can be proce
 We hypotethize that a careful distribution of controllers across the data plane minimizes the inter-controller-data-plane subsets traffic. 
 
 
-
 \begin{figure}
   \centering
   \includegraphics[width=\textwidth]{./pic/heimdall/controller-architecture}
   \caption{Controller components. }
   \label{fig:heimdall:architecture}
 \end{figure}
-
 
 
 The applications present in the controller can access the data store, through the \emph{Data Store Service}  which manages the access control to the data store. 
@@ -195,8 +177,9 @@ The data store supports different table types shown in Table~\ref{tab:table-type
   \label{tab:table-types}
 \end{table}
 
-We do not envision that clients should use the data store for performing the event-driven pattern whereby applications subscribe for events triggered by other applications (e.g., host authenticated, device add, topology changed, etc.,). We believe it is simpler for each application to perform polling in the data store therefore subscribing and identifying changes. In the future we do intend to expand the data store to facilitate this behaviour (e.g., by allowing clients to receive he aggregated changes in a single table since a particular past version).
+We do not envision that clients should use the data store for performing the event-driven pattern whereby applications subscribe for events triggered by other applications (e.g., host authenticated, device add, topology changed, etc.,). We believe it is simpler for each application to perform polling in the data store therefore subscribing and identifying changes. In the future we do intend to expand the data store to facilitate this behavior (e.g., by allowing clients to receive he aggregated changes in a single table since a particular past version).
 This way the client sets bound of the inconsistency on the window of inconsistency based on the periodicity established. Off course the client could still do pub/sub locally but not remotely. 
+
 
 \subsection{Data Store Replication}
 \glsreset{smr} 
@@ -233,39 +216,34 @@ We consider failures in the controller-to-data store interactions in section~\re
 
 \subsection{Fault Tolerance}
 \label{sec:heimdall:fault-tolerance}
-
-There are three fault domains. Explain what domains are those and how our design fits in all this. Consider question from ewsdn. 
-
-We built upon the distributed election algorithm (see Section 4.1.2 in
-\cite{4d}) whereby only an elected leader should send instructions to
-each data plane element. 
-As such the switches do not receive incoherent and conflicting
-decisions from the control plane. 
-Even if distributed election is a complex operation our data store
-shields the controller from this complexity. It can be as simple as an
-read-modify operation and pooling. 
-
-
-Master slave
-Our ``protocol''
-
 Our distributed controller architecture covers the two most complex fault domains in an SDN, as introduced in~\cite{kim2012}.
 It has the potential to tolerate faults in the controller (if the controller itself or associated machinery fails) by having the state stored in the fault-tolerant data store.
-It can also deal with faults in the control plane (the connection controller-switch) by having each switch connected to several controllers (which is ongoing work).
+It can also deal with faults in the control plane (the connection controller-switch) by having each switch connected to several controllers. 
 The third SDN fault domain --- the data plane --- is orthogonal to this work since it depends on the topology of the network and how control applications react to faults.
-This problem is being addressed in other recent
-efforts~\cite{kim2012,Reitblatt2013}.
+This problem is being addressed in other recent efforts~\cite{kim2012,Reitblatt2013}. 
+In this section, we explain how can we leverage the data store to support adequate fault-tolerance in the overall system. 
+Our primary goal is to ensure that as long as a single controller is up and running it should be able to control the data plane. 
 
+%Even if our data store is fault-tolerant it is important to rationalize how faults can be tolerated in our entire architecture. 
+%According to Kim~\etal~  \cite{kim2012} there are three fault domains in \gls{sdn}. Namely, the Data plane where the switch or link can fail; the control plane where the connection between the controller and switch fails, and the controller where the controller machine fails. 
+%We do not disagree, but it is hard to distinguish the case where the connection between the controller and the switch fails, from the failure of the controller or the switch. From the point of view of either of this two entities, the failure of a connection is equivalent to their failure. So we propose a different scheme to distinguish faults, and we also incorporate our design.  
+%As such we will focus our discussion in three faults domains: \emph{data plane} where a switch fails, \emph{control plane} where a controller fails, and \emph{data store} where the data store fails. 
+%It may seem superfluous to integrate the data store in our discussion since we have already established that it is fault-tolerant. 
+%However, even if the data store is up and running it can be the case that it is viewed as failed from a controller. 
+%For clarity we shall use the term \emph{suspected} to fail in such cases.  
+%Finally, notice that we do not consider the failure of links between switches since they are the responsibility of both the network infrastructure and applications that control it. 
 
-A simple ``protocol'' to handle switch fail-over. I still need to think of bad things that can happen when two controllers fight over a switch.
-\subsection{Protocol}
-\begin{itemize}
-\item There is an eventual failure detector built with the data store. If the controller does not has access to the data store it should not control anything in the network (Fig.~\ref{fig:proto-heartbeats}). The data store also keeps the switches under each controller ; 
-\item Controllers can suspect the failure of another and attempt to replace it. First they have to set a flag in the data store stating that they are attempting to take over the presumably failed controller (Fig.~\ref{fig:proto-c2-fails}). With this flag other controllers can known that someone is attempting to control the switches and avoid taking over. This also helpfully for the failed controller which can recover and known that there is an active process to take its place. 
-\item A controller can then set himself as master of the switch. After this point all switches messages go to the new controller (C1) (Fig.~\ref{fig:proto-c1-as-master}); 
-\item Finally the controller sets himself as master of the switch in the data store. (Fig.~\ref{fig:proto-c1-finishes}). 
-\end{itemize}
+We consider a crash fault model for the controllers (where controllers can crash and do not recover). Furthermore, a controller is only able to operate the network if he can access the data store. 
+To detect controller failures we consider an eventual perfect failure detector~$\lozenge\mathscr{P}$ build on the data store. 
+This can be done with a simple algorithm: (1) each controller sends an regular heartbeat to the data store, (2) once a controller fails, the data store marks the controller as \emph{suspected}; and (3) in the event that the controller is still correct, the heartbeat may arrive after the selected interval, in which case the data store adjusts the heart beat interval for that specific controller and restores him as correct. 
+The  crux properties  of~$\lozenge\mathscr{P}$~are: $(i)$  \emph{Eventually, every controller that crashes is permanently suspected by every other controller}, and $(ii)$ \emph{Eventually, no correct controller is suspected by any correct controller}~\cite{2011itra.book.....C}.  
 
+Fig.~\ref{fig:design:fault-tolerance} shows how can we use this abstraction to replace failed controllers. 
+First, the controllers send the regular heartbeats to the data store (Fig.~\ref{fig:proto-heartbeats}). 
+Then $c1$ fails \hbox{(a network failure or a crash)}  and  stops sending heartbeats to the data store.
+Once  $c2$ \emph{suspect's} $c1$ has failed, he proceeds to replace it by assuming control of all its switches.  
+Since several controllers could attempt to do the same, $c2$ sets a flag in the data store stating that he is trying to take control of the switches (Fig.~\ref{fig:proto-c2-fails}). 
+Once he sets himself as master for all the switches (Fig.~\ref{fig:proto-c1-as-master}) he can update the data store such that others can be aware that he is the definitive master (Fig.~\ref{fig:proto-c1-finishes}). 
 
 \begin{figure}
   \centering
@@ -286,28 +264,101 @@ A simple ``protocol'' to handle switch fail-over. I still need to think of bad t
   \begin{subfigure}[b]{0.5\textwidth}
                 \centering
                 \includegraphics[scale = 0.4]{./pic/heimdall/proto-3}
-                \caption{C1 has to set himself as master in S2. }
+                \caption{C1 has to set himself as master in S2.}
                 \label{fig:proto-c1-as-master}
         \end{subfigure}%
         ~
         \begin{subfigure}[b]{0.5\textwidth}
                 \centering
                 \includegraphics[scale=0.4]{./pic/heimdall/proto-4}
-                \caption{Finally tell the data store he controls S2. }
+                \caption{Finally tell the data store he controls S2.}
                 \label{fig:proto-c1-finishes}
         \end{subfigure}
+\caption[Fault Tolerance in the Control Plane.]{}
+\label{fig:design:fault-tolerance}
 \end{figure}
 
-Notes
-\begin{itemize}
-\item In the case S1 fails while taking over S2, other controllers (if any) will eventually known about this and take over. 
-\item This process can also be triggered in the case a switch fails. It is worth doing so because a switch can fail due to network failures who affect the connectivity with his master controller but not with others; 
-\item As long as one  controller does not fail and reaches every switch (who also has not failed)  and data store we can handle all kind of network failures.
-\item When C2 recovers he can do the same process to take over his switches again. 
-\item I think that to be safe (I will try to define safety later) the data store should deny state changing messages from controllers who do not own the switch (which caused the state changes). But I have to think better about this.... 
-\end{itemize}
+
+The flag set by $c2$ before attempting to control the switches is relevant in the case that $c1$ has not fail, but is delayed when delivering the heartbeat. In this case, $c1$ could attempt to manage the switches concurrently with $c2$. To minimize contention, $c1$ can receive its condition (i.e., \emph{suspected}) as a reply to its heartbeat and sit quietly, until he can get its switches back. 
+This procedure relies in: $(i)$ the OpenFlow property that only the master controller can modify the switch tables; and $(ii)$ the controller will not set himself as master without processing the protocol described above.
+ As such, there will only be a single controller managing the switch at any time, since $c1$ must wait for $c2$ to finish before attempting to get its switches back.
+
+The thorough reader already anticipated that this protocol might cause problems when $c2$ fails while attempting to take control of $c1$ switches. 
+Then, a third controller $c3$ can detect the failure of $c2$ and attempt to take control of all his switches (including  the switches that belong to $c1$). 
+Due to the asynchronous nature of the network, it is possible that a switch receives  the $c2$ master command message after the  $c3$ message thus overwriting the correct decision (i.e., the master should be $c3$. 
+Fig~\ref{fig:concurrent-master-accept} extends on the previous example to exemplify how switch $s2$ can finish with a failed controller as master ($c2$). 
+To avoid this possibility, we leverage on an existent OpenFlow mechanism that establishes that whenever a controller changes its role to master it must specify an \emph{id} bigger than the present at the switch (initialized to zero). 
+If controllers keep the \emph{id} used in the data store, we can ensure that the request from $c3$ contains an \emph{id} bigger than the request of $c1$, thus invalidating  the latter request (Fig.~\ref{fig:concurrent-master-discard}).  
 
 
+
+\begin{figure}
+  \centering
+\begin{subfigure}[b]{0.5\textwidth}
+  \centering
+  \includegraphics[width=\textwidth]{./pic/heimdall/concurrent-master}
+  \caption{Switch s2 accepts message}
+\label{fig:concurrent-master-accept}
+\end{subfigure}%
+        ~
+        \begin{subfigure}[b]{0.5\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{./pic/heimdall/concurrent-master-solved}
+                \caption{Switch s2 discards message}
+\label{fig:concurrent-master-discard}
+        \end{subfigure}
+        \caption[Concurrent masters.]{Concurrent master requests sent to the switch: once the first master (c2) of the switch fails, c1 detects the failure and attempts to take control of the switch, but shortly after sending the message to the switch, also fails. Due to the asynchronous nature of the network this message can arrive at any time, namely after a third controller s3 has already sent a master request.}
+\end{figure}
+
+A switch failure can also trigger the process of controller takeover described before. 
+%The process of controller takeover can also be triggered  when a switch fails. 
+In fact, it is worth doing so because a switch can fail due to network failures that affect the connectivity with his master controller but not with others.  
+In this case, once  a controller updates the data store and sets a switch as ``failed'', other controllers could attempt to access the switch.
+If two or more controllers have access to the switch, they can use the same algorithm (defined above) to decide on the definitive master of the switch. 
+If no controller has access to the switch then the latter can be considered permanently failed until reconnection.
+Until that time, controller applications should manage the network and ensure that they are alternative paths to every host (if possible). 
+
+% \begin{figure}
+%   \centering
+%   \includegraphics[width=\textwidth]{pic/heimdall/partitions}
+%   \caption{Network Partitions}
+% \end{figure}
+If we assume that at least one controller is always available and can connect to the data store and all switches, then this mechanism guarantees that even if all other things fail (controllers and respective connections to switches), at some point in time the network can be reliable managed by that controller. 
+However, adequate engineering would  take into consideration that a single controller might not be able to handle the entire network. In those cases, counter-measures can be taken by the controller to lower the number of events triggered by the data plane on the controller at the expense of control optimality (e.g., discarding traffic or abdicate from reactive flow installation). 
+
+The vital component of this assumption is to ensure that the controller is capable of connecting to the data store at all times. 
+It may seem superfluous to integrate the data store in our discussion since we have already established that it is fault-tolerant as long as majority of replicas are available. 
+However, the possibility that controllers cannot access the data store majority of replicas exists. 
+We note that this is not a problem, since from the point of view of the system such a case is equivalent to have the controller as faulty (i.e., a controller is considered correct if he can access the data store). 
+In the case that the controller cannot recover the  connection to the majority of replicas he will be permanently suspected as failed, and other controllers take its place. 
+
+However, there is no realistic assurance that a majority of replicas can be correct and available; nor that at least a single controller can connect to the data store. 
+In such extreme cases, network operators could maintain fail-safe policy  in the controller's disks. 
+This works because a controller maintains its master role as long as no other controller overwrites the switch. 
+In this case, a controller who looses access to the data store (when there are no other controllers available) can continue to operate the network. 
+Finally, as specified by OpenFlow,  when switches can not reach any controllers, they  could operate in the ``fail standalone'' mode to operate as a legacy Ethernet switch or router or ``fail secure'' to maintain the normal behaviour and discard packets that would go to the controller. 
+
+
+%However, even if the data store is up and running it can be the case that it is viewed as failed from a controller. 
+
+%Starting withe the data store, we assumed that it is always available as long as a majority of the replicas are correct (i.e., non faulty). 
+%Of course, this a strong assumption but it is dictated by the state machine replication semantics.
+
+% We built upon the distributed election algorithm (see Section 4.1.2 in
+% \cite{4d}) whereby only an elected leader should send instructions to
+% each data plane element. 
+% As such the switches do not receive incoherent and conflicting
+% decisions from the control plane. 
+% Even if distributed election is a complex operation our data store
+% shields the controller from this complexity. It can be as simple as an
+% read-modify operation and pooling. 
+
+
+% Master slave
+% Our ``protocol''
+
+
+%A simple ``protocol'' to handle switch fail-over. I still need to think of bad things that can happen when two controllers fight over a switc%h.
 
 \section{Data Store Prototype}
 \glsresetall 

@@ -1,10 +1,7 @@
-
 \section{Discussion}
-
 \subsection{Centralized Controllers}
 
-Our argument is threefold.
-First, we note that the performance results of our data store are similar to those reported for the original NOX and other popular SDN controllers\,\cite{Tootoonchian:2012:CPS:2228283.2228297}.
+First, we note that the performance results of our data store are similar to those reported for the original NOX and other popular SDN controller\,\cite{Tootoonchian:2012:CPS:2228283.2228297}.
 The average throughput for the Learning Switch application (the only application considered in\,\cite{Tootoonchian:2012:CPS:2228283.2228297}) is not far from that reported by NOX (30kReq/s), so our data store would not become a bottleneck in this respect.
 In addition, the latency is close to the values reported for the different SDN controllers analyzed in that work (including the high-performance, multi-threaded ones), so the additional latency introduced, although non-negligible, can (arguably) be considered acceptable.
 We consider this result to be remarkable given that our data store provides both strong consistency and fault tolerance.
@@ -60,12 +57,7 @@ Starting by assuming the inevitability of this cost, our objective in this paper
 The drawback of a strongly consistent, fault-tolerant approach for an SDN platform is the increase in latency, which limits responsiveness; and the decrease in throughput that hinders scalability.
 Even assuming these negative consequences, an important conclusion of this study is that it is possible to achieve those goals while maintaining the performance penalty at an acceptable level.
 
-
 As the number of SDN production networks increase the need for dependability becomes essential. The key takeover of this work is that dependability mechanisms have their cost, and it is therefore an interesting challenge for the SDN community to integrate these mechanisms into scalable control platforms. 
-
-\begin{itemize}
-\item they were not data store aware so we had to optimize them. This off course caused changes to the code.
-\end{itemize}
 
 \subsection{Limitations}
 \begin{itemize}

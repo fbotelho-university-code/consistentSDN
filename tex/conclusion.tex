@@ -1,4 +1,8 @@
 \section{Discussion}
+\begin{itemize}
+\item Our analysis is not thorough  because it does not accounts for other applications. 
+\end{itemize}
+
 \subsection{Centralized Controllers}
 
 First, we note that the performance results of our data store are similar to those reported for the original NOX and other popular SDN controller\,\cite{Tootoonchian:2012:CPS:2228283.2228297}.
@@ -39,6 +43,7 @@ um artigo onde se fale da performance do bft-smart?)
 \item Add applications that we believe to be fundamental to the data center: Topology Manager and Firewall.  Study the pipeline effect of all the applications together and improve on that. 
 \item Study the differences between serializability and strong consistency, establishing when do the applications require one or another. State machine replication is not required in all aplications, use strong consistency in some cases (reads, writes). Bessani Protocol, cassandra with strong consistency scales better than SMR , etc., 
 \end{itemize}
+
 
 
 \section{Conclusions}

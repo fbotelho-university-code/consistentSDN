@@ -182,7 +182,9 @@ This way the client sets bound of the inconsistency on the window of inconsisten
 
 
 \subsection{Data Store Replication}
+\label{sec:design:data-store-repl}
 \glsreset{smr} 
+
 Our architecture orbits around a data store that must be fault tolerant to avoid a single point of failure and provide strong consistency to be transparent. 
 As previously covered (in section~\ref{sec:related:cons-data-stor}) the solution to both those requirements is the \gls{smr}  technique. 
 In this section we explain how we can exploit this technique to implement our data store. 
@@ -372,6 +374,7 @@ Our data store offers a platform independent interface (i.e., it can be used in 
 \label{fig:design:class-diagram}
 \end{figure}
 
+\todo{Fala das tabelas LRU. }
 Missing things to talk about: 
 \begin{itemize}
 \item An hash table and a Key Value table is the same, we use both terms. 

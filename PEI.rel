@@ -11,7 +11,7 @@
 
 (is-multi t)
 
-(bibview-cache ("Foster:2010wp" . "Foster etal. 2010, {Frenetic: high level language OpenFlow, Proceedings of the Workshop on Programmable Routers for Extensible Services of Tomorrow 6") ("Wang:2012tj" . "Wang etal. 2012, {Gnoth. separ. data metad. effic., in: USENIX ATC'12: Proceedings 2012") ("Lee:1996jm" . "Lee & Thekkath 1996, {Petal: distributed virtual disks}, in: ASPLOS VII: Proceedings seventh") ("jain2013b4" . "Jain etal. 2013, B4: Experience with globally deployed, in: Proceedings ACM SIGCOMM 2013, 3") ("2011itra.book.....C" . "Cachin etal. 2011, {Intr. Reli. Secure Distr. Progr") ("Koponen:2010th" . "Koponen etal. 2010, Onix: distributed control platform large, in: OSDI'10: Proceedings 9th USENIX") ("Liskov:2012ut" . "Liskov & Cowling 2012, Viewstamped replication revisited") ("" . "Kostic etal. 2013, OpenFlow Needs You! Call Discussion, in: Software Defined Networking (EWSDN)") ("McKeown:2008dn" . "McKeown etal. 2008, OpenFl. enabl. innov. camp. netw., SIGCOMM Computer Communication Review 38") ("Casado:2007kb" . "Casado etal. 2007, Ethane: Taking Control Enterprise, in: SIGCOMM '07: Proceedings 2007") ("Caesar:2005ws" . "Caesar etal. 2005, Design impl. rout. contr. platf., in: NSDI'05: Proceedings 2nd conference"))
+(bibview-cache ("Erickson:2013er" . "Erickson 2013, {The beacon openflow controller}, in: HotSDN '13: Proceedings second") ("Tootoonchian:2012uia" . "Tootoonchian etal. 2012, {On contr. perf. softw. defin., in: Hot ICE'12: Proceedings 2nd") ("Tootoonchian:2010vy" . "Tootoonchian & Ganjali 2010, {Hyp. distr. contr. plane OpenFl., in: INM/WR. Proc. 2010 intern") ("Levin:2012bt" . "Levin etal. 2012, {Log. centr. state distr. trade, in: HotSDN '12: Proceedings first") ("Corbett:2012uz" . "Corbett etal. 2012, Spann. Googl. glob. distr. datab., in: OSDI") ("DeCandia:2007cn" . "DeCandia etal. 2007, {Dynamo: amazon's highly available key, in: SOSP '07: Proceedings twenty") ("Hunt:2010ux" . "Hunt etal. 2010, {ZooK. Wait free coord. Intern., in: Proc. USEN. Proc. 2010") ("kung1981optimistic" . "Kung & Robinson 1981, optimistic methods concurrency control, ACM Transactions on Database Systems (TODS) 6:213") ("Foster:2010wp" . "Foster etal. 2010, {Frenetic: high level language OpenFlow, Proceedings of the Workshop on Programmable Routers for Extensible Services of Tomorrow 6") ("Wang:2012tj" . "Wang etal. 2012, {Gnoth. separ. data metad. effic., in: USENIX ATC'12: Proceedings 2012") ("Lee:1996jm" . "Lee & Thekkath 1996, {Petal: distributed virtual disks}, in: ASPLOS VII: Proceedings seventh") ("jain2013b4" . "Jain etal. 2013, B4: Experience with globally deployed, in: Proceedings ACM SIGCOMM 2013, 3") ("2011itra.book.....C" . "Cachin etal. 2011, {Intr. Reli. Secure Distr. Progr") ("Koponen:2010th" . "Koponen etal. 2010, Onix: distributed control platform large, in: OSDI'10: Proceedings 9th USENIX") ("Liskov:2012ut" . "Liskov & Cowling 2012, Viewstamped replication revisited") ("" . "Kostic etal. 2013, OpenFlow Needs You! Call Discussion, in: Software Defined Networking (EWSDN)") ("McKeown:2008dn" . "McKeown etal. 2008, OpenFl. enabl. innov. camp. netw., SIGCOMM Computer Communication Review 38") ("Casado:2007kb" . "Casado etal. 2007, Ethane: Taking Control Enterprise, in: SIGCOMM '07: Proceedings 2007") ("Caesar:2005ws" . "Caesar etal. 2005, Design impl. rout. contr. platf., in: NSDI'05: Proceedings 2nd conference"))
 
 (master-dir . "/Users/fabiim/Dropbox/TESE/final/")
 
@@ -199,9 +199,11 @@
 
 (bof "/Users/fabiim/Dropbox/TESE/final/tex/design.tex")
 
-(toc "toc" "    3.1 Shared Data Store Controller Architecture" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil 2 "3.1" "\\section{Shared Data Store Controller Architecture}" 2)
+(toc "toc" "    3.1 Shared Data Store Controller Architecture" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil 2 "3.1" "\\section{Shared Data Store Controller Architecture}" 1346)
 
-(toc "toc" "      3.1.1 General Architecture" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil 3 "3.1.1" "\\subsection{General Architecture}" 3893)
+("sec:shared-data-store" "s" "Before \\gls{sdn} control functions such as routing required their own distributed protocol that woul" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
+
+(toc "toc" "      3.1.1 General Architecture" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil 3 "3.1.1" "\\subsection{General Architecture}" 4172)
 
 ("fig:heimdall:active" "f" "Active." "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
 
@@ -215,19 +217,19 @@
 
 ("fig:heimdall:cache-domains" "f" "Performance and Scalability." "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
 
-(toc "toc" "      3.1.2 Controller" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil 3 "3.1.2" "\\subsection{Controller}" 13424)
+(toc "toc" "      3.1.2 Controller" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil 3 "3.1.2" "\\subsection{Controller}" 14230)
 
 ("fig:heimdall:architecture" "f" "Controller components. " "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
 
 ("tab:table-types" "t" "Table types" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
 
-(toc "toc" "      3.1.3 Data Store Replication" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil 3 "3.1.3" "\\subsection{Data Store Replication}" 20678)
+(toc "toc" "      3.1.3 Data Store Replication" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil 3 "3.1.3" "\\subsection{Data Store Replication}" 21787)
 
 ("sec:design:data-store-repl" "s" "\\glsreset{smr} Our architecture orbits around a data store that must be fault tolerant to avoid a si" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
 
 ("fig:design:smr" "f" "Data Store Architecture" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
 
-(toc "toc" "      3.1.4 Fault Tolerance" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil 3 "3.1.4" "\\subsection{Fault Tolerance}" 24819)
+(toc "toc" "      3.1.4 Fault Tolerance" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil 3 "3.1.4" "\\subsection{Fault Tolerance}" 27469)
 
 ("sec:heimdall:fault-tolerance" "s" "Our distributed controller architecture covers the two most complex fault domains in an SDN, as intr" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
 
@@ -245,15 +247,19 @@
 
 ("fig:concurrent-master-discard" "f" "Switch s2 discards message" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
 
-(toc "toc" "    3.2 Data Store Prototype" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil 2 "3.2" "\\section{Data Store Prototype}" 37692)
+(toc "toc" "    3.2 Data Store Prototype" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil 2 "3.2" "\\section{Data Store Prototype}" 40353)
+
+("sec:data-store-prototype" "s" "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Our data store offers a platform independent inte" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil "")
 
 ("fig:design:class-diagram" "f" "Class diagram of the client interface to the data store tables." "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
 
 ("sec:heimdall:key-value" "s" "\\subsection{Cross References}  A Cross Reference table ($t_{cr}$) contains values that can be used a" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
 
-(toc "toc" "      3.2.1 Cross References" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil 3 "3.2.1" "\\subsection{Cross References}" 40094)
+(toc "toc" "      3.2.1 Cross References" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil 3 "3.2.1" "\\subsection{Cross References}" 45285)
 
 ("sec:heimdall:cross-references" "s" "A Cross Reference table ($t_{cr}$) contains values that can be used as keys in another table ($t_{d}" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
+
+("fig:cross-references" "f" "Cross References" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil "")
 
 (toc "toc" "      3.2.2 {Versioning}  \\begin{figure}[ht] \\centering \\begin{subfigure}[b]{0.5\\textwidth} \\centering " "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil 3 "3.2.2" "\\subsection {Versioning}
 \\label{sec:heimdall:versioning}
@@ -261,7 +267,7 @@
   \\centering
   \\begin{subfigure}[b]{0.5\\textwidth}
                 \\centering
-         " 42385)
+         " 48279)
 
 ("sec:heimdall:versioning" "s" "\\begin{figure}[ht] \\centering \\begin{subfigure}[b]{0.5\\textwidth} \\centering \\includegraphics[width=" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
 
@@ -271,7 +277,7 @@
 
 ("fig:heimdall:versioning" "f" "Concurrent updates" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
 
-(toc "toc" "      3.2.3 Columns" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil 3 "3.2.3" "\\subsection{Columns}" 53938)
+(toc "toc" "      3.2.3 Columns" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil 3 "3.2.3" "\\subsection{Columns}" 59942)
 
 ("sec:heimdall:columns" "s" "\\begin{figure}[ht] \\centering \\begin{subfigure}[b]{0.5\\textwidth} \\centering \\includegraphics[width=" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
 
@@ -281,13 +287,15 @@
 
 ("fig:heimdall:columns" "f" "From a Key Value store to a Column store. " "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
 
-(toc "toc" "      3.2.4 Micro Components" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil 3 "3.2.4" "\\subsection{Micro Components}" 59764)
+(toc "toc" "      3.2.4 Micro Components" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil 3 "3.2.4" "\\subsection{Micro Components}" 66060)
 
 ("sec:heimdall:micro-components" "s" "Micro Components are equivalent to the stored procedures functionality existent in \\gls{sql} databas" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
 
-(toc "toc" "      3.2.5 Cache" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil 3 "3.2.5" "\\subsection{Cache}" 61729)
+(toc "toc" "      3.2.5 Cache" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil 3 "3.2.5" "\\subsection{Cache}" 68132)
 
 ("sec:heimdall:cache" "s" "With a Cache table, the client enables caching for a particular data store table. Consequently each " "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
+
+("fig:cache-client" "f" nil "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil "")
 
 (eof "/Users/fabiim/Dropbox/TESE/final/tex/design.tex")
 

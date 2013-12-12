@@ -1,20 +1,20 @@
 \glsresetall
 
+\todo{Make introduction to this chapter...}
 \section{Software Defined Networks History}
 Traditionally, networking  relied and evolved over a non-transparent distributed model for the deployment of protocols and configuration of devices that resulted in: complex protocols and intrinsically difficult configuration of network devices. 
-\gls{sdn} presents a new way of thinking in networking, shifting the complexity of protocols and management functions from  the  networks devices to a general purpose logically centralized service. 
+\gls{sdn} presents a new way of thinking in networking, shifting the complexity of protocols and management functions from  the  network devices to a general purpose logically centralized service. 
 The motivation behind this decoupling is the following: if the distributed network state can be collected and presented to a logically centralized service then it is simpler  both to specify network level objectives as well as to translate these objectives into the appropriate configuration of network devices. 
 These planes, when loosely coupled, can simplify the development of protocols and the management of network infrastructures. 
 %\gls{sdn} breaks this complex model through the physical detachment of the control and data planes.  
 
 This section outlines the major contributions in the \gls{sdn} research field.   
 In order to understand how \gls{sdn} works today it is fundamental to understand how they came to be. 
-Understanding the biggest contributions in the \gls{sdn} research field allows us to draw a better picture of its skeleton, benefits and drawbacks. 
-To do so, our  historical perspective hand-picks works that have structured the current \gls{sdn} architecture. 
+Understanding the biggest contributions in the \gls{sdn} research field allows us to draw a better picture of its skeleton, benefits, and drawbacks, thus our historical perspective handpicks works that have molded the current \gls{sdn} architecture. 
 %Our historical perspective hand-picks works that either have distributed control planes (thus being relevant for our work) or contribute with fundamental concepts to the current \gls{sdn} architecture. 
 \gls{sdn} contributions can be decomposed  in three phases: the introduction of programmable network hardware; the control and data plane separation; and, finally the de facto standardization of the data plane interface~\cite{feamster2013road}. 
 We only cover the last two since they are the ones that have a bigger impact in our work. 
-For an overview of all the existing work we redirect the reader to the survey by Feamster~\etal~\cite{feamster2013road}. 
+For an overview of all the existing work, we redirect the reader to the survey by Feamster~\etal~\cite{feamster2013road}. 
 
 
 % In \gls{rcp} decoupled the control plane from the data plane just to solve routing problems. Then the 4D architecture formalizes a general architecture whereby all the control functionality resides outside the data plane.  This architecture was later adopted by the Ethane system. Finally the standardization of a data plane protocol and the introduction of a general, developer friendly, Network Operating System allowed \gls{sdn} to pull up the ladder. 
@@ -29,7 +29,7 @@ a crucial component of the Internet operation used between routers inside an \gl
 A year later Caesar~\etal\ describes and evaluates a functional \gls{rcp} system~\cite{Caesar:2005ws}. 
 %The \gls{rcp} system is one of the first to decouple the control plane from the data plane. 
 
-With standard \gls{ibgp}, we must choose between scalability or correctness. 
+With standard \gls{ibgp}, we must choose between scalability and correctness. 
 %Both works identify scalability or correctness as the major problems in \gls{ibgp} deployments.
 %On one hand, in a full mesh configuration, each router maintains  $O(n^2)$ (for $n$ routers) connections and associated state. 
 On one hand, a full mesh configuration is correct, but requires a connection between any two routers, which significantly hinders the scalability of the system. 
@@ -71,10 +71,10 @@ In fact, the current \gls{sdn} architecture is very similar to 4D albeit the pra
 In 2007  Casado~\etal\ presents a network architecture for the enterprise with emphasis in security~\cite{Casado:2007kb}. 
 This architecture, named Ethane, follows the 4D footprints and identifies the same problems in the traditional network management domain. Namely, the configuration errors caused by distributed configuration and lack of cooperating control functions. 
 To address those issues they introduce the controller as a logically centralized server in charge of all network devices.
-By maintaining a global network view that includes topology and  bindings between users, host machines and addresses, the controller is able to play the interposition role between any communication occurring in the network. As such, it can ensure that a network policy is correctly respected. 
+By maintaining a global network view that includes topology and  bindings between users, host machines and addresses, the controller is able to play the interposition role between any communications occurring in the network. As such, it can ensure that a network policy is correctly respected. 
 
 
-In Ethane network devices (switches) do not perform regular operations (e.g., learn address, packet filtering, routing protocols, etc.,).
+In Ethane, network devices (switches) do not perform regular operations (e.g., learn address, packet filtering, routing protocols, etc.,).
 Instead, they are limited  to flow-based forwarding with the help of a local flow table that is maintained by the controller.
 % A flow broadly equivalent to a single host-to-host network interaction (e.g., all the \gls{ip} traffic destined to a host or  all the \gls{http} between two particular hosts). 
 Every packet that fails to match with any of the rules available in the flow table is redirected to the controller. Then the controller takes the packet information, current network state and security policy and decides on a forwarding policy. Commonly the controller will either drop the packet or decide on a path and install rules in the switches such that  not only the packet but also packets that will follow it (i.e., a flow) find a match in the flow table thus avoiding being redirected to the controller. 
@@ -82,19 +82,18 @@ Every packet that fails to match with any of the rules available in the flow tab
 
 Arguably, the most significant contribution of Ethane came from the results obtained with the deployment in a particular campus network with approximately 300 hosts. 
 According to the reported results, the authors estimate that a single desktop computer could handle a network with over 20k hosts.  
-This is interesting since at the time,  one of the biggest objections to decoupled architectures was the scalability and resilience properties. 
-Consequently  in the paper we also see a significant discussion regarding the resilience of Ethane. 
+This is interesting since at the time,  one of the biggest objections to decoupled architectures was the scalability and resilience property. 
+Consequently, in the paper we also see a significant discussion regarding the resilience of Ethane. 
 
 The authors present different distribution modes to achieve resilience. 
 In the primary-backup mode  there is one active controller while others standby to take over its place in the event of failure. 
 In this mode the standby controllers can keep slow-changing state (such as configuration and user registration) consistently while the binding information that associates network devices to users is kept under eventual consistency semantic. 
 The only problem identified in the paper with this mode is that in the event of failures some users may need to re-authenticate. 
 In the active mode, two or more controllers take over the network while switches distribute their requests across the existent controllers.  
-Under this mode, the authors argue that  the use of eventually consistency semantics for replication is sufficient in most implementations. To  sustain it is observed that the use of consistency aware data structures such as \gls{crdt}\footnote{A \gls{crdt} is an special data structure that is used to avoid conflicts or loss of information in eventual consistent replication of data.} or simple partitioning schemes (e.g., separate \gls{ip} address space across controllers for \gls{dhcp} allocation) can be sufficient for avoiding inconsistency problems. 
+Under this mode, the authors argue that  the use of eventually consistency semantics for replication is sufficient in most implementations. To  sustain it, the authors observe that the use of consistency aware data structures such as \gls{crdt}\footnote{A \gls{crdt} is an special data structure that is used to avoid conflicts or loss of information in eventual consistent replication of data.} or simple partitioning schemes (e.g., separate \gls{ip} address space across controllers for \gls{dhcp} allocation) can be sufficient for avoiding inconsistency problems. 
 Albeit arguing for eventual consistency they do state that there a need for further study and stronger consistency guarantees such as the \gls{smr} used by in our distributed control plane. 
 
-We do not disagree but we also do not agree. 
-We believe that in a sensible deployment where the security policy must be strictly respected in every host-to-host communication, it is crucial that the distribution of the control plane is built on top of resilient and coherent distribution models. 
+We partially agree with the authors but, we believe that in a sensible deployment where the security policy must be strictly respected in every host-to-host communication, it is crucial that the distribution of the control plane is built on top of resilient and coherent distribution models. 
 However due to the asynchronous nature of a network (e.g., as soon as you install a rule in a switch, the network policy or topology may already have changed) we may need more than a strong consistency semantics for the control plane. In fact, we may need to expand the strong consistency semantics to the data plane (as covered in section~\ref{sec:related:consistent-data-plane}). 
 Finally, as explained in section~\ref{sec:related:cons-data-stor} the use of eventually consistent data stores requires extra work and care from the developer that we do not believe to justifiable in all cases. 
 
@@ -151,7 +150,7 @@ Interestingly, until this day the architecture of the \gls{nos} has not changed 
 
 In March 2011, the Open Network Foundation (ONF) was created with the participation and support from several industry partners \cite{onf}. 
 ONF  is a ``non-profit consortium dedicated to the transformation of networking through the development and standardization of a unique architecture called Software-Defined Networking (SDN)''. 
-They have done so, by releasing a white-paper defining the design principles for a SDN architecture and the advantages of it \cite{ONF:2012ui}. 
+They have done so, by releasing a white paper defining the design principles for a SDN architecture and the advantages of it \cite{ONF:2012ui}. 
 They are also responsible for the standardization process of the OpenFlow protocol.
 
 The \gls{sdn} architecture is not a standard but rather an architectural approach to networking. 
@@ -166,6 +165,7 @@ This section can (and should) be used as reference throughout the text.
 
 \subsection{SDN Architecture}
 \label{sec:related:sdn-architecture}
+\todo{missing context, one paragraph or bigger first sentence.}
 The common \gls{sdn} architecture is a three-layer stack shown in Fig.~\ref{fig:related:sdn-stack}. 
 % \begin{itemize}
 % \item Context. 
@@ -191,7 +191,7 @@ From a conceptual point of view, these applications interact with the controller
 A possible implementation of this interface is a \gls{rest}  web service implemented in the controller\footnote{A web \gls{api} based on \gls{http} protocol.}~\cite{fielding2002principled} that allows remote applications to read and modify the network state and configuration.  
 It is also possible that controllers allow applications to subscribe (to be process) to network events through this \gls{api}. 
 This is typically applicable to in-memory applications but does need to be the case. 
-For this reason the image also shows that the controller invokes operations on  the Management plane through the \emph{North} \gls{api}. 
+For this reason the image also shows that, the controller invokes operations on  the Management plane through the \emph{North} \gls{api}. 
 All the control planes referenced in this document allow this behavior for in-memory applications. 
 In fact, as we shall see, the event-oriented programming model is present throughout all the \gls{sdn} stack components  being that  \gls{sdn} is event oriented from the get go, as network events  such as  topology changes and forwarding requests, are asynchronous in nature. 
 
@@ -233,13 +233,15 @@ One can even choose between the two models for different types of traffic, or di
 \subsection{OpenFlow}
 \label{sec:related:openflow-spec}
 \glsreset{of}
+\todo{Missing things mentioned in the document (flow-mod, flow-removed}
+\todo{Clean up ``abstract flow definitions'' in : introduction, ethane, and here. One is enough.}
 %Missing things to talk about:
 % \begin{itemize}
 % \item FLOW REMOVED (evaluation section, maybe we can remove it). 
 % \item FLOW MOD  (evaluation section, maybe we can remove it). 
 %\item it is event-driven, the switch does not need a reply
 % \end{itemize}
-\gls{of} is the most common implementation of the \emph{South} \gls{api} shown in Fig.~\ref{fig:related:sdn-stack} which consequently has  
+\gls{of} is the most common implementation of the \emph{South} \gls{api} shown in Fig.~\ref{fig:related:sdn-stack} that consequently  has
 somewhat defined the current panorama of \gls{sdn} architectures. 
 Thus, in order to make this document self-contained we feel that we should clarify some technical aspects of the \gls{of}  protocol. 
 %This section will briefly resume (and simplify) the most important characteristics of the protocol that should be used as reference for the remaining document. We note that the relevance of this protocol has already been covered in section~\ref{sec:related:openflow}.  
@@ -269,26 +271,27 @@ This table is used by the controller to define the forwarding rules for each pac
 %The switch uses the match fields to find the forwarding instructions for any incoming packet.
 As opposed to common devices, which are restricted to a small set of network packet headers (e.g., \gls{mac} for switches, \gls{ip} for routes), \gls{of} switches are able to match packets against 13 different headers (that can be combined with logical operators).
 Furthermore, some headers such as the \gls{ip} and \gls{mac}
- fields can be matched against  bitmasks which allows  a wide range of values for a single table entry. 
+ fields can be matched against  bitmasks, which allows  a wide range of values for a single table entry. 
 As an example, the table shows that the last two entries match against any host present in the $10.0.0.0/24$ network. 
 Beyond headers, the switch can also match packets according to the port on which they arrive. 
 We note that conflicting matches (i.e., a packet matches more than one entry in the table) are arbitrated by the priority associated with the rule (not show in the table). 
 
-For each entry there is an associated instruction that the switch uses to forward the packet whenever it is able to find a match. 
+For each entry, there is an associated instruction that the switch uses to forward the packet whenever it is able to find a match. 
 Several instructions are available including: forward to port $x$, forward to controller, and drop the packet. 
 As seen in the table, the instructions can be combined (the first entry forwards to two different ports). 
 
 
-Each entry  is removed from the table once one of the two private timeouts expire. 
-There is an hard timeout, which is never reseted,  and an  idle timeout that is reseted whenever an packet is matched against the entry. 
-Both timeouts are used by the controller to recycle and control the entries in the switch table.
+Each entry  is removed from the table once one of the two private timeouts expires. 
+There is a hard timeout, which is never reset,  and an  idle timeout that is reset whenever a packet is matched against the entry. 
+The controller recycles and controls the entries in the switch table using both timeouts. 
+%Both timeouts are used by the controller to recycle and control the entries in the switch table.
 It is also possible that a rule is persistent (never expires). 
-In this case the timeout will be set to 0. 
+In this case, the timeout will be set to 0. 
 
 
 A \gls{of} switch table can be configured to forward non-matching packets to the controller (e.g.,  the last entry in the table).
 In a  reactive model, the switch forwards the first packet of a flow to the controller. 
-In this context flow is somewhat undefined but in essence it should represent a stream of one or more packets in an communication.
+In this context a  flow is somewhat undefined but in essence it should represent a stream of one or more packets in an communication.
 For example a flow could be all the packets exchanged between an \gls{http} client and server to download a web page, or it  all the \gls{icmp} packets exchanged between a pair of hosts. 
 
 Fig.~\ref{fig:related:reactive} illustrates how the switch processes packets in the reactive mode. 
@@ -309,6 +312,7 @@ Additionally, the controller also configures the switch table such that  future 
 \label{sec:related:phys-centr-contr}
 \glsresetall
 
+\todo{Warning: not word-spell-checked.}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 In this section we present an overview of relevant centralized
@@ -316,14 +320,6 @@ controllers. Centralized controllers are, by our definition, control
 planes that do not show any explicit support in the deployment of 
 different controllers processes over onde or more servers. 
 According to our general architecture (see section~\ref{sec:related:sdn-architecture}) the controller has no \emph{East}/\emph{West} \gls{api}. 
-
-
-\begin{figure}
-  \centering
-\includegraphics[width=\textwidth]{pic/related/meta-controller-architecture}
-  \caption[Controller Architecture]{The common (meta) controller architecture is event-driven. The data plane triggers events (e) that are dispatched by the controller to a pipeline of interested applications. }
-\label{fig:related:meta-architecture}
-\end{figure}
 
 All the controllers in this section share the architectural composition shown in Fig.~\ref{fig:related:meta-architecture}.
 In this architecture, the controller supports multiple applications that run in-memory (i.e., with the controller process) with the goal of processing events  triggered by the data plane (i.e., the switches). 
@@ -334,6 +330,12 @@ In each stage a different application processes the event and chooses to pass it
 We note also that any (or all) of the applications could interact with the switches at any time. 
 Finally we also notice that this architectures  show a tight-bound between the Management and Data plane interfaces (i.e., \emph{North} and \emph{South} \glsplural{api}) since the pipelines are dependant of \gls{of} events. 
 
+\begin{figure}[ht]
+  \centering
+\includegraphics[width=\textwidth]{pic/related/meta-controller-architecture}
+  \caption[Controller Architecture]{The common (meta) controller architecture is event-driven. The data plane triggers events (e) that are dispatched by the controller to a pipeline of interested applications. }
+\label{fig:related:meta-architecture}
+\end{figure}
 This architecture has been concurrently introduced (see section~\ref{sec:related:netw-oper-syst}) by NOX (covered in section~\ref{sec:related:nox}) and Maestro (covered in section~\ref{sec:related:maestro}).  It was also adopted by Beacon (section~\ref{sec:related:beacon})  and later on Floodlight (section~\ref{sec:related:floodlight}). 
 We have evaluated and studied all this controllers considering each one as the base for out distributed controller. 
 We end up choosing Floodlight for this and we explain why in section~\ref{sec:related:controller-choice}. 
@@ -447,25 +449,25 @@ It accomplishes this through an asynchronous event based multithreaded library n
 \glsresetall
 \section{Distributed Controllers}
 \label{sec:related:distr-contr}
+\todo{Make intro, define distributed controller..,introduce the three works.}
 
 \subsection{Kandoo}
 \label{sec:related:kandoo}
-
-In 2012 Yeganesh~\etal\ presented Kandoo \cite{Yeganeh:2012jm}  --- an hierarchical controller for scalable infrastructures. 
+In 2012, Yeganesh~\etal\ presented Kandoo \cite{Yeganeh:2012jm}  --- an hierarchical controller for scalable infrastructures. 
 The main contribution comes from the deployment of isolated controllers near the switches that shield a parent  controller from processing all
 flow requests triggered by the network. 
 It is implemented in a mixture of
 C, C++ and Python and is not publicly available. 
 
-In Kandoo --- see Figure  \ref{fig:kandoo-design} --- the control and management plane is replicated in two two levels: in the top level resides the root controller responsible for normal operation; and in the bottom, local controllers that are (ideally) closer to the managed switches (in fact they may even be implemented in the switches itself). 
-This design is motivated by the ideia of bringing control functionality towards the data plane. 
+In Kandoo --- see Figure  \ref{fig:kandoo-design} --- the control and management plane is replicated in two levels: in the top level resides the root controller responsible for normal operation; and in the bottom, local controllers that are (ideally) closer to the managed switches (in fact they may even be implemented in the switches itself). 
+This design is motivated by the idea of bringing control functionality towards the data plane. 
 
 
 The Management plane exists in both levels. 
 \emph{Global} applications reside in the top level and operate with the input of the global network state while \emph{Local} applications reside in the bottom level and operate without the global state. 
 Each event can be processed by local applications without the root controller collaboration. 
 However, if a local application decides that a particular event requires the input of the network state, or modifies this state than the application can redirect the event to the root controller. 
-As the bottom plane does not requires access to the network state it remains simple and efficient. 
+As the bottom plane does not require access to the network state it remains simple and efficient. 
 Additionally, flow request that can be processed by local applications benefit from a lower latency penalty. 
 
 
@@ -547,7 +549,7 @@ HyperFlow, leverages on an existing Publish/Subscribe system that provides: pers
 %Additionally, Hyperflow  also addresses incorrectness problems caused by transient inconsistency across controllers  by defining an \emph{authoritative}  controller for each flow. This controller is responsible for orchestrating changes in the network regarding some flow. As an example, to avoid loop-free forwarding \emph{authoritative} controllers are solely  responsible for setting the flow paths across the forwarding plane for some specific flow. For this, applications must relay requests for some flow to its \emph{authoritative} controller. 
 
 HyperFlow addresses scalability of the control plane by minimizing the number of events that an instance replicates to others. 
-Thus, HyperFlows s focus on the scalability of the CPU and does not address state scalability since  each controller contains  the entire network state. 
+Thus, HyperFlow  is focused  on the scalability of the CPU and does not address state scalability since  each controller contains  the entire network state. 
 
 To minimize the number of events  processed by instances, HyperFlow filters the dissemination of events.  
 To this end, it requires that applications tag locally generated events that affect the network state.   
@@ -599,16 +601,16 @@ We note that those applications are fundamental for tracking hosts, forwarding a
 \subsection{Onix}
 \label{sec:related:onix}
 
-Onix \cite{Koponen:2010th}  was build upon the NOX legacy and provides two major contributions: it is the first general controller published in the literature, and also the first to provide strong consistency.  
+Onix \cite{Koponen:2010th}  was build upon the NOX legacy and provides two major contributions: it is the first general controller published in the literature, and the first to provide strong consistency.  
 Onix  provides an improved Network Operating System interface on  which the northbound API does not reflect the southbound API. 
 Management applications are programmed against a network graph of Typed Entities very similar to the Object Oriented paradigm and are not aware of the southbound characteristics (e.g., the use of \gls{of}). 
-The graph is implemented in  the \gls{nib}  --- a in-memory data structure that contains the network state ---  and can be distributed across a  cluster of  Onix controllers. 
+The graph is implemented in  the \gls{nib}  --- an in-memory data structure that contains the network state ---  and can be distributed across a  cluster of  Onix controllers. 
 Applications have the choice to specify consistency and durability requirements  per network entity  present in the \gls{nib}.  
 Onix was the result of a joint effort between Google, NEC, Nicira, ISCI and Berkely, and (at least)  both Google and Ericson have developed their controllers based on from Onix \cite{The-Valley-of-the-Nerd.:fk}. 
 At the time of writing Onix is not publicly available. 
 
 Onix architecture is presented in figure \ref{fig:onix-design}. 
-Only one application resides on the  Management layer and may communicate with other applications in other controllers instances for coordination. 
+Only one application resides on the  Management layer and may communicate with other applications in other controller instances for coordination. 
 The \gls{nib} is the only element in Onix northbound interface. 
 The Management layer directly modifies the \gls{nib} and subscribes to changes on it. 
 The data plane  indirectly modifies the \gls{nib} (trough the controller).
@@ -619,14 +621,14 @@ For this, it translates network events into changes in the \gls{nib} and changes
 Onix supports  \gls{of} but it could transparently move to another southbound API. 
 
 Each Onix instance independently manages a subset of the data plane. 
-However each instance can be exposed to the entire network state through  the \gls{nib}.  
+However, each instance can be exposed to the entire network state through  the \gls{nib}.  
 Under such scenario, each time a local Onix instance alters the \gls{nib}, these changes are reflected in all other instances. 
 Thus, the \gls{nib} is also the distribution mechanism of the Onix controller. 
-The distribution itself is done by the datastores that back up  the \gls{nib} state (seen in figure \ref{fig:onix-design}).
-However, in concept the \gls{nib} is not meant to contain all the network state. 
+The distribution itself is done by the data stores that back up  the \gls{nib} state (seen in figure \ref{fig:onix-design}).
+However, in concept the \gls{nib} is not \textbf{meant} to contain all the network state. 
 In fact, the \gls{nib} is best seen as a kind of in-memory cache which imports (exports) particular state from  (to) the fault-tolerant distributed data stores. 
 
-\begin{figure}
+\begin{figure}[ht]
   \centering 
   \includegraphics[width=\textwidth]{pic/related/onix-design}
   \caption[Onix architecture] {\textbf{Onix achitecture.} In Onix the NIB is the
@@ -652,17 +654,17 @@ Onix defines a flexible distribution model for the \gls{nib} whereby  it offers 
 Two replicated data stores are present, covering  strong  and eventually consistency. 
 Strong consistency data is provided through a transactional persistent database backed up by a replicated state machine (see section~\ref{sec:related:cons-data-stor}). 
 This data store is favored for data with low-frequency changes  as its performance limitations are significant. 
-The eventually consistent data store consists in  an one hop memory based \gls{dht}  (as Dynamo  \cite{DeCandia:2007cn}) favored for  volatile data with high update rates. 
+The eventually consistent data store consists in  an one-hop memory based \gls{dht}  (as Dynamo  \cite{DeCandia:2007cn}) favored for  volatile data with high update rates. 
 %The \gls{nib} reflects the state of both data stores. 
 Both the integration of multiple data stores and the inconsistency characteristics of the \gls{dht} can lead the \gls{nib} to an inconsistent state where reads performed in some entity may return more than one result. 
-Thus, Onix provides primitives for the integration of inconsistency resolution logic as well as  direct integration of a distributed coordination framework (see  Apache' ZooKeeper \cite{Hunt:2010ux}) in the northbound interface. 
+Thus, Onix provides primitives for the integration of inconsistency resolution logic as well as  direct integration of a distributed coordination framework (see  Apache' Zookeeper~\cite{Hunt:2010ux}) in the northbound interface. 
 
-Onix is intended for large scale network infrastructure where scalability is fundamental. 
+Onix is intended for large-scale network infrastructure where scalability is fundamental. 
 However, in each Onix instance the \gls{nib}  size reflecting the network state could lead to memory exhaustion and the processing of both network events and subscriptions  to changes in  the \gls{nib}  can lead to \gls{cpu} exhaustion.
-In order to introduce scalability and avoid exhaustion, partition and aggregation based techniques can be configured in the Management layer. 
+In order to introduce scalability and avoid exhaustion, partition, and aggregation based techniques can be configured in the Management layer. 
 Partition avoids full replication of both data  and workload such that additional instances do not only replicate overall work but also relief it. 
 As for aggregation it can, for example, allow network entities to be aggregated and exposed for other Onix instances as only one.
-In practice partition in Onix is present in the division of the data plane across different Onix instances.  
+In practice, partition in Onix is present in the division of the data plane across different Onix instances.  
 This way instances process fewer events. 
 Additionally the Management logic can configure Onix instances to keep only subsets of the \gls{nib} in memory and up to date. 
 For aggregation, an Onix instance can be configured to expose a subset of the \gls{nib} as an aggregated element. 
@@ -671,29 +673,29 @@ For aggregation, an Onix instance can be configured to expose a subset of the \g
 Applications are built against the \gls{nib} graph data structure that is composed of \emph{Typed Entities} supporting the Object Oriented paradigm (i.e., encapsulation of data, functions over entities, hierarchy, etc.). 
 Onix supports extensible representations of network entities. 
 The \gls{api}  provides essential functions to search, inspect, create, destroy and modify entities present in the \gls{nib}. 
-It is also possible to register notifications for creation, removal and updates of data entities. 
+It is also possible to register notifications for creation, removal, and updates of data entities. 
 When network events of other Onix instances update the data stores those changes must be reflected on the local \gls{nib} and the application must be notified through a callback function. 
 All operations are asynchronous, with eventual delivery and no ordering or latency guarantees given therefore a \emph{barrier} synchronization primitive is available allowing the application to wait as updates are translated and applied in the network devices and/or other controllers. 
-Finally it is worth mentioning that Onix employs coarse-grained locking mechanisms over the \gls{nib}.
+Finally, it is worth mentioning that Onix employs coarse-grained locking mechanisms over the \gls{nib}.
  Applications are given the guarantee that no other local thread concurrently updates the \gls{nib}. 
 
 
 Onix is focused in generality; and it does a great job at it. 
-However it is merely an control platform where the Management application has to fill-in to complete  most of the work. 
-Namely, neither reliability nor scalability are first class citizens of the platform. 
-Furthermore, beyond delegating reliability for the developer, Onix relies on third party applications for this task (i.e., Apache' Zookeeper~\cite{Hun10} ). 
+However, it is merely an control platform where the Management application has to fill-in to complete  most of the work. 
+Namely, neither reliability nor scalability are  first class citizens of the platform. 
+Furthermore, beyond delegating reliability for the developer, Onix relies on third party applications for this task (i.e., Apache' Zookeeper~\cite{Hun10}). 
 This, it introduces another degree of complexity for the \gls{sdn} developer which has to learn yet another interface. 
-As a contrast, in our controller design the same interface is able to perform all the tasks which (arguably) presents a less steeper learning curve.  
+As a contrast, in our controller design the same interface is able to perform all these tasks,  which (arguably) presents a less steeper learning curve.  
 
 It is important to realize that Onix is in no way optimized for performance. 
 As stated in the paper: ``when faced with a tradeoff between generality and control plane performance we try to optimize the former while satisfying the latter''. 
 This is fine, but it lefts us (the world) with a gap in the research field. 
-Namely we need to understand what kind of impact does a reliable and distributed control plane has on real world \gls{sdn} applications. 
+Namely, we need to understand what kind of impact does a reliable and distributed control plane has on real world \gls{sdn} applications. 
 Furthermore, we need to effectively contrast eventual consistency vs. strong consistency distributed control planes. 
 To clarify, not even the Onix eventual consistent  data store evaluation is able to show a significant performance advantage against an off-the-shelf consistent data store.  
 This is bad, since enterprises currently, have no way to accurately determine, based on the number of events generated by their data planes, what kind of consistency semantics they should seek for their distributed \gls{sdn} deployment. 
 
-Finally we note that Onix is all but transparent. 
+Finally, we note that Onix is all but transparent. 
 Applications have to include conflict resolution logic, and rely on different interfaces for the appropriate semantic per action. 
 To clarify, applications must choose between eventual consistency, strong consistency, à priori in a statically defined import/export module. 
 Furthermore, they must rely on complex event oriented programming techniques and specific \gls{nib} methods as the barrier primitive or external interfaces as Apache Zookeeper to modify state with a coherent and reliable semantics. 
@@ -702,7 +704,8 @@ Furthermore, they must rely on complex event oriented programming techniques and
 \glsresetall
 \section{Consistent Data Stores}
 \label{sec:related:cons-data-stor}
-
+\todo{restructure, clean}
+\todo{Warning: first draft!!!}
 The key idea of our controller architecture is to make the controller instances coordinate their actions through a dependable data store in which all relevant state of the network and of its control applications is maintained in a consistent way.
 This data store is implemented with a set of servers (replicas) to avoid any single point of failure, without impairing consistency.
 One of the most popular techniques for implementing such replicated data store is \gls{smr}~\cite{Schneider:1990vy,Lam98}.
@@ -734,17 +737,17 @@ The reliability benefit arises from the fact that failures are often the rule an
 As for the performance benefit in can be manifested in two different forms. First, different replicas can be located closer to different clients therefore improving on the latency. Second, client load can be balanced across different replicas therefore improving the limit on the system processing rate. 
 
 
-Since the proof of the CAP theorem in 2002 by Gilbert and Lynch that there is an significant  interest in weak consistent distributed systems~\cite{Gilbert:2002il}. 
-This theorem establishes that a distributed system can only be qualified with only two of the following properties: consistency, availability and partition-tolerance. 
+Since the proof of the CAP theorem in 2002 by Gilbert and Lynch, that there is a significant  interest in weak consistent distributed systems~\cite{Gilbert:2002il}. 
+This theorem establishes that a distributed system can only be qualified with only two of the following properties: consistency, availability, and partition-tolerance. 
 In this context, consistency is equivalent to a system supporting linearizability (which will be defined in a moment), availability is equivalent to the guarantee than any request performed on the system eventually receives an reply, and partition-tolerance implies  tolerating arbitrary message loss. 
-Being that systems  often exhibit arbitrary message loss caused by the network or other pitfalls (the nodes might be  stuck processing the garbage collector algorithm) systems are force to choose between availability and consistency. 
+Since systems  often exhibit arbitrary message loss caused by the network or other pitfalls (the nodes might be  stuck processing the garbage collector algorithm) systems are force to choose between availability and consistency. 
 
-Facing those facts a replicated system is either consistent or eventually consistent. 
+Facing those facts, a replicated system is either consistent or eventually consistent. 
 If consistent than it is not always available; if eventually consistent it is always available. 
-But in practice systems are not black or white. 
+However, in practice systems are not black or white. 
 In fact, one of the outcomes of the dichotomy established by CAP is a panoply of systems with different consistency models that attempt to position themselves at a different optimal point between  the availability and consistency spectrum. 
 To explain, if we look under the hood of eventually consistent, we will conclude that  this model is an umbrella for different consistency models that can be ``more or less'' consistent (e.g., read-your-writes, causal consistency, session consistency). 
-Due to space constraints we cannot cover each of those models and instead defer the interested reader for surveys on the topic \cite{bailis2013eventual, bailis2013eventual}
+Due to space constraints, we cannot cover each of those models and instead defer the interested reader for surveys on the topic \cite{bailis2013eventual, bailis2013eventual}
 
 %For simplicity we will focus on the contrast between eventual and strong consistency. 
 
@@ -752,15 +755,24 @@ Due to space constraints we cannot cover each of those models and instead defer 
 
 
 Under the \textbf{eventual consistency} model when a write is finished, then the model promises that at some point in time all clients will converge to the same value. 
-The benefit with those models is that they are straightfoward to implement. 
-A replica can accept client requests, process them, return the result and only later spread the outcome to others. 
+The benefit of  those models is that they are straightforward to implement. 
+A replica can accept client requests, process, return the result,  and only later spread the outcome to others. 
 The process of spreading values to others is commonly known as anti-entropy and can take several forms but it in essence an asynchronous (i.e., after replying to the client) process. 
 Therefore, several ``bad'' outcomes can come out of it. 
 We will show three. 
 
 For support, let us imagine a replicated system with three replicas and only a single register containing some arbitrary value. There are two clients of the system: client 1 and 2 that can perform write and read operations on this register. Fig.~\ref{fig:related:eventual} shows the system composition with two examples of different client requests orderings. 
 
-\begin{figure}
+
+
+First,  Fig.~\ref{fig:related:eventual-stale} shows than while replicas have not converge on client updates other clients are able to see older values of the register. 
+Namely, client 1 performs an update on the data store ($write(x)$) and after an certain amount time client 2 stills sees the older value of the register ($Y$). 
+We note that with weak eventual consistency models not even Client 1 could be assured to read X in a follow up operation. 
+This particular safety property is known as read-your-writes consistency and commonly requires that clients contact with the same replica of the system\footnote{Off course this is only the case for eventually consistency systems. Strong consistency does not imposes this restrictions abeit offering read-your-writes guarantee.}. 
+The time period between a write being applied in a data store replica and all clients being able to see that value is named the \textbf{window of inconsistency}.  A position paper on eventually consistent systems states that this window of inconsistency is bound between 200 ms to 15 seconds in different types of systems~\cite{bailis2013eventual}. 
+%Due to the differences in the environment and  where those tests were performed we show those values as reference to show that state of the art eventually consistent data stores maintain a lower bound of 200 ms. 
+
+\begin{figure}[ht]
   \centering
   \begin{subfigure}[b]{0.5\textwidth}
                 \centering
@@ -779,36 +791,29 @@ For support, let us imagine a replicated system with three replicas and only a s
 \label{fig:related:eventual}
 \end{figure}
 
-
-First,  Fig.~\ref{fig:related:eventual-stale} shows than while replicas have not converge on client updates other clients are able to see older values of the register. 
-Namely, client 1 performs an update on the data store ($write(x)$) and after an certain amout time client 2 stills sees the older value of the register ($Y$). 
-We note that with weak eventual consistency models not even Client 1 could be assured to read X in a follow up operation. 
-This particular safety property is known as read-your-writes consistency and commonly requires that clients contact with the same replica of the system\footnote{Off course this is only the case for eventually consistency systems. Strong consistency does not imposes this restrictions abeit offering read-your-writes guarantee.}. 
-The time period between a write being applied in a data store replica and all clients being able to see that value is named the \textbf{window of inconsistency}.  A position paper on eventually consistent systems states that this window of inconsistency is bound between 200 ms to 15 seconds in different types of systems\cite{bailis2013eventual}. Due to the differences in the environment where those tests were performed we show those values as reference to show that state of the art eventually consistent data stores maintain a lower bound of 200 ms. 
-
 It might be the case that the bound on the  window of inconsistency is not problematic for the users of the  data store. 
-However a subtle problem can emerge from the asynhronous anti-entropy process ---- there is no guarantee that an update will reach other clients. 
+However a subtle problem can emerge from the asynchronous anti-entropy process ---- there is no guarantee that an update will reach other clients. 
 This it to say that when gets a reply from a server to an update operation (e.g., $write(x)$)  he can not be sure that this update will eventually be seen at other clients. 
 First, it might be the case that concurrent updates from other clients cause the loss of the update. 
-Surely this is also the case for consistent data stores, but it also true that it is much harder to contradict this behaviour in eventual consistent systems than in strong consistent systems (to see an example of this see section~\ref{sec:heimdall:versioning}). 
+Surely, this is also the case for consistent data stores, but it also true that it is much harder to contradict this behavior in eventual consistent systems than in strong consistent systems (to see an example of this see section~\ref{sec:heimdall:versioning}). 
 Second, and arguably more serious problem than the one identified in the previous argument, it might be case that the server that processed the update fails before spreading it to other replicas. 
-In the event that this happens, it can also be the case that recovery is not supported by the system which ineviatably leads to updates being lost forever. 
-Thefore, eventually consistency ensures convergence only if replicas survive long enough do spread updates to others. 
+In the event that this happens, it can also be the case that recovery is not supported by the system which inevitably leads to updates being lost forever. 
+Therefore, eventually consistency ensures convergence only if replicas survive long enough do spread updates to others. 
 
 
 Finally, in the event of concurrent updates to a particular data bucket (e.g., our register) eventually consistent systems are forced to deal with conflicting values. 
 Fig.~\ref{fig:related:eventual-conflict} exemplifies that  both clients concurrently update the register. 
 Then, imagine that two different data store replicas (out of three) process and reply to the clients independently. 
 Later on, the anti-entropy process takes place. The question that must be answered then is the following: how out the replicas be able to determine which update should persist between the two ($write(X), write(Y)$). 
-Surely only one can be choosen, and undoubtely in many cases it should be lastest. 
-However without heavy-weight premises and abstractions  such as the ones used in real-time systems it becomes impossible to determine which update was the lastest. 
+Surely only one can be chosen, and undoubtedly in many cases it should be the latest. 
+However without heavyweight premises and abstractions  such as the ones used in real-time systems it becomes impossible to determine which update was the latest. 
 Furthermore, it might be the case that the client 1 write is more important than client 2. 
 Eventually consistent systems diverge in how they arbiter conflicts. 
-Commonly either the system solves the conflict automatically without user intervection, or both values are kept and the uses out to solve this. 
-Given that from the system point of view data is just an opaque arbitrary collection of bytes (i.e., raw data) , it is forced to crude arbitration such ``last-write-wins'' (which is commonly not based on a global wall-clock time). It is also the case that more sophisticated systems have a more deep understanding of their data. 
+Commonly either the system solves the conflict automatically without user intervention, or both values are kept and the uses out to solve this. 
+Given that from the system point of view data is just an opaque arbitrary collection of bytes (i.e., raw data), it is forced to crude arbitration such ``last-write-wins'' (which is commonly not based on a global wall-clock time). It is also the case that more sophisticated systems have a more deep understanding of their data. 
 For example, the use of a \gls{crdt} such as a set allows the data store to follow a simple conflict resolution policy  based on a simple union of all the conflicting sets~\cite{shapiro:inria-00555588}. 
-On the other hand, delegating conflict resolution to the clients leverages the benefit that the latter is well-aware of the data schema present in the data store as well as the semantical meaning of the two conflicting values. 
-As such it can be better equipped to choose how to solve conflicting values.
+On the other hand, delegating conflict resolution to the clients leverages the benefit that the latter is well aware of the data schema present in the data store as well as the semantical meaning of the two conflicting values. 
+As such, it can be better equipped to choose how to solve conflicting values.
 Notwithstanding  the evidence that systems are equipped to deal with conflicts they do so at the expense of possible incorrectness (in the system case) or the extra effort required from the developer that has to anticipate conflict resolution code for different types of data. 
 
 %Two different approaches can be taken: the system can choose one of the conflicting values and discard all the others; the system can keep both and the 
@@ -817,30 +822,30 @@ Notwithstanding  the evidence that systems are equipped to deal with conflicts t
 
 In general, eventually consistent data stores are better equipped to deal with volatile data that does not have stringent requirements such as consistency and reliability.
 With the lack of consistency clients are not able to reliable  synchronize with others nor can anticipate the results of an update. 
-To combat this lack of guarantees clients must develop counter-measures when dealing with more sensible data that can not rely on the pitfalls seen in this section. 
-This implies that additional effort and time must be taken from developers being that in the end they are still subjected to corner cases that they were not able to anticipate  that could arguably result in the failure of the overall system. 
+To combat this lack of guarantees clients must develop counter-measures when dealing with more sensible data that cannot rely on the pitfalls seen in this section. 
+This implies that additional effort and time must be taken from developers, since in the end they are still subjected to corner cases that they were not able to anticipate  that could arguably result in the failure of the overall system. 
 
 %In opposition the use of strong consistency 
 %The users of an eventual consistency are not CONDENADOS to all this pitfalls. However as stated by Bailis et. al, the user has to ``compensate'' for the lack of consistency.  There are techniques that avoid this A \gls{crdt} CRDt's Although these are prominent research topics, these are still concepts difficult to master to the regular developers.
 
 \subsection{Strong Consistency}
-As Fekete and Ramamrithan so eloquently state : ``the principal goal of research on consistency models is to help application developers understand the behavior they will see when they interact with a replicated storage system, and especially so they can choose application logic that will unction sensibly''. \cite{fekete2010consistency}
-Indeed, for the user a properly defined semantics associated with the requests performed on replicated systems is of paramount important. 
+As Fekete and Ramamrithan so eloquently state: ``the principal goal of research on consistency models is to help application developers understand the behavior they will see when they interact with a replicated storage system, and especially so they can choose application logic that will unction sensibly''. \cite{fekete2010consistency}
+Indeed, for the user a properly defined semantics associated with the requests performed on replicated systems is of paramount importance. 
 Without it, the user might be able to commit ``mistakes'' that sacrifice the reliability of the data. 
 In this context, the most significant advantage of the strong consistency model  is that developers can relax their concern towards the semantics of the replicated system being that a strong consistent system is not any different from a centralized (single site), unreplicated system --- there is no more transparent system that this. 
 
-Truly, the strong consistency property is formally introduced as linearizability~\cite{herlihy1990linearizability} in a seminal paper by Herlihy~\etal. 
-In the paper the reader may find a formal definition of linearizability. 
+Truly, the strong consistency property is formally introduced as linearizability in a seminal paper by Herlihy~\etal~\cite{herlihy1990linearizability}. 
+In the paper,  the reader may find a formal definition of linearizability. 
 Informally, this property establishes that every operation performed on the replicated systems appears to have effect instantaneously. 
 The practical consequence is that clients can be made sure that after receiving a reply from the system for an update operation every other client will be able to see the effect of that write. In practice, this condition is true as soon as the data store processes the client update, but it makes more sense, from the client point of view, to base this assumption only as soon as the reply arrives since it has no other mean to determine that the data store has processed his operation. Fig.~\ref{fig:related:strong} exemplifies this condition. 
 
-Strong consistency is great, since clients are now able to accurate rely on the data store reliability property as soon as they receive a reply. 
+Strong consistency is great; since clients are now able to accurate rely on the data store reliability property as soon as they receive a reply. 
 To exemplify, the \gls{smr} technique that we use (covered in the following section) blocks client requests until they are processed by a majority of replicas that compose the system. 
-Given that this techniques assumes that there will always be a majority of replicas ``alive'' (i.e., non faulty) and reachable, the client is made sure that the aforementioned operation will never be lost in the data store unless it is overwritten. 
+Given that this technique assumes that there will always be a majority of replicas ``alive'' (i.e., non faulty) and reachable, the client is made sure that the aforementioned operation will never be lost in the data store unless it is overwritten. 
 However, using simple concurrency control techniques (see section~\ref{sec:heimdall:versioning}) clients can also be sure that no client will innocently overwrite its data without at least  be made aware of it. 
-If clients behave correctly they can always confirm in the data store that they are aware of the least-recently-update thus avoiding overwriting data.
+If clients behave correctly, they can always confirm in the data store that they are aware of the least-recently-update thus avoiding overwriting data.
 
-\begin{figure}
+\begin{figure}[ht]
   \centering
   \includegraphics[width=0.5\textwidth]{pic/related/strong-consistency}
   \caption[Strong Consistency Semantics]{Strong Consistency Semantics. A client can be sure that every client see its operation outcome as soon as the data store replies.}
@@ -851,45 +856,47 @@ Coordination is a complex problem. For this reason it is desirable to solve once
 A common example of coordination use cases is group membership and leader election.
 It is often the case than distributed nodes need to known which nodes are alive and partition responsibility amongst them. 
 There are several applications inspired by those particular problems such as Apache' Zookeeper~\cite{Hun10} and Chubby~\cite{burrows2006chubby}. 
-And at the very heart of it relies protocols that guarantee strong consistency in distributed replicated systems. 
+Both these systems rely on protocols that guarantee strong consistency in distributed replicated systems. 
 
 \subsection{ViewStamped Replication}
 \label{sec:related:viewst-repl}
 \glsreset{smr} 
 The Viewstamped (VR) protocol provides a transparent \gls{smr}  behavior that can be leveraged to implement a replicated data store with strong consistency semantics~\cite{Liskov:2012ut,Liskov:2010vt}. 
-The algorithm is built over  an partial-asynchronous network model with a crash-recover failure model for the participants (\emph{replicas}) who are the basis for maintaining a data service  available to clients. 
+The algorithm is built over  a partial-synchronous  network model with a crash-recover failure model for the participants (\emph{replicas}) who are the basis for maintaining a data service  available to clients. 
 
 \gls{smr} allows a set of machines to provide a replicated service, usually to support  availability and reliability characteristics in the system~\cite{Schneider:1990vy}.  
 Informally,  the model states that a distinguished set of machines who start in the same state and execute the same set of instructions in the same order achieve the same state  and generate the same output. 
-\gls{smr} is suitable for  distributed applications, such as  file systems or lock managers which can  be built on top of the distributed state machine. 
+\gls{smr} is suitable for  distributed applications, such as  file systems or lock managers, which can  be built on top of the distributed state machine. 
 
-The failure and timing model establishes that replicas may stop (due to crash), perform computations arbitrarily slow or  be isolated from the rest of the group. 
-The remanning  group detects and suspects the replica has failed as a reaction to its lack of feedback.
+The failure and timing model establishes that replicas may stop (due to crash), perform computations arbitrarily slow, or  be isolated from the rest of the group. 
+The remaining  group detects and suspects the replica has failed as a reaction to its lack of feedback.
 VR allows replicas to re-join the group as long as they are updated on the missed executions by the other replicas.
 VR  runs in a Replica Group composed of at least $2f+1$ replicas and assumes that only $f$ replicas can fail simultaneously. 
 Thus, as long as $f+1$ replicas are accessible the protocol guarantees liveness (which translates to availability from the client point of view). 
 
-\begin{figure}
-\centering
-\includegraphics[width=\textwidth]{pic/related/vr.pdf}
-\caption[Paxos/VR update protocol]{Paxos/VR update protocol.} 
-\label{fig:paxos} 
-\end{figure}
-
-VR is based on  \emph{total-order}, a ordered delivery guarantee between a set of machines communicating in group. 
+VR is based on  \emph{total-order}, an ordered delivery guarantee between a set of machines communicating in-group. 
 The protocol has a behavior structured around the notion of a leader (a distinguished replica named primary) who chooses and imposes the order of delivery of executions on the group. 
 This approach has the drawback of overloading the primary with client requests but  simplifies the protocol and reduces execution latency significantly. 
 
 
 Fig. \ref{fig:paxos} shows the messages exchanged in VR for an update operation: the client sends a message to a primary replica (the leader) that disseminates the update to all other replicas. 
 These replicas write the update to their log and send an \texttt{ACK} message to the primary.
-In the final step the leader executes the request and sends the reply to the client.
+In the final step, the leader executes the request and sends the reply to the client.
 If the primary fails, messages will not be ordered and thus a new primary will be elected to ensure the algorithm makes progress.
 When read-only operations are invoked, the leader can answer them without contacting the other replicas.
-Strong consistency is ensured due to the fact that all requests are serialized by the leader.
+Strong consistency is ensured  because the leader orders all requests that are later executed by each replica in isolation. 
 
-Off course this is only the normal execution of the protocol. 
-The interest reader is forwarded to the originals papers  for a description of the remaining protocol which involves a protocol for re-electing a new leader of the system whenever the current is suspected to fail and also a protocol for recovering replicas such that they can be updated by the group~\cite{Liskov:2012ut,Liskov:2010vt}. 
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\textwidth]{pic/related/vr.pdf}
+\caption[Paxos/VR update protocol]{Paxos/VR update protocol.} 
+\label{fig:paxos} 
+\end{figure}
+
+
+Off course,  this is only the normal execution of the protocol. 
+The interested reader is forwarded to the originals papers for a description of the remaining protocol which involves a protocol for re-electing a new leader of the system whenever the current is suspected to fail and also a protocol for recovering replicas such that they can be updated by the group~\cite{Liskov:2012ut,Liskov:2010vt}. 
 %Each replica runs the same application code as each can be the primary at some point in time.
 
 
@@ -901,7 +908,7 @@ Besides the synchronization protocol, these systems employ many implementation t
 
 Although not as scalable as a weakly consistent data store, these systems grant the advantages of consistency for a large number of applications, namely those with moderate performance and scalability requirements. To give an idea of the performance of these systems, Table \ref{table:smr-results} shows the reported throughput for read and write operations of several state-of-the-art consistent data stores.
 
-\begin{table}
+\begin{table}[ht]
   \center
     \begin{tabular}{ lccc}
     \hline

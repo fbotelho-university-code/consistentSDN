@@ -636,7 +636,6 @@ Operation & Type & Request & Reply \\ \toprule
 
 
 \subsection{Optimizations}
-
 Table~\ref{table:dm-known-optimizations} summaries the optimizations done to the know  devices workload. 
 As before we can seen different implementations prefixes (dmw-0, dmw-1, ..., dmw-4) that are described in Table~\ref{table:names:dm}. 
 From left to right we see improvement in the workloads. 
@@ -875,6 +874,7 @@ So, it will be beneficial to keep empty values at the expense of a wider window 
 \end{figure}
 
 \subsection{Cache}
+\todo{Do this section like the previous.}
 As before, we can introduce the cache to serve a portion of the reads locally. 
 This time we keep the \texttt{devices} in cache. 
 Again, the same logic  can be applied: we can use the write present in our workload to verify if our current data is stale or not.  Then in the known devices workload case when we update the timestamp with the local version number of the device (present in cache), the operation will only succeed if we have the most recent device version. 
@@ -882,11 +882,73 @@ The same logic is followed in the unknown device case but this time with the mic
 We expect this operation to be successful a sufficient number of times to justify the use of cache since we do not anticipate frequent scenarios where more than one controller (or even different threads in same one) update the same device. 
 
 \subsection{Theoretical Evaluation}
+\todo{Isto vai ser uma secao com os resultados da cache teoricos (baseados no melhor caso em que tudo o que puder estar em cache realmente esta. )}
+
+
+\section{Discussion}
+\todo{Por escrever...}
+
+\subsection{Centralized Controllers}
+First, we note that the performance results of our data store are similar to those reported for the original NOX and other popular SDN controller\,\cite{Tootoonchian:2012:CPS:2228283.2228297}.
+The average throughput for the Learning Switch application (the only application considered in\,\cite{Tootoonchian:2012:CPS:2228283.2228297}) is not far from that reported by NOX (30kReq/s), so our data store would not become a bottleneck in this respect.
+In addition, the latency is close to the values reported for the different SDN controllers analyzed in that work (including the high-performance, multi-threaded ones), so the additional latency introduced, although non-negligible, can (arguably) be considered acceptable.
+We consider this result to be remarkable given that our data store provides both strong consistency and fault tolerance.
+
+Of course, the insightful reader will note that the results become quite distant from what is obtained with a controller that is optimized for performance, such as NOX-MT~\cite{Tootoonchian:2012:CPS:2228283.2228297}, particularly in terms of throughput.
+As the second part of the argument, it is important to understand that every update to our data store represents an execution of the protocol of Fig. \ref{fig:paxos}, while in NOX-MT we have simply OF requests being received by a controller with the data store kept in main memory.
+Even if NOX-MT (or any other high-performance controller) synchronously writes particular data to disk (something that takes around 5ms), no more than 200 updates/second can be executed.
+This unequivocally shows that if some basic durability guarantees are required (e.g., to ensure recoverability after a crash), then the impressive capabilities of these high-performance controllers will be of little use.
+
+\subsection{Distributed Controllers}
+\begin{itemize}
+\item Hyperflow (1 paragrafo) 
+  \begin{itemize}
+  \item  is limited to 1000 events per second to guarantee ``consistency''.  
+  \item  we have real consistency and much more 1000 events per seconds.
+  \end{itemize}
+\item Onix
+  \begin{itemize}
+  \item  There are not enough detail in the paper to understand the performance bottleneck of their data store;  We can guess that it does not has state of the art techniques; Clearly we have a much better state machine replication implementation with the same guarantees; give numbers (1 paragrafo).
+\item  Even the dht with three replicas is not state of the art being that we nearly have the same kind of performance; 
+  \end{itemize}
+\end{itemize}
+
+\subsection{Consistency} 
+What are the benefits in using a consistent data store for those applications? 
+\begin{itemize}
+\item Is consistency worth it ? 
+\item Learning Switch   
+  \begin{itemize}
+  \item Moving Devices?
+  \end{itemize}
+\item Load Balancer
+  \begin{itemize}
+  \item Arguably it can be  the most concurrently accessed data in the data store.  
+  \item Levin 
+  \item Accurate update of the round-robin
+  \end{itemize}
+\item Device Manager
+  \begin{itemize}
+  \item Moving devices?
+  \end{itemize}
+\item Transparency, simplicty
+  \begin{itemize}
+  \item It was really easy to shift the existing centralized model to this one; 
+  \item In some cases the naive implementation can just replace the hash table instantion. 
+  \end{itemize}
+\end{itemize}
+
+
+% \begin{itemize}
+% \item Analysis of the theoretical performance results based on cache. 
+% \item 
+% \end{itemize}
+
 % \begin{table}[ht]
 %   \centering
 %   \begin{tabular}[ht]{llcc}
 %     Workload & Case & Latency & Throughput \\ \toprule 
-%     lsw-1-unicast & \tbl{l}{best \\ worst}  &  Cenas &  Outras \\ \midrule
+%     lsw-1-unicast & \tbl{l}{best \\ worst}  &  \tbl{$C_{lat}}  &  Outras \\ \midrule
 %     lbw-4-case & \tbl{l}{best \\ worst}  &  Cenas & Outras  \\  \midrule
 %     dmw-4-known-case & \tbl{l}{best \\ worst} & $\mathscr{C}_{lat}$ & $\mathscr{C}_{tx}$  \\  \midrule
 %     dmw-4-unknown-case & \tbl{l}{best \\ worst}  &  & \\ \bottomrule

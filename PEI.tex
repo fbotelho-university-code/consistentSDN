@@ -7,7 +7,7 @@
 % - n.o 209 - 30 de Outubro de 2006)
 %
 \documentclass[12pt,openright,twoside]{report}
-\usepackage[hide]{chato-notes}
+\usepackage[show]{chato-notes}
 \usepackage[utf8]{inputenc}
 % Quem tiver problemas com os acentos, trocar utf8 por latin1
 
@@ -243,6 +243,8 @@ url=false, doi=false, eprint=false]{biblatex}
 \renewcommand{\clearpage}{}
 \label{chapter:1}
 \glsresetall
+
+\epigraph{The nice thing about standards is that you have so many to choose from.}{Andrew S. Tanenbaum} 
 % contexto do trabalho
 % se resume o trabalho desenvolvido
 % se identificam  contribuicoes 
@@ -273,7 +275,8 @@ url=false, doi=false, eprint=false]{biblatex}
 \include{./tex/relatedwork2}
 \endgroup
 \LIMPA
-\chapter{Architecture and Implementation}\label{chapter:3}
+\chapter{Architecture\includegraphics[]{PEI.pdf}
+}\label{chapter:3}
 \epigraph{All problems in computer science can be solved by another level of indirection... ..except for the problem of too many layers of indirection.}{Kevlin Henney's}
 \begingroup
 \renewcommand{\cleardoublepage}{}

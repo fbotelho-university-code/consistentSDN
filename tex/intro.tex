@@ -63,15 +63,14 @@ To exemplify, the topology process does not cooperate with the access control pr
 Second, control functions occupy resources from the network equipment requiring more powerful and expensive hardware. 
 The path computation process itself is so complex that it may require devices to concurrently execute several control processes and/or maintain a global view of the network (in each device!).  
 
-Third, it difficulties network innovation since new network protocols must undergo years of standardization and interoperability testing. 
-This protocols are then implemented in closed, proprietary software and cannot be leveraged, modified, or improved upon. 
-As such researchers have difficulty in testing and deploying new control functionality in real networks. 
+Third, it difficulties network innovation since new network protocols must undergo years of standardization and interoperability testing and are implemented in closed, proprietary software and cannot be reutilized, modified, or improved upon. 
+As such, researchers have difficulty in testing and deploying new control functionality in real networks. 
 
 
 Finally, the configuration of the data plane requires low level and device-dependent instructions through direct command line interaction or ad-hoc scripts. 
 This process is error-prone. 
 %This process of translating high-level network objectives by humans to low level device-dependent configuration primitives is error prone. Furthermore, configuration errors (that should be insignificant events) can cascade into network errors of a global scale. 
-As an example, in 2008 Pakistan Telecom took Youtube offline almost worldwide by following a censorship order~\cite{McCullagh:2008fk}.
+As an example, in 2008 Pakistan Telecom took YouTube offline almost worldwide by following a censorship order~\cite{McCullagh:2008fk}.
 Another consequence of this complexity is that administrators of large networks  must have significant human resources for the management task.  
 
 Ultimately, mingling the data plane and control plane into a vertical integrated, proprietary solution has cause networks to be difficult to manage, hard to innovate, and expensive to maintain. 
@@ -94,15 +93,27 @@ Ultimately, mingling the data plane and control plane into a vertical integrated
 \subsection{Logical Centralization} 
 \gls{sdn} is a novel architecture that emerged from the drawbacks set by closely-coupling the control and data planes. 
 Fig.~\ref{fig:sdn.2d}(a) shows that this architecture  physically decouples those planes. 
-In \gls{sdn} all network control functionality  such as routing, access control, load balancing, etc. can be defined in software and performed by a controller with the help of a logically centralized \emph{Network View} containing  all the relevant network state (e.g., network topology, forwarding tables, acess control). 
-This state can be present in the controller memory or in  a \emph{datastore}  to which the controller has access to. 
+In \gls{sdn} all network control functionality  such as routing, access control, load balancing, etc. can be defined in software and performed by a controller with the help of a logically centralized \emph{Network View} containing  all the relevant network state (e.g., network topology, forwarding tables, access control). 
+This state can be present in the controller memory or in a data store to which the controller has access.
 %Throughout the text we refer to this datastore as the Network Information Base (NIB) or \emph{view} as can be seen in the figure. 
 
 %This process is shown in Figure \ref{fig:sdn.2d}(b), with the network state represented as the NIB. Function $f$ can be dynamically invoked when changes occur in the NIB, which may result in a different configuration of the data plane. In the light of this model we can see that the NIB takes a fundamental role in the actions taken by the controller. 
 
 %TODO - podes dizer que os controladores centralizados de pipeline são um género de f(NIB, PACKET_IN). 
 
-\begin{figure}
+
+In order to separate the control plane from the data plane it is crucial that the latter implements an interface that allows  the configuration of the network devices. 
+\gls{of} is the most common protocol that implements this interface~\cite{openflow}.
+In \gls{of} forwarding is based on flows that are broadly equivalent to a single host-to-host network interaction. 
+%--- a sequence of packets with specified headers in common. 
+The control plane  manipulates the flow-based forwarding tables present in network devices. 
+Devices recognize flows (e.g., \emph{any TCP packet destined to port 80} or \emph{any IP packet destined to 1.1.1.1}) and associate them with actions (e.g., \emph{drop packet}, \emph{forward to port $x$}, \emph{forward to controller}). 
+Matching flows have associated actions as opposed to unmatching flows that can be  forwarded to the controller. 
+This method has the advantage of possibly redirecting only one packet per flow to the controller (which benefits scalability). 
+
+In \gls{sdn} the  \emph{Network View} should be constantly updated. 
+In \gls{of} this is accomplished by events triggered from the data plane to the control plane containing new updates, relevant to the network state,  such as topology changes (e.g., \emph{link up}, \emph{link down}).  
+\begin{figure}[ht]
   \centering 
   \footnotesize
   \includegraphics[width=\textwidth]{pic/intro/decoupled}
@@ -110,24 +121,12 @@ This state can be present in the controller memory or in  a \emph{datastore}  to
   \label{fig:sdn.2d}
 \end{figure}
 
-In order to separate the control plane from the data plane it is crucial that the latter implements an interface that allows  the configuration of the network devices. 
-\gls{of} is the most common protocol that implements this interface~\cite{openflow}.
-In \gls{of} forwarding is based on flows that are broadly equivalent to a single host-to-host network interaction. 
-%--- a sequence of packets with specified headers in common. 
-The control control plane  manipulates the flow-based forwarding tables present in network devices. 
-Devices recognize flows (e.g., \emph{any tcp packet destined to port 80} or \emph{any ip packet destined to 1.1.1.1}) and associate them with actions (e.g., \emph{drop packet}, \emph{forward to port $x$}, \emph{forward to controller}). 
-Matching flows have associated actions as opposed to unmatching flows that can be  forwarded to the controller. 
-This method has the advantage of possibly redirecting only one packet per flow to the controller (which benefits scalability). 
-In the  \gls{sdn} architecture it is also vital that the \emph{Network View} is constantly updated. 
-In \gls{of} this is accomplished by events triggered from the data plane to the control plane containing new updates, relevant to the network state,  such as topology changes (e.g., \emph{link up}, \emph{link down}).  
-
-In general, the objective of the control plane can be seen as to implement a function $f$, representing all control functionality,  that has the \emph{Network View}  as  input and the configuration of network devices as output. 
+In general, the objective of the control plane can be seen as to implement a function $f$, representing all control functionality, which has the \emph{Network View}  as  input and the configuration of network devices as output. 
 Alternatively, (and most common) the devices can request forwarding advice to the controller for packets on the fly. 
- In this case, function $f$  is expanded to receive both the network state and the specific packet as input, and the output determines  a viable configuration for forwarding that given packet and possibly others alike. 
-
+In this case, function $f$  is expanded to receive both the network state and the specific packet as input, and the output determines  a viable configuration for forwarding that given packet and possibly others alike. 
 
 The fact that configuration is now software driven, coupled with the logical centralization of the network state, allows simple and automatic deployment, configuration and development of  control functionalities. 
-Furthermore, as opossed to the previous condition of networks, \gls{sdn} enables standard techniques and approaches to fundamental networking problems that were once difficult to apply due to the closed nature of the equipment. 
+Furthermore, in  opossition to the standard network architecture, \gls{sdn} enables the usage of common computer science knowledge  (such as distributed systems)  to fundamental networking problems that were once difficult to apply due to the closed nature of the equipment. 
 
 It is worth pointing out that Software Defined Network is not just an  artifact for the scientific community, but it is also being adopted  by the industry. For example, Google has deployed a Software Defined  WAN (Wide Area Network) to connect their datacenters  \cite{Hoezle:2012uq}. 
 Additionally, this company and other industry  partners (Yahoo, Microsoft, Facebook, Verizon and Deutsche Telekom,  Nicira, Juniper, etc.) have formed the Open Network Foundation (ONF)~\cite{onf} --- a non-profit organization  responsible for the  standardization process of SDN technology. 
@@ -149,42 +148,44 @@ We present the following arguments supporting the distribution of the control pl
 
 %TODO - set the number on switches. 
 \textbf{Scalability} is a fundamental reason for distributing. 
-Although centralized controllers have been reported to handle: tens of thousands of hosts~\cite{Casado:2007kb}; a million events per second averaging 2.5ms per event~\cite{controllerPerformance}; and millions of flow requests per second~\cite{beacon} there are limits in resources that will eventually lead to their exhaustion. 
+Although centralized controllers have been reported to handle: tens of thousands of hosts~\cite{Casado:2007kb}; a million events per second averaging 2.5ms per event~\cite{Tootoonchian:2012uia}; and millions of flow requests per second~\cite{Erickson:2013er} there are limits in resources that will eventually lead to their exhaustion. 
 These limits are easily reached in current data centers and \glsplural{wan}. 
-Namely, there is evidence of data centeres that can  easily reach thousands of switches and hundred of thousands hosts~\cite{Scott:2012tt}. 
-Also Benson~\etal\ show that a data center with 100 edge\footnote{The three tier data center topology is an hierarchical topology with 4 levels. In the bottom levels reside the application servers connected to the edge switches.} switches can, in the worst case, have spikes of 10M  flow arrivals per second~\cite{}. 
+Namely, there is evidence of data centers that can  easily reach thousands of switches and hundred of thousands hosts~\cite{Scott:2012tt}. 
+Also Benson~\etal\ show that a data center with 100 edge\footnote{The three tier data center topology is an hierarchical topology with 4 levels. In the bottom levels reside the application servers connected to the edge switches.} switches can (in the worst case) have spikes of 10M  flow arrivals per second~\cite{benson2010network}. 
 These numbers strongly  suggest distributing the control plane in order to shield controllers from a large number of network events. 
 
 The \textbf{performance} reason presented may not be the only one, but it is fundamental. 
-At the time of writing only one \gls{sdn} enabled \gls{wan} is known \cite{jain2013b4}, but given its publicized success one could expect more to follow. 
+At the time of writing only one \gls{sdn} enabled \gls{wan} is known~\cite{jain2013b4}, but given its publicized success one could expect more to follow. 
 Even though the control plane only requires processing the first packet in flow arrivals, the latency established in this communication must be minimal such that network applications are not noticeable affected. 
 Distribution can mitigate the latency problem by bringing the control plane closer to the data plane. 
 %TODO - controller placement problem finds that only one controller is enough,  
 
 Finally,  \textbf{Fault tolerance} is an essential part of any Internet-based system, and this property is therefore typically built-in by design. 
-Solutions such as Apache' Zookeeper (Yahoo!), Dynamo (Amazon)  and Spanner (Google)  were designed and deployed in production environments to provide fault tolerance for a variety of critical services.
+Solutions such as Apache' Zookeeper (Yahoo!)~\cite{Hunt:2010ux}, Dynamo (Amazon)~\cite{DeCandia:2007cn} and Spanner (Google)~\cite{Corbett:2012uz} were designed and deployed in production environments to provide fault tolerance for a variety of critical services.
 The increasing number of SDN-based deployments in production networks is also triggering the need to consider fault tolerance when building SDNs.
 For example, Google presented recently the deployment of its inter-datacenter WAN with centralized traffic engineering using SDN and OpenFlow.
 Such centralized control requires (and employs) fault tolerance.
 
-In summary, there is a pleothora of reasons for distributing the control plane. However there several challenges in doing it so. 
-However until today, due the state dependencies present between distributed controllers there is no evidence of scalable distributed control planes (when considering the number of events processed). 
-Arguably, it might be the case that this is due to the state dependencies between different controllers in a distributed control plane. 
-Furthermore, the generality of a control plane antecipates the usage of arbitrary controller aplications that will require different and general distribution mechanisms eagaring for scalability and performance while maintaing reliability.
-Truly this is a hard challenge to tackle. 
+\todo{Redo final take.... not selling scalability here...}
+In summary, there is a plethora of reasons for distributing the control plane, but they are several challenges in doing it so. 
+Until today there is no evidence of scalable distributed control planes (when considering the number of events processed), arguably due the state dependencies present between distributed controllers instances. 
+%Arguably, it might be the case that this is due to the state dependencies between different controllers in a distributed control plane. 
+Furthermore, the generality of a control plane anticipates the usage of arbitrary controller aplications that will require different and general distribution mechanisms \textbf{eagaring} for scalability and performance while maintaing reliability and correctness.
+Truly, this is a hard challenge to tackle. 
 
-\subsection{Distribution Tradeoffs}
-Fundamental principles such as the  Brewer's CAP theorem \cite{Brewer:fk} (formally proven by Gilbert and Lynch \cite{Gilbert:2002il}) are an example of classic distribution tradeoffs. This theorem states that a distributed system may be simultaneously (i.e., at the same time) qualified with only two of the following properties: consistency, availability and partition-tolerance. Furthermore, since supporting partition-tolerance implies tolerating arbitrary message loss  \cite{Gilbert:2002il},  the vast majority of systems are forced to choose between availability and consistency. This choice also applies to the distribution of the control plane. 
+\subsection{Consistency}
+Fundamental principles such as the  Brewer's CAP theorem \cite{Brewer:fk} (formally proven by Gilbert and Lynch \cite{Gilbert:2002il}) are an example of classic distribution tradeoffs. This theorem states that a distributed system may be simultaneously (i.e., at the same time) qualified with only two of the following properties: consistency, availability, and partition-tolerance. Furthermore, since supporting partition-tolerance implies tolerating arbitrary message loss  \cite{Gilbert:2002il},  the vast majority of systems are forced to choose between availability and consistency. This choice also applies to the distribution of the control plane. 
 
+Levin et al~\etal\  has already studied the trade-offs associated with this choice, in the context of SDN~\cite{Levin:2012bt}. 
+%The trade-offs associated with this choice have already been studied by Levin et al~\etal\ in the context of SDN~\cite{Levin:2012bt}. 
+This work found that two control applications (load balancers) that differ in the choice between availability and consistency have different optimality results. Levin et al. shows also that when availability is chosen the control application optimality is significantly degraded. In spite of not all control applications effectively have optimality requirements that are affect by the choice, similar tradeoffs arise in other applications such as: firewalls, intrusion detection and routing.
 
-The tradeoffs associated with this choice have already been studied by Levin et al~\etal\ in the context of SDN~\cite{levin}. This work found that two control applications (load balancers) that differ in the choice between availability and consistency have different optimality results. Levin et al. shows also that when availability is chosen the control application optimality5 is significantly degraded. In spite of not all control applications effectively have optimality requirements that are affect by the choice, similar tradeoffs arise in other applications such as: firewalls, intrusion detection and routing.
+As well as degrading optimality, favoring availability also affects transparency - the property of a distributed system to appear as a centralized service to its users. To explain, the choice of availability implies that the user of the system must be aware of the lack of consistency. Thus, if correctness or optimality is relevant for the user, additional effort and reasoning is required in the interaction with the service. 
 
-As well as degrading optimality, favoring availability also affects transparency - the property of a distributed system to appear as a centralized service to its users. To explain, the choice of availability implies that the user of the system must be aware of the lack of consistency. Thus, if correctness or optimality are relevant for the user, additional effort and reasoning is required in the interaction with the service. 
+Currently, often-cited distributed control planes as Onix~\cite{Koponen:2010th} or HyperFlow~\cite{Tootoonchian:2010vy} favor availability over consistency. To be true Onix allows the choice to be made between availability and consistency for different control applications. However, this choice reveals a less transparent and complex API that forces users to reason about correctness and problems that may arise from the inconsistency of data in the distribution process. 
 
-Currently, often-cited distributed control planes as Onix \cite{Koponen:2010th} or HyperFlow  \cite{Tootoonchian:2010vy} favor availability over consistency. To be true Onix allows the choice to be made between availability and consistency for different control applications. However this choice reveals a less transparent and complex API that forces users to reason about correctness and problems that may arise from the inconsistency of data in the distribution process. 
-
-In our work we favor consistency and consequently transparency in the distribution of the control plane being that we believe that it can simplify application development and it can expose better results that ones portraited in \gls{sdn} literature.
-One of our goals is in fact to show that, despite the costs of consistency, the \emph{``severe performance limitations''} (quote from\,\cite{koponen2010}) reported for Onix's consistent  data store are a consequence of the particular implementation and not an inherent property of these systems. 
+In our work we favor consistency and consequently transparency in the distribution of the control plane being that we believe that it can simplify application development and it can expose better results that ones portrayed in \gls{sdn} literature.
+One of our goals is in fact to show that, despite the costs of consistency, the \emph{``severe performance limitations''} (quote from\,\cite{Koponen:2010th}) reported for Onix's consistent  data store are a consequence of the particular implementation and not an inherent property of these systems. 
 
 
 %In summary, it is usual in distributed systems to choice between consistency and availability. While the latter is informally associated with correctness and latency penalties, the former is associated with incorrectness and scalability. 
@@ -198,32 +199,32 @@ One of our goals is in fact to show that, despite the costs of consistency, the 
 
 
 Recent work on SDN has explored the need for consistency at different levels. 
-Network programming languages such as Frenetic\,\cite{Foster2011} offer consistency when composing network policies (automatically solving inconsistencies across network applications' decisions). 
+Network programming languages such as Frenetic\,\cite{Foster:2010wp} offer consistency when composing network policies (automatically solving inconsistencies across network applications' decisions). 
 Other related line of work proposes abstractions to guarantee data-plane consistency during network configuration updates~\cite{reitblatt2012abstractions}. 
 The aim of both these systems is to guarantee consistency \textit{after} the policy decision is made. 
-Onix\,\cite{koponen2010} provides a different type of consistency: one that is important \emph{before} the policy decisions are made. 
+Onix\,\cite{Koponen:2010th} provides a different type of consistency: one that is important \emph{before} the policy decisions are made. 
 Onix provides network state consistency --- both weak and strong --- between different controller instances. 
 The data store we propose is similar in that it offers strong consistency for network (and application) state between controllers\footnote{By strong consistency we mean that any read that follows a write will see the result of such write.}. 
-One of our goals is in fact to show that, despite the costs of consistent replication, the \emph{``severe performance limitations''} (quote from\,\cite{koponen2010}) reported for Onix's transactional persistent database are a consequence of the particular implementation of such data store, and not an inherent property of these systems. 
+One of our goals is in fact to show that, despite the costs of consistent replication, the \emph{``severe performance limitations''} (quote from\,\cite{Koponen:2010th}) reported for Onix's transactional persistent database are a consequence of the particular implementation of such data store, and not an inherent property of these systems. 
 
 
 \section{Goals and Contributions}
 %REFUTABLE CLAIMS WITH FORWARD REFERENCES 
-
+\todo{Rascunho....}
 Our work has the single objective of enabling distribution of a control plane through the state distribution of the network state. 
 For this we built a simple key-value data store on top of a state-of-the-art replication middleware that enables both fault-tolerance and consistency. 
 Afterwards we integrated this data store with a centralized controller and modified different applications to use the this controller. 
 
 In this thesis we argue that it is possible, using state-of-the-art consistent replication techniques, to build a distributed SDN controller that not only guarantees strong consistency and fault tolerance, but also does so with acceptable performance for many SDN applications.
-In this sense, the main contribution of this thesis is showing that if a data store built using such techniques (e.g., as provided by BFT-SMaRt~\cite{smart-tr, bft-smart:2011:High-perfomance}, a high-performance fault-tolerant state machine replication middleware) is integrated with a production-level controller (e.g., Floodlight~\cite{flood}), the resulting distributed control infrastructure could handle efficiently many real world workloads.
+In this sense, the main contribution of this thesis is showing that if a data store built using such techniques (e.g., as provided by BFT-SMaRt~\cite{smart-tr}) is integrated with a production-level controller (e.g., Floodlight~\footnote{\url{http://www.projectfloodlight.org/floodlight/}}), the resulting distributed control infrastructure could handle efficiently many real world workloads.\\
 
 %The objective of the experiments covered in this chapter  is to analyze the workloads generated by these applications to thereafter measure the performance of the data store when subject to such realistic demand caused by real applications.
 
 The contributions can be summarized as following: 
 \begin{itemize}
-\item A distributed controller design, exhibiting fault-tolerance and transparency that can be built by expanding on existent centralized controller platforms(chapter~\ref{});
-\item A study of the workloads produced by three production-level controller applications on a data store built for the distribution of the network state (chapter~\ref{}); 
-\item The evaluation of  a state-of-the-art replication middleware capability to process the workloads mentioned in the previous points. Namely: 
+\item A distributed controller design, exhibiting fault-tolerance and transparency that can be built by expanding on existent centralized controller platforms (chapter~\ref{chapter:3});
+\item A study of the workloads produced by three production-level controller applications on a data store built for the distribution of the network state (chapter~\ref{chapter:4}); 
+\item The evaluation of  a state-of-the-art replication middleware capability to process the workloads mentioned in the previous points (chapter~\ref{chapter:4}). Namely: 
   \begin{itemize}
   \item How much data plane events can such a middleware handle per second; 
   \item What is the latency penalty for processing such events; 

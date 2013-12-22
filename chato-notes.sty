@@ -25,7 +25,10 @@
 
 \DeclareOption{show}{
 	\newcommand{\note}[2][]{\def\@tmpsig{#1}\frameit{{\Pointinghand} Note}{#2\ifx \@tmpsig \@empty \else \mbox{ --\em #1}\fi}}
-	\newcommand{\todo}[2][]{\def\@tmpsig{#1}\frameit{{\Writinghand} To-do}{#2\ifx \@tmpsig \@empty \else \mbox{ --\em #1}\fi}}
+	\newcommand{\todo}[2][]{\def\@tmpsig{#1}\frameit{{\Writinghand}
+            To-do}{#2\ifx \@tmpsig \@empty \else \mbox{ --\em #1}\fi}}
+	\newcommand{\review}[2][]{\def\@tmpsig{#1}\frameit{{\Writinghand}
+            Request Review}{#2\ifx \@tmpsig \@empty \else \mbox{ --\em #1}\fi}}
 	\newcommand{\inote}[1]{\inred{$\lceil${{\Pointinghand} }} {\sf #1} \inred{$\rfloor$}}
 	\newcommand{\citemissing}[0]{\inred{[citation]}}
 }

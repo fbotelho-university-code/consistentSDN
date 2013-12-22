@@ -11,7 +11,7 @@
 
 (is-multi t)
 
-(bibview-cache ("Erickson:2013er" . "Erickson 2013, {The beacon openflow controller}, in: HotSDN '13: Proceedings second") ("Tootoonchian:2012uia" . "Tootoonchian etal. 2012, {On contr. perf. softw. defin., in: Hot ICE'12: Proceedings 2nd") ("Tootoonchian:2010vy" . "Tootoonchian & Ganjali 2010, {Hyp. distr. contr. plane OpenFl., in: INM/WR. Proc. 2010 intern") ("Levin:2012bt" . "Levin etal. 2012, {Log. centr. state distr. trade, in: HotSDN '12: Proceedings first") ("Corbett:2012uz" . "Corbett etal. 2012, Spann. Googl. glob. distr. datab., in: OSDI") ("DeCandia:2007cn" . "DeCandia etal. 2007, {Dynamo: amazon's highly available key, in: SOSP '07: Proceedings twenty") ("Hunt:2010ux" . "Hunt etal. 2010, {ZooK. Wait free coord. Intern., in: Proc. USEN. Proc. 2010") ("kung1981optimistic" . "Kung & Robinson 1981, optimistic methods concurrency control, ACM Transactions on Database Systems (TODS) 6:213") ("Foster:2010wp" . "Foster etal. 2010, {Frenetic: high level language OpenFlow, Proceedings of the Workshop on Programmable Routers for Extensible Services of Tomorrow 6") ("Wang:2012tj" . "Wang etal. 2012, {Gnoth. separ. data metad. effic., in: USENIX ATC'12: Proceedings 2012") ("Lee:1996jm" . "Lee & Thekkath 1996, {Petal: distributed virtual disks}, in: ASPLOS VII: Proceedings seventh") ("jain2013b4" . "Jain etal. 2013, B4: Experience with globally deployed, in: Proceedings ACM SIGCOMM 2013, 3") ("2011itra.book.....C" . "Cachin etal. 2011, {Intr. Reli. Secure Distr. Progr") ("Koponen:2010th" . "Koponen etal. 2010, Onix: distributed control platform large, in: OSDI'10: Proceedings 9th USENIX") ("Liskov:2012ut" . "Liskov & Cowling 2012, Viewstamped replication revisited") ("" . "Kostic etal. 2013, OpenFlow Needs You! Call Discussion, in: Software Defined Networking (EWSDN)") ("McKeown:2008dn" . "McKeown etal. 2008, OpenFl. enabl. innov. camp. netw., SIGCOMM Computer Communication Review 38") ("Casado:2007kb" . "Casado etal. 2007, Ethane: Taking Control Enterprise, in: SIGCOMM '07: Proceedings 2007") ("Caesar:2005ws" . "Caesar etal. 2005, Design impl. rout. contr. platf., in: NSDI'05: Proceedings 2nd conference"))
+(bibview-cache ("fekete2010consistency" . "Fekete & Ramamritham 2010, Consistency Models Replicated Data, in: Replication, 5959:1") ("Stribling:2009" . "Stribling etal. 2009, Flexible  Wide area Storage, in: Proceedings 6th USENIX Symposium, 43") ("maestro" . "Cai etal. 2012, {Maestr. Syst. Scal. OpenFl. Contr., 1") ("Gude:2008jd" . "Gude etal. 2008, NOX: Towards an Operating System, SIGCOMM Comput. Commun. Rev. 38:105") ("Khurshid:2013" . "Khurshid etal. 2013, VeriFl. Verify. Netw. wide Invar., in: Proceedings 10th USENIX Conference, 15") ("Greenberg:2005boa" . "Greenberg etal. 2005, Clean Slate 4D Approach Network, SIGCOMM Comput. Commun. Rev. 35:41") ("benson2010network" . "Benson etal. 2010, Netw. Traff. Char. Data Cent., in: Proceedings 10th ACM SIGCOMM, 267") ("shapiro:inria-00555588" . "Shapiro etal. 2011, {A compr. study Conv. Comm., 50") ("vogels2009eventually" . "Vogels 2008, Eventually Consistent, Queue 6:14") ("bailis2013eventual" . "Bailis & Ghodsi 2013, Eventual Consistency Today: Limitations , Queue 11:20:20") ("herlihy1990linearizability" . "Herlihy & Wing 1990, Line. Corr. Cond. Conc. Objects, ACM Trans. Program. Lang. Syst. 12:463") ("Gilbert:2002il" . "Gilbert & Lynch 2002, Brew. Conj. Feas. Cons. , SIGACT News 33:51") ("Bes13" . "Bessani etal. 2013, Effic. Durable State Mach. Repl., in: Proceedings 2013 USENIX Conference, 169") ("Liskov:2010vt" . "Liskov 2010, From Viewst. Repl. Byzant. Fault, in: Replication, 5959:121") ("onf" . "Open \\upp. \\upp. Online at") ("Yeganeh:2012jm" . "Hassas Yeganeh & Ganjali 2012, Kand. Fram. Effic. Scal. Offl., in: Proceedings First Workshop Hot, 19") ("Erickson:2013er" . "Erickson 2013, {The beacon openflow controller}, in: HotSDN '13: Proceedings second") ("Tootoonchian:2012uia" . "Tootoonchian etal. 2012, {On contr. perf. softw. defin., in: Hot ICE'12: Proceedings 2nd") ("Tootoonchian:2010vy" . "Tootoonchian & Ganjali 2010, HyperFl. Distr. Contr. Plane OpenFl., in: Proceedings 2010 Internet Network, 3") ("Levin:2012bt" . "Levin etal. 2012, {Log. centr. state distr. trade, in: HotSDN '12: Proceedings first") ("Corbett:2012uz" . "Corbett etal. 2012, Spann. Googl. glob. distr. datab., in: OSDI") ("DeCandia:2007cn" . "DeCandia etal. 2007, {Dynamo: amazon's highly available key, in: SOSP '07: Proceedings twenty") ("Hunt:2010ux" . "Hunt etal. 2010, {ZooK. Wait free coord. Intern., in: Proc. USEN. Proc. 2010") ("kung1981optimistic" . "Kung & Robinson 1981, optimistic methods concurrency control, ACM Transactions on Database Systems (TODS) 6:213") ("Foster:2010wp" . "Foster etal. 2010, {Frenetic: high level language OpenFlow, Proceedings of the Workshop on Programmable Routers for Extensible Services of Tomorrow 6") ("Wang:2012tj" . "Wang etal. 2012, {Gnoth. separ. data metad. effic., in: USENIX ATC'12: Proceedings 2012") ("Lee:1996jm" . "Lee & Thekkath 1996, {Petal: distributed virtual disks}, in: ASPLOS VII: Proceedings seventh") ("jain2013b4" . "Jain etal. 2013, B4: Experience with Globally Deployed, in: Proceedings ACM SIGCOMM 2013, 3") ("2011itra.book.....C" . "Cachin etal. 2011, {Intr. Reli. Secure Distr. Progr") ("Koponen:2010th" . "Koponen etal. 2010, Onix: Distributed Control Platform Large, in: Proceedings 9th USENIX Conference, 1") ("Liskov:2012ut" . "Liskov & Cowling 2012, Viewstamped replication revisited") ("" . "Kostic etal. 2013, OpenFlow Needs You! Call Discussion, in: Software Defined Networking (EWSDN)") ("McKeown:2008dn" . "McKeown etal. 2008, OpenFl. Enabl. Innov. Camp. Netw., SIGCOMM Comput. Commun. Rev. 38:69") ("Casado:2007kb" . "Casado etal. 2007, Ethane: Taking Control Enterprise, in: Proc. 2007 Conf. Appl., 1") ("Caesar:2005ws" . "Caesar etal. 2005, Design impl. rout. contr. platf., in: NSDI'05: Proceedings 2nd conference"))
 
 (master-dir . "/Users/fabiim/Dropbox/TESE/final/")
 
@@ -39,127 +39,137 @@
 
 (eof "/Users/fabiim/Dropbox/TESE/final/tex/resumo_ing.tex")
 
-(toc "toc" "  1 Introduction" "/Users/fabiim/Dropbox/TESE/final/PEI.tex" nil 1 "1" "\\chapter{Introduction}" 5829)
+(toc "toc" "  1 Introduction" "/Users/fabiim/Dropbox/TESE/final/PEI.tex" nil 1 "1" "\\chapter{Introduction}" 7237)
 
-("chapter:1" "s" "\\glsresetall % contexto do trabalho % se resume o trabalho desenvolvido % se identificam contribuico" "/Users/fabiim/Dropbox/TESE/final/PEI.tex" nil)
+("chapter:1" "s" "\\glsresetall \\setlength{\\epigraphwidth}{0.4\\textwidth} \\epigraph{ \\emph{The nice thing about standar" "/Users/fabiim/Dropbox/TESE/final/PEI.tex" nil)
 
 (bof "/Users/fabiim/Dropbox/TESE/final/tex/intro.tex")
 
 (toc "toc" "    1.1 Software Defined Network" "/Users/fabiim/Dropbox/TESE/final/tex/intro.tex" nil 2 "1.1" "\\section{Software Defined Network}" 3270)
 
-(toc "toc" "      1.1.1 Standard Network Problems" "/Users/fabiim/Dropbox/TESE/final/tex/intro.tex" nil 3 "1.1.1" "\\subsection{Standard Network Problems}" 7880)
+(toc "toc" "      1.1.1 Standard Network Problems" "/Users/fabiim/Dropbox/TESE/final/tex/intro.tex" nil 3 "1.1.1" "\\subsection{Standard Network Problems}" 8160)
 
-(toc "toc" "      1.1.2 Logical Centralization" "/Users/fabiim/Dropbox/TESE/final/tex/intro.tex" nil 3 "1.1.2" "\\subsection{Logical Centralization}" 12214)
+(toc "toc" "      1.1.2 Logical Centralization" "/Users/fabiim/Dropbox/TESE/final/tex/intro.tex" nil 3 "1.1.2" "\\subsection{Logical Centralization}" 13515)
 
 ("fig:sdn.2d" "f" "SDN architecture" "/Users/fabiim/Dropbox/TESE/final/tex/intro.tex" nil)
 
-(toc "toc" "      1.1.3 Distributed Control Plane" "/Users/fabiim/Dropbox/TESE/final/tex/intro.tex" nil 3 "1.1.3" "\\subsection{Distributed Control Plane}" 17016)
+(toc "toc" "      1.1.3 Distributed Control Plane" "/Users/fabiim/Dropbox/TESE/final/tex/intro.tex" nil 3 "1.1.3" "\\subsection{Distributed Control Plane}" 21265)
 
-(toc "toc" "      1.1.4 Distribution Tradeoffs" "/Users/fabiim/Dropbox/TESE/final/tex/intro.tex" nil 3 "1.1.4" "\\subsection{Distribution Tradeoffs}" 21730)
+(toc "toc" "      1.1.4 Consistency models" "/Users/fabiim/Dropbox/TESE/final/tex/intro.tex" nil 3 "1.1.4" "\\subsection{Consistency models}" 26508)
 
-(toc "toc" "    1.2 Goals and Contributions" "/Users/fabiim/Dropbox/TESE/final/tex/intro.tex" nil 2 "1.2" "\\section{Goals and Contributions}" 28244)
+(toc "toc" "    1.2 Goals and Contributions" "/Users/fabiim/Dropbox/TESE/final/tex/intro.tex" nil 2 "1.2" "\\section{Goals and Contributions}" 40040)
 
-(toc "toc" "    1.3 Planning" "/Users/fabiim/Dropbox/TESE/final/tex/intro.tex" nil 2 "1.3" "\\section{Planning}" 30823)
+(toc "toc" "    1.3 Planning" "/Users/fabiim/Dropbox/TESE/final/tex/intro.tex" nil 2 "1.3" "\\section{Planning}" 42842)
 
-(toc "toc" "    1.4 Thesis Organization" "/Users/fabiim/Dropbox/TESE/final/tex/intro.tex" nil 2 "1.4" "\\section{Thesis Organization}" 31355)
+("fig:intro:plan" "f" "The Plan" "/Users/fabiim/Dropbox/TESE/final/tex/intro.tex" nil)
+
+("fig:intro:activities" "f" "Activity Report" "/Users/fabiim/Dropbox/TESE/final/tex/intro.tex" nil)
+
+(toc "toc" "    1.4 Thesis Organisation" "/Users/fabiim/Dropbox/TESE/final/tex/intro.tex" nil 2 "1.4" "\\section{Thesis Organisation}" 47357)
 
 (eof "/Users/fabiim/Dropbox/TESE/final/tex/intro.tex")
 
-(toc "toc" "  2 Related Work" "/Users/fabiim/Dropbox/TESE/final/PEI.tex" nil 1 "2" "\\chapter{Related Work}" 6516)
+(toc "toc" "  2 Related Work" "/Users/fabiim/Dropbox/TESE/final/PEI.tex" nil 1 "2" "\\chapter{Related Work}" 8079)
 
-("chapter:2" "s" "\\begingroup \\renewcommand{\\cleardoublepage}{} \\renewcommand{\\clearpage}{} \\epigraph{If the only tool" "/Users/fabiim/Dropbox/TESE/final/PEI.tex" nil)
+("chapter:2" "s" "\\begingroup \\renewcommand{\\cleardoublepage}{} \\renewcommand{\\clearpage}{} \\setlength{\\epigraphwidth}" "/Users/fabiim/Dropbox/TESE/final/PEI.tex" nil)
 
 (bof "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex")
 
-(toc "toc" "    2.1 Software Defined Networks History" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil 2 "2.1" "\\section{Software Defined Networks History}" 15)
+(toc "toc" "    2.1 Software Defined Networks History" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil 2 "2.1" "\\section{Software Defined Networks History}" 79)
 
-(toc "toc" "      2.1.1 RCP" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil 3 "2.1.1" "\\subsection{RCP}" 2620)
+("sec:softw-defin-netw" "s" "Traditionally, networking relied and evolved over a non-transparent distributed model for the deploy" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil)
 
-(toc "toc" "      2.1.2 4D" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil 3 "2.1.2" "\\subsection{4D}" 6580)
+(toc "toc" "      2.1.1 RCP" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil 3 "2.1.1" "\\subsection{RCP}" 2702)
 
-(toc "toc" "      2.1.3 Ethane" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil 3 "2.1.3" "\\subsection{Ethane}" 9858)
+(toc "toc" "      2.1.2 4D" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil 3 "2.1.2" "\\subsection{4D}" 6664)
 
-(toc "toc" "      2.1.4 OpenFlow" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil 3 "2.1.4" "\\subsection{OpenFlow}" 14977)
+(toc "toc" "      2.1.3 Ethane" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil 3 "2.1.3" "\\subsection{Ethane}" 10059)
+
+(toc "toc" "      2.1.4 OpenFlow" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil 3 "2.1.4" "\\subsection{OpenFlow}" 15780)
 
 ("sec:related:openflow" "s" "In 2008, McKeown~\\etal\\ introduced the \\gls{of} protocol that would soon become the defacto standard" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil)
 
-(toc "toc" "      2.1.5 Network Operating System" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil 3 "2.1.5" "\\subsection{Network Operating System}" 17494)
+(toc "toc" "      2.1.5 Network Operating System" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil 3 "2.1.5" "\\subsection{Network Operating System}" 18365)
 
-("sec:related:netw-oper-syst" "s" "With the adoption of the \\gls{of} protocol \\gls{sdn} a gained significant momentum. However, the exi" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil)
+("sec:related:netw-oper-syst" "s" "With the adoption of the \\gls{of} protocol \\gls{sdn} gained significant momentum. However, the exist" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil)
 
-(toc "toc" "    2.2 Software Defined Networks Fundamentals" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil 2 "2.2" "\\section{Software Defined Networks Fundamentals}" 19482)
+(toc "toc" "    2.2 Software Defined Networks Fundamentals" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil 2 "2.2" "\\section{Software Defined Networks Fundamentals}" 20479)
 
 ("sec:realted:softw-defin-netw" "s" "In March 2011, the Open Network Foundation (ONF) was created with the participation and support from" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil)
 
-(toc "toc" "      2.2.1 SDN Architecture" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil 3 "2.2.1" "\\subsection{SDN Architecture}" 21210)
+(toc "toc" "      2.2.1 Architecture" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil 3 "2.2.1" "\\subsection{Architecture}" 22196)
 
-("sec:related:sdn-architecture" "s" "The common \\gls{sdn} architecture is a three-layer stack shown in Fig.~\\ref{fig:related:sdn-stack}. " "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil)
+("sec:related:sdn-architecture" "s" "%\\todo{missing context, one paragraph or bigger first sentence.} %As covered in the previous section" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil)
 
-("fig:related:sdn-stack" "f" "SDN Architecture" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil)
+("fig:related:sdn-stack" "f" "General SDN Architecture" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil)
 
-(toc "toc" "      2.2.2 OpenFlow" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil 3 "2.2.2" "\\subsection{OpenFlow}" 27630)
+(toc "toc" "      2.2.2 OpenFlow" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil 3 "2.2.2" "\\subsection{OpenFlow}" 29755)
 
-("sec:related:openflow-spec" "s" "\\glsreset{of} %Missing things to talk about: % \\begin{itemize} % " "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil)
-
-("fig:related:reactive" "f" "Flow Request " "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil)
+("sec:related:openflow-spec" "s" "\\glsreset{of} \\todo{Missing things mentioned in the document (flow-mod, flow-removed, master, slave)" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil)
 
 ("tab:related:openflow-flows" "t" "Openflow Flow Table" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil)
 
-(toc "toc" "    2.3 Physically Centralized Controllers" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil 2 "2.3" "\\section{Physically Centralized Controllers}" 33125)
+("fig:related:reactive" "f" "Flow Request " "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil)
 
-("sec:related:phys-centr-contr" "s" "\\glsresetall %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% In this section we present an overvi" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil)
+(toc "toc" "    2.3 Centralized Controllers" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil 2 "2.3" "\\section{Centralized Controllers}" 35530)
+
+("sec:related:phys-centr-contr" "s" "\\glsresetall \\todo{Warning: not word-spell-checked.} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil)
 
 ("fig:related:meta-architecture" "f" "Controller Architecture" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil)
 
-(toc "toc" "      2.3.1 NOX" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil 3 "2.3.1" "\\subsection{NOX}" 35684)
+(toc "toc" "      2.3.1 NOX" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil 3 "2.3.1" "\\subsection{NOX}" 38116)
 
 ("sec:related:nox" "s" "NOX\\footnote{\\url{http://www.noxrepo.org/}} was published and publicly released under the \\gls{gpl} " "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil)
 
-(toc "toc" "      2.3.2 Maestro" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil 3 "2.3.2" "\\subsection{Maestro}" 38032)
+(toc "toc" "      2.3.2 Maestro" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil 3 "2.3.2" "\\subsection{Maestro}" 40445)
 
-("sec:related:maestro" "s" "A network operating system has (at least) two functions: introduce a layer of abstraction between th" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil)
+("sec:related:maestro" "s" "A \\gls{nos} has (at least) two functions: introduce a layer of abstraction between the network and t" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil)
 
-(toc "toc" "      2.3.3 Beacon" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil 3 "2.3.3" "\\subsection{Beacon}" 40114)
+(toc "toc" "      2.3.3 Beacon" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil 3 "2.3.3" "\\subsection{Beacon}" 42556)
 
 ("sec:related:beacon" "s" "Beacon is an open source controller built in Java, by David Erickson during his academic studies in " "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil)
 
-(toc "toc" "      2.3.4 Floodlight" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil 3 "2.3.4" "\\subsection{Floodlight}" 41622)
+(toc "toc" "      2.3.4 Floodlight" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil 3 "2.3.4" "\\subsection{Floodlight}" 44096)
 
 ("sec:related:floodlight" "s" "Floodlight is an open source Apache licensed controller. It was initially forked from Beacon and is " "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil)
 
-("sec:related:controller-choice" "s" "% % \\begin{table} % % \\centering % % \\small % % \\begin{tabular}{cccc} % % Controller & Applications " "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" 42887)
+("sec:controller-choice" "s" "% \\todo{Talk why we choice Floodlight} % \\subsection{Controller Choice} %  % % \\begin{table} % % \\ce" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" 46115)
 
-(toc "toc" "    2.4 Distributed Controllers" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil 2 "2.4" "\\section{Distributed Controllers}" 43875)
+("sec:related:controller-choice" "s" "% % \\begin{table} % % \\centering % % \\small % % \\begin{tabular}{cccc} % % Controller & Applications " "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" 46220)
 
-("sec:related:distr-contr" "s" "\\subsection{Kandoo}  In 2012 Yeganesh~\\etal\\ presented Kandoo \\cite{Yeganeh:2012jm} --- an hierarchi" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil)
+(toc "toc" "    2.4 Distributed Controllers" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil 2 "2.4" "\\section{Distributed Controllers}" 47066)
 
-(toc "toc" "      2.4.1 Kandoo" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil 3 "2.4.1" "\\subsection{Kandoo}" 43942)
+("sec:related:distr-contr" "s" "In this section we present an overview of relevant distributed controllers. A distributed controller" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil)
 
-("sec:related:kandoo" "s" "In 2012 Yeganesh~\\etal\\ presented Kandoo \\cite{Yeganeh:2012jm} --- an hierarchical controller for sc" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil)
+(toc "toc" "      2.4.1 Kandoo" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil 3 "2.4.1" "\\subsection{Kandoo}" 47957)
+
+("sec:related:kandoo" "s" "In 2012, Yeganesh~\\etal\\ presented Kandoo \\cite{Yeganeh:2012jm} --- an hierarchical controller for s" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil)
 
 ("fig:kandoo-design" "f" "Kandoo design" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil)
 
-(toc "toc" "      2.4.2 HyperFlow" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil 3 "2.4.2" "\\subsection{HyperFlow}" 47173)
+(toc "toc" "      2.4.2 HyperFlow" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil 3 "2.4.2" "\\subsection{HyperFlow}" 51173)
 
-("sec:related:hyperflow" "s" "Motivated by the lack of scalability in centralized controllers, HyperFlow \\cite{Tootoonchian:2010vy" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil)
+("sec:related:hyperflow" "s" "In 2010, Tootoonchian~\\etal\\ introduced HyperFlow --- a distributed controller motivated by the lack" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil)
 
 ("fig:hyperflow-design" "f" "HyperFlow architecture" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil)
 
-(toc "toc" "      2.4.3 Onix" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil 3 "2.4.3" "\\subsection{Onix}" 57883)
+(toc "toc" "      2.4.3 Onix" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil 3 "2.4.3" "\\subsection{Onix}" 62756)
 
 ("sec:related:onix" "s" "Onix \\cite{Koponen:2010th} was build upon the NOX legacy and provides two major contributions: it is" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil)
 
 ("fig:onix-design" "f" "Onix architecture" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil)
 
-("fig:onix-process" "f" "Onix configuration process" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" 61504)
+("fig:onix-process" "f" "Onix configuration process" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" 66484)
 
-(toc "toc" "    2.5 Consistent Data Stores" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil 2 "2.5" "\\section{Consistent Data Stores}" 67501)
+(toc "toc" "    2.5 Consistent Data Stores" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil 2 "2.5" "\\section{Consistent Data Stores}" 72357)
 
 ("sec:related:cons-data-stor" "s" "The key idea of our controller architecture is to make the controller instances coordinate their act" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil)
 
-(toc "toc" "      2.5.1 Eventual Consistency" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil 3 "2.5.1" "\\subsection{Eventual Consistency}" 70135)
+(toc "toc" "      2.5.1 Trade-offs" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil 3 "2.5.1" "\\subsection{Trade-offs}" 74948)
 
-("sec:related:underst-cons" "s" "To understand consistency we must first establish some fundamental concepts. In our context the cons" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil)
+(toc "toc" "      2.5.2 Eventual Consistency" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil 3 "2.5.2" "\\subsection{Eventual Consistency}" 77678)
+
+("sec:related:underst-cons" "s" "%For simplicity we will focus on the contrast between eventual and strong consistency. %To simplify " "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil)
 
 ("fig:related:eventual-stale" "f" "Stale data: reading an old value." "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil)
 
@@ -167,69 +177,69 @@
 
 ("fig:related:eventual" "f" "Eventual Consistency pitfalls" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil)
 
-(toc "toc" "      2.5.2 Strong Consistency" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil 3 "2.5.2" "\\subsection{Strong Consistency}" 81351)
+(toc "toc" "      2.5.3 Strong Consistency" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil 3 "2.5.3" "\\subsection{Strong Consistency}" 86127)
 
 ("fig:related:strong" "f" "Strong Consistency Semantics" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil)
 
-(toc "toc" "      2.5.3 ViewStamped Replication" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil 3 "2.5.3" "\\subsection{ViewStamped Replication}" 85224)
+(toc "toc" "      2.5.4 ViewStamped Replication" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil 3 "2.5.4" "\\subsection{ViewStamped Replication}" 89800)
 
 ("sec:related:viewst-repl" "s" "\\glsreset{smr} The Viewstamped (VR) protocol provides a transparent \\gls{smr} behavior that can be l" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil)
 
 ("fig:paxos" "f" "Paxos/VR update protocol" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil)
 
-(toc "toc" "      2.5.4 State Machine Replication Performance" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil 3 "2.5.4" "\\subsection{State Machine Replication Performance}" 88757)
+(toc "toc" "      2.5.5 State Machine Replication Performance" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil 3 "2.5.5" "\\subsection{State Machine Replication Performance}" 93323)
 
 ("sec:related:state-mach-repl" "s" "The Paxos/VR algorithm has served as the foundation for many recent replicated (consistent and fault" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil)
 
 ("table:smr-results" "t" "Performance of state machine replication systems" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil)
 
-(toc "toc" "    2.6 Consistent Data Planes" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil 2 "2.6" "\\section{Consistent Data Planes}" 91453)
+(toc "toc" "    2.6 Consistent Data Planes" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil 2 "2.6" "\\section{Consistent Data Planes}" 95980)
 
 ("sec:related:consistent-data-plane" "s" "In order to avoid confusion to the reader familiar with \\gls{sdn} it is fundamental that we distingu" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil)
 
-(toc "toc" "      2.6.1 Abstractions for Network Updates" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil 3 "2.6.1" "\\subsection{Abstractions for Network Updates}" 92288)
+(toc "toc" "      2.6.1 Abstractions for Network Updates" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil 3 "2.6.1" "\\subsection{Abstractions for Network Updates}" 96804)
 
-(toc "toc" "      2.6.2 Software Transactional Network" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil 3 "2.6.2" "\\subsection{Software Transactional Network}" 93775)
+(toc "toc" "      2.6.2 Software Transactional Network" "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex" nil 3 "2.6.2" "\\subsection{Software Transactional Network}" 98308)
 
 (eof "/Users/fabiim/Dropbox/TESE/final/tex/relatedwork2.tex")
 
-(toc "toc" "  3 Architecture and Implementation" "/Users/fabiim/Dropbox/TESE/final/PEI.tex" nil 1 "3" "\\chapter{Architecture and Implementation}" 6955)
+(toc "toc" "  3 Architecture" "/Users/fabiim/Dropbox/TESE/final/PEI.tex" nil 1 "3" "\\chapter{Architecture}" 8566)
 
-("chapter:3" "s" "\\epigraph{All problems in computer science can be solved by another level of indirection... ..except" "/Users/fabiim/Dropbox/TESE/final/PEI.tex" nil)
+("chapter:3" "s" "\\epigraph{\\emph{All problems in computer science can be solved by another level of indirection...exc" "/Users/fabiim/Dropbox/TESE/final/PEI.tex" nil)
 
 (bof "/Users/fabiim/Dropbox/TESE/final/tex/design.tex")
 
-(toc "toc" "    3.1 Shared Data Store Controller Architecture" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil 2 "3.1" "\\section{Shared Data Store Controller Architecture}" 1346)
+(toc "toc" "    3.1 Shared Data Store Controller Architecture" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil 2 "3.1" "\\section{Shared Data Store Controller Architecture}" 1551)
 
-("sec:shared-data-store" "s" "Before \\gls{sdn} control functions such as routing required their own distributed protocol that woul" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
+("sec:shared-data-store" "s" "Distributed systems are hard. There are plenty of arguments to justify it: failures are inevitable, " "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
 
-(toc "toc" "      3.1.1 General Architecture" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil 3 "3.1.1" "\\subsection{General Architecture}" 4172)
+(toc "toc" "      3.1.1 General Architecture" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil 3 "3.1.1" "\\subsection{General Architecture}" 4778)
 
-("fig:heimdall:active" "f" "Active." "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
+("fig:heimdall:active" "f" "Active" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
 
-("fig:heimdall:primary-backup" "f" "Primary Backup." "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
+("fig:heimdall:primary-backup" "f" "Primary-Backup" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
 
 ("fig:architecture" "f" "General Architecture." "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
 
-("fig:heimdall:cache" "f" "Cache. " "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
+("fig:heimdall:cache" "f" "Cache" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
 
 ("fig:heimdall:domains" "f" "Domains" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
 
-("fig:heimdall:cache-domains" "f" "Performance and Scalability." "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
+("fig:heimdall:cache-domains" "f" "Performance and Scalability" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
 
-(toc "toc" "      3.1.2 Controller" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil 3 "3.1.2" "\\subsection{Controller}" 14230)
+(toc "toc" "      3.1.2 Controller" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil 3 "3.1.2" "\\subsection{Controller}" 14628)
 
 ("fig:heimdall:architecture" "f" "Controller components. " "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
 
 ("tab:table-types" "t" "Table types" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
 
-(toc "toc" "      3.1.3 Data Store Replication" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil 3 "3.1.3" "\\subsection{Data Store Replication}" 21787)
+(toc "toc" "      3.1.3 Data Store Replication" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil 3 "3.1.3" "\\subsection{Data Store Replication}" 22054)
 
-("sec:design:data-store-repl" "s" "\\glsreset{smr} Our architecture orbits around a data store that must be fault tolerant to avoid a si" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
+("sec:design:data-store-repl" "s" "\\glsreset{smr} \\todo{Preciso de establecer a diferença entre reads e writes.} Our architecture orbit" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
 
 ("fig:design:smr" "f" "Data Store Architecture" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
 
-(toc "toc" "      3.1.4 Fault Tolerance" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil 3 "3.1.4" "\\subsection{Fault Tolerance}" 27469)
+(toc "toc" "      3.1.4 Fault Tolerance" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil 3 "3.1.4" "\\subsection{Fault Tolerance}" 27767)
 
 ("sec:heimdall:fault-tolerance" "s" "Our distributed controller architecture covers the two most complex fault domains in an SDN, as intr" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
 
@@ -247,29 +257,26 @@
 
 ("fig:concurrent-master-discard" "f" "Switch s2 discards message" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
 
-(toc "toc" "    3.2 Data Store Prototype" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil 2 "3.2" "\\section{Data Store Prototype}" 40353)
+(toc "toc" "    3.2 Data Store Prototype" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil 2 "3.2" "\\section{Data Store Prototype}" 40754)
 
-("sec:data-store-prototype" "s" "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Our data store offers a platform independent inte" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil "")
+("sec:data-store-prototype" "s" "\\todo{Refactor desta introdução.} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% In this section" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
 
-("fig:design:class-diagram" "f" "Class diagram of the client interface to the data store tables." "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
+("fig:design:class-diagram" "f" "Client Interfaces for the data store" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
 
-("sec:heimdall:key-value" "s" "\\subsection{Cross References}  A Cross Reference table ($t_{cr}$) contains values that can be used a" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
+("sec:heimdall:key-value" "s" "Our data store prototype has been iteratively refined to incorporate data store functions required t" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
 
-(toc "toc" "      3.2.1 Cross References" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil 3 "3.2.1" "\\subsection{Cross References}" 45285)
+(toc "toc" "      3.2.1 Cross References" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil 3 "3.2.1" "\\subsection{Cross References}" 45780)
 
-("sec:heimdall:cross-references" "s" "A Cross Reference table ($t_{cr}$) contains values that can be used as keys in another table ($t_{d}" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
+("sec:heimdall:cross-references" "s" "A Cross Reference table (CR) contains values that can be used as keys in another table (D) as shown " "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
 
-("fig:cross-references" "f" "Cross References" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil "")
+("fig:cross-references" "f" "Cross References" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
 
-(toc "toc" "      3.2.2 {Versioning}  \\begin{figure}[ht] \\centering \\begin{subfigure}[b]{0.5\\textwidth} \\centering " "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil 3 "3.2.2" "\\subsection {Versioning}
+(toc "toc" "      3.2.2 {Versioning}  With Versioning we associate each table entry (i.e., key value pair) with a monotonica" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil 3 "3.2.2" "\\subsection {Versioning}
 \\label{sec:heimdall:versioning}
-\\begin{figure}[ht]
-  \\centering
-  \\begin{subfigure}[b]{0.5\\textwidth}
-                \\centering
-         " 48279)
 
-("sec:heimdall:versioning" "s" "\\begin{figure}[ht] \\centering \\begin{subfigure}[b]{0.5\\textwidth} \\centering \\includegraphics[width=" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
+With Versioning we associate each table entry (i.e., key value pair)  with a monotonically increasing cou" 48628)
+
+("sec:heimdall:versioning" "s" "With Versioning we associate each table entry (i.e., key value pair) with a monotonically increasing" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
 
 ("fig:heimdall:versioning-0" "f" "No Versioning." "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
 
@@ -277,9 +284,9 @@
 
 ("fig:heimdall:versioning" "f" "Concurrent updates" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
 
-(toc "toc" "      3.2.3 Columns" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil 3 "3.2.3" "\\subsection{Columns}" 59942)
+(toc "toc" "      3.2.3 Columns" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil 3 "3.2.3" "\\subsection{Columns}" 60210)
 
-("sec:heimdall:columns" "s" "\\begin{figure}[ht] \\centering \\begin{subfigure}[b]{0.5\\textwidth} \\centering \\includegraphics[width=" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
+("sec:heimdall:columns" "s" "%\\todo{Devo sumir com a secção porque nao trouxe resultados significativos?} With Columns we enhance" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
 
 ("fig:heimdall:columns-0" "f" "Key Value store." "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
 
@@ -287,41 +294,41 @@
 
 ("fig:heimdall:columns" "f" "From a Key Value store to a Column store. " "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
 
-(toc "toc" "      3.2.4 Micro Components" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil 3 "3.2.4" "\\subsection{Micro Components}" 66060)
+(toc "toc" "      3.2.4 Micro Components" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil 3 "3.2.4" "\\subsection{Micro Components}" 66412)
 
 ("sec:heimdall:micro-components" "s" "Micro Components are equivalent to the stored procedures functionality existent in \\gls{sql} databas" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
 
-(toc "toc" "      3.2.5 Cache" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil 3 "3.2.5" "\\subsection{Cache}" 68132)
+(toc "toc" "      3.2.5 Cache" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil 3 "3.2.5" "\\subsection{Cache}" 68467)
 
-("sec:heimdall:cache" "s" "With a Cache table, the client enables caching for a particular data store table. Consequently each " "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
+("sec:heimdall:cache" "s" "\\todo{Ligar figura com texto} With a Cache table, the client enables caching for a particular data s" "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
 
-("fig:cache-client" "f" nil "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil "")
+("fig:cache-client" "f" "Reading cached values." "/Users/fabiim/Dropbox/TESE/final/tex/design.tex" nil)
 
 (eof "/Users/fabiim/Dropbox/TESE/final/tex/design.tex")
 
-(toc "toc" "  4 Evaluation" "/Users/fabiim/Dropbox/TESE/final/PEI.tex" nil 1 "4" "\\chapter{Evaluation}" 7382)
+(toc "toc" "  4 Evaluation" "/Users/fabiim/Dropbox/TESE/final/PEI.tex" nil 1 "4" "\\chapter{Evaluation}" 8979)
 
-("chapter:4" "s" "\\begingroup \\renewcommand{\\cleardoublepage}{} \\renewcommand{\\clearpage}{} \\epigraph{\\emph{There are " "/Users/fabiim/Dropbox/TESE/final/PEI.tex" nil)
+("chapter:4" "s" "\\begingroup \\renewcommand{\\cleardoublepage}{} \\renewcommand{\\clearpage}{} \\setlength{\\epigraphwidth}" "/Users/fabiim/Dropbox/TESE/final/PEI.tex" nil)
 
 (bof "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex")
 
 ("sec:feasibility:apps" "s" "\\glsresetall %\\todo{Online appendix} To evaluate the feasibility of our distributed controller desig" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
 
-(toc "toc" "    4.1 Methodology And Environment" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 2 "4.1" "\\section{Methodology And Environment}" 2249)
+(toc "toc" "    4.1 Methodology And Environment" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 2 "4.1" "\\section{Methodology And Environment}" 2247)
 
 ("sec:workload-generation" "s" "\\begin{figure}[ht] \\centering \\includegraphics[scale=0.7]{pic/feasibility/workload-generic.pdf} \\cap" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
 
 ("fig:feasibility:workloads" "f" "Workload definition" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
 
-(toc "toc" "      4.1.1 Workload Generation" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.1.1" "\\subsection{Workload Generation}" 5244)
+(toc "toc" "      4.1.1 Workload Generation" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.1.1" "\\subsection{Workload Generation}" 5242)
 
-(toc "toc" "      4.1.2 Data Store Performance" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.1.2" "\\subsection{ Data Store Performance}" 6795)
+(toc "toc" "      4.1.2 Data Store Performance" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.1.2" "\\subsection{ Data Store Performance}" 6793)
 
 ("fig:feasibility:simulation" "f" "Test Environment and Metholodogy." "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
 
-(toc "toc" "      4.1.3 Test Environment" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.1.3" "\\subsection{Test Environment}" 10974)
+(toc "toc" "      4.1.3 Test Environment" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.1.3" "\\subsection{Test Environment}" 10972)
 
-(toc "toc" "    4.2 Learning Switch" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 2 "4.2" "\\section{Learning Switch}" 11956)
+(toc "toc" "    4.2 Learning Switch" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 2 "4.2" "\\section{Learning Switch}" 11954)
 
 ("sec:feasibility:ls" "s" "\\glsresetall %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% The Learning Switch application em" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
 
@@ -331,25 +338,25 @@
 
 ("fig:ls:interaction" "f" "Learning Switch workloads" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
 
-(toc "toc" "      4.2.1 Broadcast Packet" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.2.1" "\\subsection{Broadcast Packet}" 17502)
+(toc "toc" "      4.2.1 Broadcast Packet" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.2.1" "\\subsection{Broadcast Packet}" 17500)
 
 ("table:lsw0:broadcast" "t" "Workload lsw-0-broadcast operations" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
 
-(toc "toc" "      4.2.2 Unicast Packet" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.2.2" "\\subsection{Unicast Packet}" 18605)
+(toc "toc" "      4.2.2 Unicast Packet" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.2.2" "\\subsection{Unicast Packet}" 18603)
 
 ("table:lsw0:unicast" "t" "Workload lsw-0-unicast operations" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
 
-(toc "toc" "      4.2.3 Optimizations" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.2.3" "\\subsection{Optimizations}" 19394)
+(toc "toc" "      4.2.3 Optimizations" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.2.3" "\\subsection{Optimizations}" 19392)
 
 ("sec:optimizations-2" "s" "\\todo{Falta fazer micro-componentes disto.} The Learning Switch operations are simple, so there is n" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
 
 ("table:lsw1:unicast" "t" "Workload lsw-1-unicast operations" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
 
-(toc "toc" "      4.2.4 Evaluation" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.2.4" "\\subsection{Evaluation}" 20543)
+(toc "toc" "      4.2.4 Evaluation" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.2.4" "\\subsection{Evaluation}" 20541)
 
 ("fig:lsw:comparison" "f" "Learning Switch workloads performance comparison" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
 
-(toc "toc" "    4.3 Load Balancer" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 2 "4.3" "\\section{Load Balancer}" 22637)
+(toc "toc" "    4.3 Load Balancer" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 2 "4.3" "\\section{Load Balancer}" 22635)
 
 ("sec:feasibility:lb" "s" "\\glsresetall %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
 
@@ -363,29 +370,29 @@
 
 ("fig:lb:interaction" "f" "Load Balancer workloads" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
 
-(toc "toc" "      4.3.1 ARP Request" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.3.1" "\\subsection{ARP Request}" 26424)
+(toc "toc" "      4.3.1 ARP Request" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.3.1" "\\subsection{ARP Request}" 26422)
 
 ("table:lbw-0-arp-request" "t" "Workload lbw-0-arp-request operations" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
 
-(toc "toc" "      4.3.2 Packets to a VIP" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.3.2" "\\subsection{Packets to a VIP}" 27705)
+(toc "toc" "      4.3.2 Packets to a VIP" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.3.2" "\\subsection{Packets to a VIP}" 27703)
 
 ("table:lbw-0-ip-to-vip" "t" "Workload lbw-0-ip-to-vip operations" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
 
-(toc "toc" "      4.3.3 Optimizations" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.3.3" "\\subsection{Optimizations}" 29797)
+(toc "toc" "      4.3.3 Optimizations" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.3.3" "\\subsection{Optimizations}" 29862)
 
-("fig:lbw-ip-to-vip:comparison" "f" "Load Balancer lbw-X-ip-to-vip comparison" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" 30091)
+("fig:lbw-ip-to-vip:comparison" "f" "Load Balancer lbw-X-ip-to-vip comparison" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" 30156)
 
-("table:lb-versions" "f" "Name guide to Load Balancer workloads" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" 30859)
+("table:lb-versions" "f" "Name guide to Load Balancer workloads" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" 30924)
 
 ("table:lbw:optimizations" "t" "Load Balancer IP to VIP workload optimizations" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
 
 ("table:lb-versions" "t" "Name guide to Load Balancer workloads" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
 
-(toc "toc" "      4.3.4 Evaluation" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.3.4" "\\subsection{Evaluation}" 36080)
+(toc "toc" "      4.3.4 Evaluation" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.3.4" "\\subsection{Evaluation}" 36145)
 
 ("fig:lbw-ip-to-vip:comparison" "f" "Load Balancer lbw-X-ip-to-vip comparison" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
 
-(toc "toc" "    4.4 Device Manager" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 2 "4.4" "\\section{Device Manager}" 37383)
+(toc "toc" "    4.4 Device Manager" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 2 "4.4" "\\section{Device Manager}" 37448)
 
 ("sec:feasibility:dm" "s" "\\glsresetall %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% The Device Manager application tra" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
 
@@ -399,15 +406,23 @@
 
 ("fig:dm:interaction" "f" "Device Manager workload events" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
 
-(toc "toc" "      4.4.1 Known Devices" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.4.1" "\\subsection{Known Devices}" 41908)
-
-("table:ops:dm-0-known" "t" "Workload dm-0-known (Known Devices) operations" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
-
-(toc "toc" "      4.4.2 Unknown Source" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.4.2" "\\subsection{Unknown Source}" 41909)
+(toc "toc" "      4.4.1 Unknown Device" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.4.1" "\\subsection{Unknown Device}" 41974)
 
 ("table:ops:dm-0-unknown" "t" "Workload dm-0-unknown operations" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
 
-(toc "toc" "      4.4.3 Optimizations" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.4.3" "\\subsection{Optimizations}" 45344)
+(toc "toc" "      4.4.2 Known Devices" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.4.2" "\\subsection{Known Devices}" 44072)
+
+("table:ops:dm-0-known" "t" "Workload dm-0-known (Known Devices) operations" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
+
+(toc "toc" "      4.4.3 Optimizations" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.4.3" "\\subsection{Optimizations}" 45409)
+
+("table:dm-known-optimizations" "t" "Workload dm-0-known operations" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
+
+("table:names:dm" "t" "Name guide to Device Manager workloads" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
+
+("table:dm-unknown-optimizations" "t" "Workload dm-0-unknown operations" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
+
+(toc "toc" "      4.4.4 Evaluation" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.4.4" "\\subsection{Evaluation}" 51042)
 
 ("fig:dm:comparison:unknown" "f" "Unknown device." "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
 
@@ -415,51 +430,57 @@
 
 ("fig:dm:performance" "f" "Device Manager performance comparison" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
 
-("table:dm-known-optimizations" "t" "Workload dm-0-known operations" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
+(toc "toc" "    4.5 Cache" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 2 "4.5" "\\section{Cache}" 53074)
 
-("table:dm-unknown-optimizations" "t" "Workload dm-0-unknown operations" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
+(toc "toc" "      4.5.1 Learning Switch" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.5.1" "\\subsection{Learning Switch}" 54759)
 
-("table:names:dm" "t" "Name guide to Device Manager workloads" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
+("sec:ls:cache" "s" "Given that Learning Switch is a single reader, single writer application, we can introduce caching m" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
 
-(toc "toc" "      4.4.4 Cache" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.4.4" "\\subsection{Cache}" 53009)
+("table:lsw1:unicast:cache" "t" "Workload unicast workload with cache" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
 
-(toc "toc" "    4.5 Leveraging Cache" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 2 "4.5" "\\section{Leveraging Cache}" 53010)
+(toc "toc" "      4.5.2 Load Balancer" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.5.2" "\\subsection{Load Balancer}" 58723)
 
-(toc "toc" "      4.5.1 Learning Switch" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.5.1" "\\subsection{Learning Switch}" 53134)
+("sec:load-balancer" "s" "In the Load Balancer case we use the cache to maintain \\gls{vip} entities locally, but this time, we" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
 
-("sec:ls:cache" "s" "%Before we delve into caching the Learning Switch tables in the controller we must further understan" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
-
-(toc "toc" "      4.5.2 Load Balancer" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.5.2" "\\subsection{Load Balancer}" 57085)
-
-("sec:load-balancer" "s" "With cache we can maintain \\gls{vip} entities locally. Then in the worst case the local \\gls{vip} in" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
+("table:lbw5:optimizations:cache" "t" "Load Balancer IP to VIP workload with cache" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
 
 ("fig:lb:minimal" "f" "Minimum impact of Load Balancer in the pipeline." "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
 
-(toc "toc" "    4.6 Discussion" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 2 "4.6" "\\section{Discussion}" 64224)
+(toc "toc" "      4.5.3 Device Manager" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.5.3" "\\subsection{Device Manager}" 64488)
+
+("table:dmw5:optimizations:cache" "t" "Workload dmw-5-known (cached)" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
+
+(toc "toc" "      4.5.4 Theoretical Evaluation" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.5.4" "\\subsection{Theoretical Evaluation}" 68538)
+
+("tab:cache-theoretical" "t" "Bounded Analysis to Cache workloads" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil)
+
+(toc "toc" "    4.6 Discussion" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 2 "4.6" "\\section{Discussion}" 69463)
+
+(toc "toc" "      4.6.1 Centralized Controllers" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.6.1" "\\subsection{Centralized Controllers}" 70574)
+
+(toc "toc" "      4.6.2 Distributed Controllers" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.6.2" "\\subsection{Distributed Controllers}" 72362)
+
+(toc "toc" "      4.6.3 Consistency" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 3 "4.6.3" "\\subsection{Consistency}" 73115)
+
+(toc "toc" "    4.7 Discussion" "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex" nil 2 "4.7" "\\section{Discussion}" 75625)
 
 (eof "/Users/fabiim/Dropbox/TESE/final/tex/feasibility.tex")
 
-(toc "toc" "  5 Conclusions" "/Users/fabiim/Dropbox/TESE/final/PEI.tex" nil 1 "5" "\\chapter{Conclusions}" 7864)
+(toc "toc" "  5 Conclusions" "/Users/fabiim/Dropbox/TESE/final/PEI.tex" nil 1 "5" "\\chapter{Conclusions}" 9503)
 
-("chapter:5" "s" "\\begingroup \\renewcommand{\\cleardoublepage}{} \\renewcommand{\\clearpage}{} \\epigraph{The Free Lunch I" "/Users/fabiim/Dropbox/TESE/final/PEI.tex" nil)
+("chapter:5" "s" "\\begingroup \\renewcommand{\\cleardoublepage}{} \\renewcommand{\\clearpage}{} \\setlength{\\epigraphwidth}" "/Users/fabiim/Dropbox/TESE/final/PEI.tex" nil)
 
 (bof "/Users/fabiim/Dropbox/TESE/final/tex/conclusion.tex")
 
-(toc "toc" "    5.1 Discussion" "/Users/fabiim/Dropbox/TESE/final/tex/conclusion.tex" nil 2 "5.1" "\\section{Discussion}" 1)
+(toc "toc" "    5.1 Conclusions" "/Users/fabiim/Dropbox/TESE/final/tex/conclusion.tex" nil 2 "5.1" "\\section{Conclusions}" 1)
 
-(toc "toc" "      5.1.1 Centralized Controllers" "/Users/fabiim/Dropbox/TESE/final/tex/conclusion.tex" nil 3 "5.1.1" "\\subsection{Centralized Controllers}" 22)
+(toc "toc" "      5.1.1 Frow Ewsdn" "/Users/fabiim/Dropbox/TESE/final/tex/conclusion.tex" nil 3 "5.1.1" "\\subsection{Frow Ewsdn}" 46)
 
-(toc "toc" "      5.1.2 Distributed Controllers" "/Users/fabiim/Dropbox/TESE/final/tex/conclusion.tex" nil 3 "5.1.2" "\\subsection{Distributed Controllers}" 1848)
+(toc "toc" "      5.1.2 Things we found out" "/Users/fabiim/Dropbox/TESE/final/tex/conclusion.tex" nil 3 "5.1.2" "\\subsection{Things we found out}" 2141)
 
-(toc "toc" "      5.1.3 Consistent Data Plane" "/Users/fabiim/Dropbox/TESE/final/tex/conclusion.tex" nil 3 "5.1.3" "\\subsection{Consistent Data Plane}" 2511)
+(toc "toc" "      5.1.3 Limitations" "/Users/fabiim/Dropbox/TESE/final/tex/conclusion.tex" nil 3 "5.1.3" "\\subsection{Limitations}" 2836)
 
-(toc "toc" "    5.2 Future Work" "/Users/fabiim/Dropbox/TESE/final/tex/conclusion.tex" nil 2 "5.2" "\\section{Future Work}" 2547)
-
-(toc "toc" "      5.2.1 Future Work" "/Users/fabiim/Dropbox/TESE/final/tex/conclusion.tex" nil 3 "5.2.1" "\\subsection{Future Work}" 3277)
-
-(toc "toc" "    5.3 Conclusions" "/Users/fabiim/Dropbox/TESE/final/tex/conclusion.tex" nil 2 "5.3" "\\section{Conclusions}" 3862)
-
-(toc "toc" "      5.3.1 Limitations" "/Users/fabiim/Dropbox/TESE/final/tex/conclusion.tex" nil 3 "5.3.1" "\\subsection{Limitations}" 5955)
+(toc "toc" "      5.1.4 Future Work" "/Users/fabiim/Dropbox/TESE/final/tex/conclusion.tex" nil 3 "5.1.4" "\\subsection{Future Work}" 7537)
 
 (eof "/Users/fabiim/Dropbox/TESE/final/tex/conclusion.tex")
 
@@ -469,7 +490,7 @@
 
 (eof "/Users/fabiim/Dropbox/TESE/final/tex/apendices.tex")
 
-(bib "/Users/fabiim/Dropbox/TESE/final/bibliografia.bib" "/Users/fabiim/Dropbox/TESE/final/web.bib")
+(bib "/Users/fabiim/Dropbox/TESE/final/bibliografia.bib")
 
 (eof "/Users/fabiim/Dropbox/TESE/final/PEI.tex")
 ))

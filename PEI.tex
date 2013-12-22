@@ -13,12 +13,15 @@
 
 %\usepackage{setspace}
 \usepackage[portuguese,english]{babel}
+
 \usepackage{times}
-\usepackage{url}
+\usepackage[hyphens]{url}
+%\usepackage{url}
 \usepackage{graphicx}
 \usepackage{mdwlist}
 \usepackage[nottoc]{tocbibind}
 \usepackage{csquotes}
+\usepackage{listings}
 \usepackage[table,hyperref,x11names]{xcolor}
 \usepackage{array,booktabs}
 \usepackage{multirow}
@@ -84,15 +87,54 @@
 
 \usepackage[font={small}]{caption}
 \usepackage{subcaption}
-\usepackage[sorting=none,  isbn=false,
-url=false, doi=false, eprint=false]{biblatex}
+\usepackage[style=numeric-comp, sorting=none,  isbn=false,
+url=false, doi=false, eprint=false,backref=true]{biblatex}
 
-\bibliography{bibliografia,web}
+%%%%%%%%%%%
+\newbibmacro*{bbx:parunit}{%
+  \ifbibliography
+    {\setunit{\bibpagerefpunct}\newblock
+     \usebibmacro{pageref}%
+     \clearlist{pageref}%
+     \setunit{\adddot\par\nobreak}}
+    {}}
+
+\renewbibmacro*{doi+eprint+url}{%
+  \usebibmacro{bbx:parunit}% Added
+  \iftoggle{bbx:doi}
+    {\printfield{doi}}
+    {}%
+  \iftoggle{bbx:eprint}
+    {\usebibmacro{eprint}}
+    {}%
+  \iftoggle{bbx:url}
+    {\usebibmacro{url+urldate}}
+    {}}
+
+\renewbibmacro*{eprint}{%
+  \usebibmacro{bbx:parunit}% Added
+  \iffieldundef{eprinttype}
+    {\printfield{eprint}}
+    {\printfield[eprint:\strfield{eprinttype}]{eprint}}}
+
+\renewbibmacro*{url+urldate}{%
+  \usebibmacro{bbx:parunit}% Added
+  \printfield{url}%
+  \iffieldundef{urlyear}
+    {}
+    {\setunit*{\addspace}%
+     \printtext[urldate]{\printurldate}}}
+
+%%%%%%%%%%%%%
+\bibliography{bibliografia}
 \fancyhf{} %
 \lhead{\nouppercase {\leftmark}} %
 \rhead{\nouppercase {\bf \thepage}}
 \renewcommand{\headrulewidth}{0.1pt}
+%%%%%%%%%%%
+\usepackage{titletoc}
 
+%%%%%%%%%
 %%%%
 %colouring tables
 \usepackage{color, colortbl}
@@ -125,9 +167,23 @@ url=false, doi=false, eprint=false]{biblatex}
 \thispagestyle{plain}
 }
 
+%%%%%%%%%
+% \renewcommand{\epigraphrule}{0pt}
+\setlength{\epigraphwidth}{0.6\textwidth}
+% \renewcommand{\textflush}{flushepinormal}
+% \makeatletter
+% % Taken and updated from http://mirrors.ctan.org/macros/latex/contrib/epigraph/epigraph.dtx
+% \renewcommand{\@epitext}[1]{%
+%   \begin{minipage}{\epigraphwidth}\begin{\textflush} \hspace*{20pt}\emph{#1}\\
+%     \ifdim\epigraphrule>\z@ \@epirule \else \vspace*{-.5\baselineskip} \fi
+%   \end{\textflush}\end{minipage}}
+% \makeatother
+%%%%%%%%%%%%%%%%%%%%
 
+
+%%%%%%%%%%%%%
 %%%%%%% PERSONAL COMMANDS %%%%%%%%%%%
-\newcommand{\distcontrollers}{\cite{:vn, Tootoonchian:2010vy,Koponen:2010th,Yeganeh:2012jm,jain2013b4}}
+\newcommand{\distcontrollers}{\cite{Tootoonchian:2010vy,Koponen:2010th,Yeganeh:2012jm,jain2013b4}}
 \newcommand{\distcontrollerspaper}{\cite{Tootoonchian:2010vy, Koponen:2010th,Yeganeh:2012jm}}
 %END 
 
@@ -225,6 +281,7 @@ url=false, doi=false, eprint=false]{biblatex}
 \thispagestyle{empty} \mbox{}
 \newpage
 
+
 % ----------------------------------------------------------------------
 % Inicio conteudo
 \pagestyle{fancy}
@@ -237,14 +294,17 @@ url=false, doi=false, eprint=false]{biblatex}
 \interfootnotelinepenalty=10000
 
 
-\chapter{Introduction}
+
 \begingroup
 \renewcommand{\cleardoublepage}{}
 \renewcommand{\clearpage}{}
-\label{chapter:1}
-\glsresetall
+\chapter{Introduction}\label{chapter:1}
+\endgroup
 
-\epigraph{The nice thing about standards is that you have so many to choose from.}{Andrew S. Tanenbaum} 
+\glsresetall
+\setlength{\epigraphwidth}{0.4\textwidth}
+\epigraph{ \emph{The nice thing about standards is that you have so
+    many to choose from.}}{Andrew S. Tanenbaum} 
 % contexto do trabalho
 % se resume o trabalho desenvolvido
 % se identificam  contribuicoes 
@@ -257,42 +317,44 @@ url=false, doi=false, eprint=false]{biblatex}
 % metodologia  utilizado no desenvolvimento como o planeamento efectuado para o concretizar 
 % Apresentar uma confrontacao com o plano de trabalho inicial  analisando as razoes de eventuais desvios occorridos
 
-\include{./tex/intro}
-\endgroup
+\input{./tex/intro}
+
 \LIMPA
 
 %\renewcommand{\cleardoublepage}{}
 %\renewcommand{\clearpage}{}
-
-\chapter{Related Work}\label{chapter:2}
 \begingroup
 \renewcommand{\cleardoublepage}{}
 \renewcommand{\clearpage}{}
-
-\epigraph{If the only tool you have is a hammer, you treat everything like a nail.}{Abraham Maslow}
+\chapter{Related Work}\label{chapter:2}
+\endgroup
+\setlength{\epigraphwidth}{0.4\textwidth}
+\epigraph{\emph{If the only tool you have is a hammer, you treat everything like a nail.}}{Abraham Maslow}
 %\epigraph{Uma pessoa chega a qualquer algoritmo que encontra por aí. Pega, corta, abre, olha, vê.... É um Hilo! Tudo é um Hilomorfismo!}{Professor de LEI - 2º ano}
 \glsresetall
-\include{./tex/relatedwork2}
-\endgroup
+\input{./tex/relatedwork2}
+
 \LIMPA
-\chapter{Architecture\includegraphics[]{PEI.pdf}
-}\label{chapter:3}
-\epigraph{All problems in computer science can be solved by another level of indirection... ..except for the problem of too many layers of indirection.}{Kevlin Henney's}
 \begingroup
 \renewcommand{\cleardoublepage}{}
 \renewcommand{\clearpage}{}
+\chapter{Architecture}\label{chapter:3}
+\endgroup
+\epigraph{\emph{All problems in computer science can be solved by another level of indirection...except for the problem of too many layers of indirection.}}{Kevlin Henney's}
 %\epigraph{Estamos no Mato...  E sem cão!}{Professor de LEI - 3º ano}
 \glsresetall
-\include{./tex/design}
-\endgroup
-\LIMPA
+\input{./tex/design}
 
-\chapter{Evaluation}\label{chapter:4}
+\LIMPA
 \begingroup
 \renewcommand{\cleardoublepage}{}
 \renewcommand{\clearpage}{}
-\epigraph{\emph{There are only two hard things in Computer Science: cache invalidation, naming things and off-by-one errors.}}{``Phil Karlton''}
-
+\chapter{Evaluation}\label{chapter:4}
+\setlength{\epigraphwidth}{0.6\textwidth}
+\epigraph{\emph{There are only two hard things in Computer Science:
+    cache invalidation, naming things and off-by-one
+    errors.}}{Variation of Phil Karlton quote}
+\endgroup
 %\setlength{\epigraphwidth}{.6\textwidth}
 %\epigraph{Eu já estou por tudo. Por mim reinicio o TomCat.}{MSI - Estudante do 1º ano}
 %\epigraph{}{}
@@ -301,15 +363,16 @@ url=false, doi=false, eprint=false]{biblatex}
 %%%%
 
 \glsresetall
-\include{./tex/feasibility} 
-\endgroup
-\LIMPA
+\input{./tex/feasibility} 
 
-\chapter{Conclusions}\label{chapter:5}
+\LIMPA
 \begingroup
 \renewcommand{\cleardoublepage}{}
 \renewcommand{\clearpage}{}
-\epigraph{The Free Lunch Is Over.}{Herb Sutter.}
+\chapter{Conclusions}\label{chapter:5}
+\endgroup
+\setlength{\epigraphwidth}{0.25\textwidth}
+\epigraph{\emph{The Free Lunch Is Over.}}{Herb Sutter.}
 
 %\epigraph{São trade-offs Professor, são trade-offs...}{MSI - José Sá Lopes}
 \glsresetall
@@ -318,15 +381,13 @@ url=false, doi=false, eprint=false]{biblatex}
 % comentario critico
 % possibility of future work 
 
-\include{./tex/conclusion}
-\endgroup
+\input{./tex/conclusion}
 \LIMPA
 
 % Inicio apendices
-\appendix
+%\appendix
 
-\include{./tex/apendices}
-
+%\include{./tex/apendices}
 
 
 
